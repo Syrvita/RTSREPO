@@ -6,8 +6,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     // 1. RBAC Route Protection (Client only)
-    const currentUser = ROVER_AUTH.requireRole("Client");
-    if (!currentUser) return;
+    const currentUser = window.ROVER_AUTH ? ROVER_AUTH.requireRole("Client") : null;
+    if (window.ROVER_AUTH && !currentUser) return;
+
+    let currentEditId = null;
 
     // 2. Client Reservations Rendering & State
     function renderClientReservations() {
@@ -38,20 +40,38 @@ document.addEventListener("DOMContentLoaded", () => {
         const filterVal = filterSelect ? filterSelect.value : "ALL";
 
         const filtered = reservations.filter(r => {
+            const fVal = filterVal.toUpperCase();
+            const rStat = (r.status || "").toUpperCase();
+
             const matchesFilter = 
-                filterVal === "ALL" ? true :
-                filterVal === "PENDING" ? (r.status === "Pending" || r.status === "Pending Review") :
-                filterVal === "CONFIRMED" ? r.status === "Confirmed" :
-                filterVal === "COMPLETED" ? r.status === "Completed" : true;
+                fVal === "ALL" || fVal === "" ? true :
+                fVal.includes("PENDING") ? rStat.includes("PENDING") :
+                fVal.includes("CONFIRM") ? rStat.includes("CONFIRM") :
+                fVal.includes("COMPLETE") ? rStat.includes("COMPLETE") :
+                fVal.includes("CANCEL") ? rStat.includes("CANCEL") :
+                rStat === fVal;
 
             const matchesSearch = !q ||
                 (r.id && r.id.toLowerCase().includes(q)) ||
                 (r.route && r.route.toLowerCase().includes(q)) ||
                 (r.pickup && r.pickup.toLowerCase().includes(q)) ||
-                (r.destination && r.destination.toLowerCase().includes(q));
+                (r.destination && r.destination.toLowerCase().includes(q)) ||
+                (r.vehicleType && r.vehicleType.toLowerCase().includes(q));
 
             return matchesFilter && matchesSearch;
         });
+
+        // Update record count badge and pagination info
+        const recordCountBadge = document.getElementById("recordCountBadge");
+        if (recordCountBadge) {
+            recordCountBadge.innerText = `${reservations.length} records`;
+        }
+
+        const paginationInfo = document.getElementById("paginationInfo");
+        if (paginationInfo) {
+            const displayCount = Math.min(filtered.length, 4);
+            paginationInfo.innerText = `Showing 1 to ${displayCount} of ${reservations.length} requests`;
+        }
 
         tbody.innerHTML = "";
         if (filtered.length === 0) {
@@ -71,36 +91,111 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const isPending = r.status === "Pending" || r.status === "Pending Review";
             const isConfirmed = r.status === "Confirmed";
+            const isCancelled = r.status === "Cancelled";
 
-            const statusBadge = isPending ? 
-                `<span class="status-pill status-pending">&#9679; Pending Review</span>` :
+            const statusBadge = isCancelled ?
+                `<span class="status-pill status-cancelled" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10006; Cancelled</span>` :
+                isPending ? 
+                `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Pending Review</span>` :
                 isConfirmed ? 
-                `<span class="status-pill status-confirmed">&#10004; Confirmed</span>` :
-                `<span class="status-pill status-completed">Completed</span>`;
+                `<span class="status-pill status-confirmed" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Confirmed</span>` :
+                `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Completed</span>`;
 
-            const actionText = isPending ? "Modify Request" : "Download Manifest";
+            const actionText = isPending ? "Modify Request" : isConfirmed ? "View Details" : "Download Manifest";
 
+            // Strict 7-Column Layout mapping 1:1 with Table Headers
             tr.innerHTML = `
-                <td style="padding: 16px 20px; font-weight: 700; color: #C62828;">${r.id}</td>
+                <!-- 1. REQUEST ID -->
+                <td style="padding: 16px 20px; font-weight: 700; color: #C62828; white-space: nowrap;">${r.id}</td>
+
+                <!-- 2. VEHICLE TYPE -->
                 <td style="padding: 16px 20px;">
                     <div style="font-weight: 600; color: #212121;">${r.vehicleType || "Corporate Shuttle"}</div>
-                    <div style="font-size: 11px; color: #78909C;">${r.units || 1} Assigned Unit${(r.units > 1) ? 's' : ''}</div>
+                    <div style="font-size: 11px; color: #78909C; margin-top: 2px;">${r.units || 1} Assigned Unit${(r.units > 1) ? 's' : ''}</div>
                 </td>
-                <td style="padding: 16px 20px; font-size: 12px; color: #424242;">
-                    <div>${r.pickup || "Metro Manila Hub"}</div>
-                    <div style="color: #9E9E9E; font-size: 11px;">to</div>
-                    <div>${r.destination || "Destination Terminal"}</div>
+
+                <!-- 3. PICKUP LOCATION -->
+                <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
+                    <div style="font-weight: 500;">${r.pickup || "Metro Manila Hub"}</div>
                 </td>
+
+                <!-- 4. DESTINATION -->
+                <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
+                    <div style="font-weight: 500;">${r.destination || "Destination Terminal"}</div>
+                </td>
+
+                <!-- 5. DATE & TIME -->
                 <td style="padding: 16px 20px; font-size: 12px; color: #37474F;">
                     <div style="font-weight: 600;">${r.schedule || r.start}</div>
                     ${r.return ? `<div style="color: #78909C; font-size: 11px; margin-top: 2px;">Return: ${r.return}</div>` : ''}
                 </td>
-                <td style="padding: 16px 20px;">${statusBadge}</td>
-                <td style="padding: 16px 20px;">
-                    <a href="#" style="color: #1976D2; font-size: 12px; font-weight: 600; text-decoration: none;">${actionText} &rarr;</a>
+
+                <!-- 6. STATUS -->
+                <td style="padding: 16px 20px; white-space: nowrap;">
+                    ${statusBadge}
+                </td>
+
+                <!-- 7. ACTIONS (Includes Cancel capability) -->
+                <td style="padding: 16px 20px; white-space: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        ${!isCancelled ? `
+                            <button type="button" class="btn-modify-res" data-id="${r.id}" style="background: none; border: none; color: #1976D2; font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 6px; text-decoration: none;" title="Modify request details">
+                                ${actionText} &rarr;
+                            </button>
+                            <button type="button" class="btn-cancel-res" data-id="${r.id}" style="background: #FFFFFF; border: 1px solid #FFCDD2; color: #D32F2F; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;" title="Cancel reservation">
+                                Cancel
+                            </button>
+                        ` : `
+                            <span style="font-size: 12px; color: #9E9E9E; font-weight: 500; font-style: italic;">Cancelled</span>
+                        `}
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
+        });
+
+        // Bind Action Buttons
+        bindActionButtons();
+    }
+
+    // Bind Cancel & Modify Buttons
+    function bindActionButtons() {
+        // Cancel capability
+        const cancelButtons = document.querySelectorAll(".btn-cancel-res");
+        cancelButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const resId = btn.dataset.id;
+                if (!resId) return;
+
+                const db = ROVER_DB.get();
+                const res = (db.reservations || []).find(x => x.id === resId);
+                if (!res) return;
+
+                const confirmed = confirm(`Are you sure you want to cancel reservation ${resId} (${res.vehicleType})?\n\nThis will release the reserved fleet units and notify dispatch.`);
+                if (!confirmed) return;
+
+                res.status = "Cancelled";
+                res.cancelledAt = new Date().toISOString();
+                ROVER_DB.save(db);
+                renderClientReservations();
+            });
+        });
+
+        // Modify capability
+        const modifyButtons = document.querySelectorAll(".btn-modify-res");
+        modifyButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const resId = btn.dataset.id;
+                if (!resId) return;
+
+                const db = ROVER_DB.get();
+                const res = (db.reservations || []).find(x => x.id === resId);
+                if (!res) return;
+
+                openModalForEdit(res);
+            });
         });
     }
 
@@ -127,10 +222,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.getElementById("closeReservationModalBtn");
     const cancelBtn = document.getElementById("cancelReservationBtn");
     const submitBtn = document.getElementById("submitReservationBtn");
+    const deleteBtn = document.getElementById("modalDeleteResBtn");
     const errorDiv = document.getElementById("reservationModalError");
+    const modalTitle = document.getElementById("reservationModalTitle");
 
     function openModal() {
+        currentEditId = null;
+        if (modalTitle) modalTitle.innerText = "New Reservation Request";
+        if (submitBtn) submitBtn.innerText = "Submit Request";
+        if (deleteBtn) deleteBtn.style.display = "none";
         if (errorDiv) errorDiv.style.display = "none";
+        const form = document.getElementById("reservationForm");
+        if (form) form.reset();
+        if (modal) modal.style.display = "flex";
+    }
+
+    function openModalForEdit(res) {
+        currentEditId = res.id;
+        if (modalTitle) modalTitle.innerText = `Modify Reservation Request: ${res.id}`;
+        if (submitBtn) submitBtn.innerText = "Save Changes";
+        if (deleteBtn) {
+            deleteBtn.style.display = (res.status !== "Cancelled") ? "block" : "none";
+        }
+        if (errorDiv) errorDiv.style.display = "none";
+
+        // Prepopulate inputs
+        const pickupLoc = document.getElementById("pickupLocationInput");
+        const destLoc = document.getElementById("destinationInput");
+        const vehicleType = document.getElementById("vehicleTypeSelect");
+        const units = document.getElementById("unitQuantityInput");
+        const costCenter = document.getElementById("costCenterInput");
+        const notes = document.getElementById("tripNotesInput");
+        const disclaimer = document.getElementById("disclaimerCheckbox");
+
+        if (pickupLoc) pickupLoc.value = res.pickup || "";
+        if (destLoc) destLoc.value = res.destination || "";
+        if (vehicleType) vehicleType.value = res.vehicleType || "HiAce Commuter (Van - 14 Seater)";
+        if (units) units.value = res.units || 1;
+        if (costCenter) costCenter.value = res.costCenter || "";
+        if (notes) notes.value = res.notes || "";
+        if (disclaimer) disclaimer.checked = true;
+
         if (modal) modal.style.display = "flex";
     }
 
@@ -138,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modal) modal.style.display = "none";
         const form = document.getElementById("reservationForm");
         if (form) form.reset();
+        currentEditId = null;
     }
 
     const reservationForm = document.getElementById("reservationForm");
@@ -149,6 +282,25 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
     if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
 
+    // Modal Cancel/Delete Reservation Button
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", () => {
+            if (!currentEditId) return;
+            const db = ROVER_DB.get();
+            const res = (db.reservations || []).find(x => x.id === currentEditId);
+            if (!res) return;
+
+            const confirmed = confirm(`Are you sure you want to cancel reservation ${currentEditId}?\n\nThis will release the reserved fleet units.`);
+            if (!confirmed) return;
+
+            res.status = "Cancelled";
+            res.cancelledAt = new Date().toISOString();
+            ROVER_DB.save(db);
+            closeModal();
+            renderClientReservations();
+        });
+    }
+
     if (submitBtn) {
         submitBtn.addEventListener("click", () => {
             const pickupDate = document.getElementById("pickupDateTimeInput") ? document.getElementById("pickupDateTimeInput").value : "";
@@ -159,15 +311,56 @@ document.addEventListener("DOMContentLoaded", () => {
             const units = parseInt(document.getElementById("unitQuantityInput") ? document.getElementById("unitQuantityInput").value : "1", 10);
             const disclaimer = document.getElementById("disclaimerCheckbox") ? document.getElementById("disclaimerCheckbox").checked : true;
 
+            // In edit mode, allow keeping existing schedule if datetime wasn't re-entered
+            if (currentEditId) {
+                if (!pickupLoc || !destLoc || !vehicleType || isNaN(units) || units < 1) {
+                    if (errorDiv) {
+                        errorDiv.innerText = "Please complete all required location and vehicle fields.";
+                        errorDiv.style.display = "block";
+                    }
+                    return;
+                }
+
+                const db = ROVER_DB.get();
+                const res = (db.reservations || []).find(x => x.id === currentEditId);
+                if (res) {
+                    res.pickup = pickupLoc;
+                    res.destination = destLoc;
+                    res.route = `${pickupLoc} to ${destLoc}`;
+                    res.vehicleType = vehicleType;
+                    res.vehiclePref = `${units}x ${vehicleType}`;
+                    res.units = units;
+                    if (pickupDate) {
+                        res.schedule = formatDateTimeString(pickupDate);
+                        res.start = formatDateTimeString(pickupDate);
+                    }
+                    if (returnDate) {
+                        res.return = formatDateTimeString(returnDate);
+                    }
+                    res.costCenter = document.getElementById("costCenterInput") ? document.getElementById("costCenterInput").value.trim() : res.costCenter;
+                    res.notes = document.getElementById("tripNotesInput") ? document.getElementById("tripNotesInput").value.trim() : res.notes;
+
+                    ROVER_DB.save(db);
+                }
+
+                closeModal();
+                renderClientReservations();
+                return;
+            }
+
+            // New reservation creation
             if (!pickupDate || !returnDate || !pickupLoc || !destLoc || !vehicleType || isNaN(units) || units < 1 || !disclaimer) {
-                if (errorDiv) errorDiv.style.display = "block";
+                if (errorDiv) {
+                    errorDiv.innerText = "Please complete all required fields and accept the legal disclaimer.";
+                    errorDiv.style.display = "block";
+                }
                 return;
             }
 
             const db = ROVER_DB.get();
             const newReservation = {
                 id: "#RQ-" + Math.floor(1000 + Math.random() * 9000),
-                client: currentUser.name || "Rowena Mae Castaneda",
+                client: currentUser ? currentUser.name : "Rowena Mae Castaneda",
                 vehicleType: vehicleType,
                 vehiclePref: `${units}x ${vehicleType}`,
                 units: units,
@@ -203,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
         exportBtn.addEventListener("click", () => {
             const db = ROVER_DB.get();
             const reservations = db.reservations || [];
-            let csv = "REQUEST ID,CLIENT,VEHICLE TYPE,UNITS,PICKUP,DESTINATION,SCHEDULE,STATUS\n";
+            let csv = "REQUEST ID,CLIENT,VEHICLE TYPE,UNITS,PICKUP LOCATION,DESTINATION,SCHEDULE,STATUS\n";
             reservations.forEach(r => {
                 csv += `"${r.id}","${r.client}","${r.vehicleType || ''}","${r.units || 1}","${r.pickup || ''}","${r.destination || ''}","${r.schedule || r.start || ''}","${r.status}"\n`;
             });
