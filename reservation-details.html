@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Reservation Manifest PB-006</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/reservation-details.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar: Client Enterprise Tier -->
+        <aside class="sidebar" style="background-color: #2C1E1E;">
+            <div class="sidebar-header" style="display: flex; align-items: center; gap: 0.5rem; padding: 24px 24px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
+                <h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.05em; color: white;">ROVER</h2>
+                <span style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 700; letter-spacing: 0.05em; color: white;">ENTERPRISE</span>
+            </div>
+            <div style="font-size: 10px; color: #A0A0A0; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 0 24px; margin-bottom: 8px;">CLIENT WORKSPACE</div>
+            <nav class="sidebar-nav">
+                <a href="client.html" class="nav-item">My Dashboard</a>
+                <a href="request-service.html" class="nav-item active">Request Service</a>
+                <a href="#" class="nav-item" style="display: flex; justify-content: space-between; align-items: center;">Active Bookings <span style="background: rgba(255,255,255,0.15); padding: 2px 7px; border-radius: 10px; font-size: 11px;">3</span></a>
+                <a href="#" class="nav-item">Billing &amp; Invoices</a>
+            </nav>
+            <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding: 18px 24px; margin-top: auto;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="avatar" style="width: 36px; height: 36px; border-radius: 6px; background: #212121; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1);">AL</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span id="clientCompanyNameDisplay" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Apex Logistics Global Inc.</span>
+                            <span id="clientNameSidebarDisplay" style="font-size: 0.75rem; color: #9E9E9E; margin-top: 4px;">Rowena Mae Castaneda</span>
+                        </div>
+                    </div>
+                    <button id="clientLogoutBtn" title="Log Out" style="background: none; border: none; color: #9E9E9E; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; font-size: 1.1rem; transition: color 0.2s;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content reservation-details-view">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search reservations, reference IDs, routes..." style="width: 380px; padding: 8px 14px; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 13px; outline: none; background: #FFFFFF; font-family: inherit;">
+                </div>
+                <div class="top-nav-right" style="display: flex; align-items: center; gap: 1.25rem;">
+                    <div class="badge pill-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> Verified Corporate Tier-1 • Active Agreement
+                    </div>
+                    <a href="#" style="color: #757575; text-decoration: none; font-size: 13px; font-weight: 600;">Support</a>
+                    <div style="position: relative; cursor: pointer; color: #757575; font-size: 1.2rem; display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span style="position: absolute; top: -3px; right: -3px; background: #D32F2F; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #FFFFFF;"></span>
+                    </div>
+                    <div id="topNavAvatar" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">RC</div>
+                </div>
+            </header>
+
+            <div class="workspace-container" style="padding: 32px; flex: 1;">
+                <!-- Breadcrumbs & Compliance Pill Row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <div class="breadcrumbs" style="color: #757575; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+                        ROVER CLIENT GATEWAY / APEX LOGISTICS GLOBAL / RESERVATIONS / TICKET <span id="breadcrumbTicketId">#RQ-1042</span>
+                    </div>
+                    <div style="background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+                        <span style="width: 6px; height: 6px; background: #2E7D32; border-radius: 50%; display: inline-block;"></span>
+                        SEC VERIFIED CLIENT • SEC-202109482-C
+                    </div>
+                </div>
+
+                <!-- Dynamic Success Notification Banner -->
+                <div id="manifestNotificationBanner" style="display: none; background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; color: #2E7D32; font-size: 13px; font-weight: 600; align-items: center; gap: 10px;">
+                    <span>✓</span> <span id="manifestNotificationText">Reservation cancelled successfully.</span>
+                </div>
+
+                <!-- Header Row -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <h1 style="font-size: 24px; font-weight: 700; color: #212121; margin: 0;">Reservation Manifest <span id="manifestTicketIdTag" style="color: #D32F2F;">#RQ-1042</span></h1>
+                            <span id="manifestStatusBadge" class="status-pill status-pending">• Pending Review</span>
+                            <span style="background: #FFEBEE; color: #C62828; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 700;">FORM PB-006</span>
+                        </div>
+                        <p style="font-size: 13px; color: #757575; margin-top: 6px; margin-bottom: 0;">Corporate Passenger Shuttle Manifest &amp; Administrative Dispatch Order</p>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <button type="button" id="printManifestBtn" class="btn-manifest-action btn-ghost" style="padding: 9px 16px; border: 1px solid #E0E0E0; border-radius: 6px; background: #FFFFFF; font-size: 13px; font-weight: 600; color: #424242; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Print Manifest
+                        </button>
+                        <button type="button" id="openCancelModalBtn" class="btn-manifest-action" style="padding: 9px 18px; border: 1px solid #FFCDD2; background: #FFEBEE; border-radius: 6px; font-size: 13px; font-weight: 600; color: #D32F2F; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                            Cancel Reservation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2-Column Grid (Left: 2fr, Right: 1fr, Gap: 24px) -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+                    <!-- Left Column -->
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- 1. Route & Schedule Card -->
+                        <div class="manifest-card" style="padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F0F0F0; padding-bottom: 16px; margin-bottom: 20px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="width: 8px; height: 8px; background: #D32F2F; border-radius: 50%;"></span>
+                                    <span style="font-size: 12px; font-weight: 700; color: #424242; letter-spacing: 0.5px; text-transform: uppercase;">ROUTE CORRIDOR &amp; TRANSIT SCHEDULE</span>
+                                </div>
+                                <span style="background: #F5F5F5; color: #616161; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px; border: 1px solid #E0E0E0;" id="manifestCorridorDistance">92.4 km (NLEX Corridor)</span>
+                            </div>
+
+                            <!-- Origin / Destination Block -->
+                            <div style="margin-bottom: 24px; padding-left: 8px;">
+                                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; width: 14px; margin-top: 3px;">
+                                        <span style="width: 12px; height: 12px; background: #D32F2F; border: 2px solid #FFCDD2; border-radius: 50%;"></span>
+                                        <span style="border-left: 2px dashed #BDBDBD; height: 42px; margin: 4px 0;"></span>
+                                        <span style="width: 12px; height: 12px; background: #2E7D32; border: 2px solid #C8E6C9; border-radius: 50%;"></span>
+                                    </div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                                        <div>
+                                            <div style="font-size: 11px; font-weight: 700; color: #9E9E9E; text-transform: uppercase; letter-spacing: 0.5px;">ORIGIN PICKUP HUB</div>
+                                            <div id="manifestPickupLoc" style="font-size: 15px; font-weight: 700; color: #212121; margin-top: 2px;">Makati CBD (Ayala Tower 1)</div>
+                                            <div style="font-size: 12px; color: #757575;">Terminal Bay 3 • Security Clear Access Authorized</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 11px; font-weight: 700; color: #9E9E9E; text-transform: uppercase; letter-spacing: 0.5px;">DESTINATION TERMINAL</div>
+                                            <div id="manifestDestLoc" style="font-size: 15px; font-weight: 700; color: #212121; margin-top: 2px;">Clark Logistics Hub Terminal 2</div>
+                                            <div style="font-size: 12px; color: #757575;">Cargo Logistics Gate 4 • Priority Express Corridor</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Time Windows Sub-Cards -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div style="background: #FAFAFA; border: 1px solid #ECEFF1; border-radius: 6px; padding: 14px 16px;">
+                                    <div style="font-size: 11px; font-weight: 700; color: #757575; text-transform: uppercase; letter-spacing: 0.5px;">PICKUP DATE &amp; TIME</div>
+                                    <div id="manifestPickupDate" style="font-size: 14px; font-weight: 700; color: #212121; margin-top: 6px;">Oct 28, 2026 • 06:30 AM</div>
+                                    <div style="font-size: 11px; color: #2E7D32; margin-top: 4px; font-weight: 500;">✓ On-time arrival target / Gate clearance active</div>
+                                </div>
+                                <div style="background: #FAFAFA; border: 1px solid #ECEFF1; border-radius: 6px; padding: 14px 16px;">
+                                    <div style="font-size: 11px; font-weight: 700; color: #757575; text-transform: uppercase; letter-spacing: 0.5px;">RETURN DATE &amp; TIME</div>
+                                    <div id="manifestReturnDate" style="font-size: 14px; font-weight: 700; color: #212121; margin-top: 6px;">Oct 28, 2026 • 06:00 PM</div>
+                                    <div style="font-size: 11px; color: #616161; margin-top: 4px;">Scheduled turnaround window</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Requested Fleet Specifications Card -->
+                        <div class="manifest-card" style="padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F0F0F0; padding-bottom: 16px; margin-bottom: 20px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 15px;">🚐</span>
+                                    <span style="font-size: 12px; font-weight: 700; color: #424242; letter-spacing: 0.5px; text-transform: uppercase;">REQUESTED FLEET SPECIFICATIONS</span>
+                                </div>
+                                <span id="manifestUnitCountBadge" style="background: #E3F2FD; color: #1976D2; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">Manifest Unit 1 of 1</span>
+                            </div>
+
+                            <!-- Unit Box -->
+                            <div style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 18px; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; gap: 16px;">
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <div style="width: 44px; height: 44px; background: #F5F5F5; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                                        🚐
+                                    </div>
+                                    <div>
+                                        <div id="manifestVehicleType" style="font-size: 15px; font-weight: 700; color: #212121;">HiAce Commuter (Van - 14 Seater)</div>
+                                        <div style="font-size: 12px; color: #757575; margin-top: 2px;">High-Roof Passenger Van • Air-Conditioned • Toll RFID Active</div>
+                                    </div>
+                                </div>
+                                <span id="manifestPaxBadge" style="background: #F5F5F5; border: 1px solid #E0E0E0; color: #424242; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap;">14 PAX MAX</span>
+                            </div>
+
+                            <!-- Allocation Status Box -->
+                            <div id="allocationStatusBox" style="background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; margin-top: 16px;">
+                                <span style="color: #F57F17; font-size: 16px; margin-top: 1px;">⏱</span>
+                                <div style="font-size: 12.5px; color: #7F5800; line-height: 1.5;">
+                                    <strong>Vehicle &amp; Driver Allocation Pending.</strong> Operations Manager is currently validating unit availability and driver shift clearance at Manila Hub.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- 1. Billing & Cost Allocation Card -->
+                        <div class="manifest-card" style="padding: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F0F0F0; padding-bottom: 14px; margin-bottom: 16px;">
+                                <span style="font-size: 12px; font-weight: 700; color: #424242; letter-spacing: 0.5px; text-transform: uppercase;">BILLING &amp; COST ALLOCATION</span>
+                                <span style="background: #E8F5E9; color: #2E7D32; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">SEC TIER-1</span>
+                            </div>
+
+                            <!-- Cost Center Box -->
+                            <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 12px 14px; margin-bottom: 16px;">
+                                <div style="font-size: 10px; font-weight: 700; color: #9CA3AF; letter-spacing: 0.5px;">DEPARTMENT COST CENTER</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                    <span id="manifestCostCenter" style="font-size: 14px; font-weight: 700; color: #1F2937;">APX-LOG-OPS-2026</span>
+                                    <span style="font-size: 11px; color: #059669; font-weight: 600;">✓ Auto-verified</span>
+                                </div>
+                            </div>
+
+                            <!-- Line Items -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #4B5563; border-bottom: 1px solid #F3F4F6; padding-bottom: 14px; margin-bottom: 14px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Base Vehicle Rate</span>
+                                    <strong style="color: #111827;">PHP 8,800.00</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Estimated Tolls (NLEX)</span>
+                                    <strong style="color: #111827;">PHP 2,150.00</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Driver Per Diem &amp; Staging</span>
+                                    <strong style="color: #111827;">PHP 1,500.00</strong>
+                                </div>
+                            </div>
+
+                            <!-- Total Fee & Payment Terms -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                                    <span style="font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase;">ESTIMATED TOTAL</span>
+                                    <span id="manifestTotalFee" style="font-size: 20px; font-weight: 800; color: #D32F2F;">PHP 12,450.00</span>
+                                </div>
+                                <div style="font-size: 11px; color: #9CA3AF; text-align: right;">Payment Terms: Corporate Credit Account • Net 30</div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Support Desk Card -->
+                        <div class="manifest-card" style="padding: 24px;">
+                            <div style="font-size: 12px; font-weight: 700; color: #424242; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 14px; border-bottom: 1px solid #F0F0F0; padding-bottom: 10px;">
+                                SUPPORT &amp; DISPATCH DESK
+                            </div>
+                            <div style="background: #FFF5F5; border: 1px solid #FED7D7; border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 18px; color: #C53030;">☎</span>
+                                <div>
+                                    <div style="font-size: 10px; font-weight: 700; color: #9B2C2C; text-transform: uppercase;">24/7 PRIORITY DISPATCH HOTLINE</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #742A2A;">+63 (2) 8888-ROVER</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; font-weight: 600; color: #757575;">Assigned Dispatch Liaison:</div>
+                                <div style="font-size: 13px; font-weight: 600; color: #212121; margin-top: 2px;">Eduardo Mendoza</div>
+                                <div style="font-size: 11px; color: #9E9E9E;">Senior Operations Coordinator (Hub 01)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Governance Footer -->
+                <div style="border-top: 1px solid #EAEAEA; padding-top: 18px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #9E9E9E; flex-wrap: wrap; gap: 12px;">
+                    <div>Rover Enterprise Security &amp; DPA Governance • Client reservation changes are audited under RA 10173.</div>
+                    <div>SEC: CS2023-11094 • BIR: 009-881-284-000</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Cancellation Modal (PB-006) -->
+    <div id="cancelModalOverlay" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: #FFFFFF; border-radius: 10px; width: 560px; max-width: 90vw; padding: 28px; box-shadow: 0 16px 36px rgba(0,0,0,0.25); position: relative; box-sizing: border-box;">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #EEEEEE; padding-bottom: 16px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #FFEBEE; color: #D32F2F; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        🛡
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #212121;">Cancel Reservation Request</h3>
+                        <div id="cancelModalSubtitleTicketId" style="font-size: 12px; color: #757575; margin-top: 2px;">FORM PB-006 • MANIFEST TICKET #RQ-1042</div>
+                    </div>
+                </div>
+                <button id="closeModalCrossBtn" type="button" style="background: none; border: none; font-size: 22px; color: #9E9E9E; cursor: pointer; padding: 4px; line-height: 1;">&times;</button>
+            </div>
+
+            <!-- Amber Warning Alert -->
+            <div style="background: #FFF8E1; border: 1px solid #FFE082; border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                <span style="color: #F57F17; font-size: 16px; margin-top: 1px;">⚠️</span>
+                <div style="font-size: 12px; color: #7F5800; line-height: 1.4;">
+                    Cancellations submitted within 24 hours of scheduled departure may incur a 15% standby surcharge per Master Service Agreement Section 4.2.
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <form id="cancelReservationForm">
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="cancelReasonSelect" class="modal-label" style="display: block; font-size: 12px; font-weight: 600; color: #424242; margin-bottom: 6px;">Reason for Cancellation *</label>
+                    <select id="cancelReasonSelect" required class="modal-input" style="width: 100%; padding: 9px 12px; border: 1px solid #E0E0E0; border-radius: 6px; font-family: inherit; font-size: 13px; outline: none; background: #FFFFFF; cursor: pointer;">
+                        <option value="Client Schedule Change">Client Schedule Change</option>
+                        <option value="Executive Delegation Flight Rescheduled">Executive Delegation Flight Rescheduled</option>
+                        <option value="Site Inspection Postponed">Site Inspection Postponed</option>
+                        <option value="Route Consolidated with Existing Dispatch">Route Consolidated with Existing Dispatch</option>
+                        <option value="Other Operational Reason">Other Operational Reason</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="cancelNotesTextarea" class="modal-label" style="display: block; font-size: 12px; font-weight: 600; color: #424242; margin-bottom: 6px;">Operational Justification / Internal Notes</label>
+                    <textarea id="cancelNotesTextarea" rows="3" placeholder="Describe the operational circumstances requiring ticket cancellation..." class="modal-input" style="width: 100%; padding: 9px 12px; border: 1px solid #E0E0E0; border-radius: 6px; font-family: inherit; font-size: 13px; outline: none; resize: vertical; box-sizing: border-box;"></textarea>
+                </div>
+
+                <!-- Summary Box -->
+                <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 14px 16px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 600; color: #9CA3AF;">TARGET MANIFEST</div>
+                        <div id="cancelSummaryTicketId" style="font-size: 14px; font-weight: 700; color: #1F2937; margin-top: 2px;">#RQ-1042</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 600; color: #9CA3AF;">ESTIMATED SAVINGS</div>
+                        <div id="cancelEstimatedSavings" style="font-size: 14px; font-weight: 700; color: #059669; margin-top: 2px;">PHP 10,582.50</div>
+                    </div>
+                </div>
+
+                <!-- Actions Footer -->
+                <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #EEEEEE; padding-top: 16px;">
+                    <button type="button" id="keepReservationBtn" class="btn-ghost" style="padding: 10px 18px; border: 1px solid #E0E0E0; background: white; border-radius: 6px; font-size: 13px; font-weight: 600; color: #616161; cursor: pointer;">Keep Reservation</button>
+                    <button type="submit" id="confirmCancellationSubmitBtn" style="padding: 10px 22px; background: #C62828; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">Confirm Cancellation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/reservation-details.js"></script>
+</body>
+</html>

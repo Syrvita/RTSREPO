@@ -106,7 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Strict 7-Column Layout mapping 1:1 with Table Headers
             tr.innerHTML = `
                 <!-- 1. REQUEST ID -->
-                <td style="padding: 16px 20px; font-weight: 700; color: #C62828; white-space: nowrap;">${r.id}</td>
+                <td style="padding: 16px 20px; font-weight: 700; color: #C62828; white-space: nowrap;">
+                    <a href="reservation-details.html?id=${r.id}" style="color: #C62828; text-decoration: none; font-weight: 700;">${r.id}</a>
+                </td>
 
                 <!-- 2. VEHICLE TYPE -->
                 <td style="padding: 16px 20px;">
@@ -135,20 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${statusBadge}
                 </td>
 
-                <!-- 7. ACTIONS (Includes Cancel capability) -->
+                <!-- 7. ACTIONS -->
                 <td style="padding: 16px 20px; white-space: nowrap;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        ${!isCancelled ? `
-                            <button type="button" class="btn-modify-res" data-id="${r.id}" style="background: none; border: none; color: #1976D2; font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 6px; text-decoration: none;" title="Modify request details">
-                                ${actionText} &rarr;
-                            </button>
-                            <button type="button" class="btn-cancel-res" data-id="${r.id}" style="background: #FFFFFF; border: 1px solid #FFCDD2; color: #D32F2F; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;" title="Cancel reservation">
-                                Cancel
-                            </button>
-                        ` : `
-                            <span style="font-size: 12px; color: #9E9E9E; font-weight: 500; font-style: italic;">Cancelled</span>
-                        `}
-                    </div>
+                    ${isCancelled ? `
+                        <span style="color: #9E9E9E; font-style: italic; font-size: 12px;">Cancelled</span>
+                    ` : `
+                        <a href="reservation-details.html?id=${r.id}" style="color: #D32F2F; text-decoration: none; font-weight: 600; font-size: 13px;">View Manifest →</a>
+                    `}
                 </td>
             `;
             tbody.appendChild(tr);
