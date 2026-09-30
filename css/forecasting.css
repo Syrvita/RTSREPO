@@ -1,0 +1,85 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - DEMAND FORECASTING VIEW (css/forecasting.css)
+   Scoped Multi-Page Architecture (MPA)
+   ========================================================================== */
+
+.forecasting-view .btn-segment-group {
+    display: inline-flex;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.forecasting-view .btn-segment {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748B;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.forecasting-view .btn-segment:hover {
+    color: #1E293B;
+}
+
+.forecasting-view .btn-segment.active {
+    background: #FFFFFF;
+    color: #D32F2F;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+}
+
+.forecasting-view #runPredictiveModelBtn {
+    width: max-content !important;
+    white-space: nowrap !important;
+}
+
+.forecasting-view .metric-val {
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    margin: 8px 0;
+    line-height: 1.1;
+}
+
+.forecasting-view #projectionsTableBody tr {
+    transition: background-color 0.15s ease;
+}
+
+.forecasting-view #projectionsTableBody tr:hover {
+    background-color: #FAFAFA;
+}
+
+.forecasting-view #projectionsTableBody td {
+    vertical-align: middle;
+    padding: 14px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.forecasting-view .chart-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.forecasting-view .scenario-banner {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

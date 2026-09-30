@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/client-gateway.css">
 </head>
 <body>
     <div class="client-layout" style="display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; background: #FDFDFD; font-family: 'Inter', sans-serif;">
@@ -40,7 +41,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content" style="grid-column: 2; display: flex; flex-direction: column; min-height: 100vh; background: #FDFDFD; padding: 0;">
+        <main class="main-content client-gateway-view" style="grid-column: 2; display: flex; flex-direction: column; min-height: 100vh; background: #FDFDFD; padding: 0;">
             <!-- Top Navigation Bar -->
             <header class="top-nav" style="height: 64px; border-bottom: 1px solid #EAEAEA; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; box-sizing: border-box;">
                 <div class="search-bar">
@@ -206,7 +207,7 @@
                 <button id="closeReservationModalBtn" style="background: none; border: none; font-size: 20px; color: #9E9E9E; cursor: pointer; padding: 4px; line-height: 1;">&times;</button>
             </div>
             <!-- Form Controls -->
-            <form id="reservationForm" onsubmit="return false;" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <form id="reservationForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div>
                     <label class="modal-label" for="pickupDateTimeInput">Pickup Date &amp; Time *</label>
                     <input type="datetime-local" id="pickupDateTimeInput" required class="modal-input">
@@ -265,226 +266,7 @@
         </div>
     </div>
 
-    <script>
-        // 1. RBAC Enforcement & Session Population
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Client") {
-                window.location.href = "index.html";
-            } else {
-                if (document.getElementById("clientNameSidebarDisplay") && user.name) {
-                    document.getElementById("clientNameSidebarDisplay").innerText = user.name;
-                }
-                if (document.getElementById("topNavAvatar") && user.name) {
-                    const parts = user.name.split(' ');
-                    const initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
-                    document.getElementById("topNavAvatar").innerText = initials.toUpperCase();
-                }
-            }
-        }
-
-        // 2. LocalStorage Seed & Initialization
-        let roverDB = JSON.parse(localStorage.getItem("roverDB")) || {};
-        const defaultReservations = [
-            { id: "RQ-1042", vehicleType: "Van (Toyota HiAce)", units: 1, pickup: "Makati CBD (Ayala Tower 1)", destination: "Clark Logistics Hub Terminal 2", start: "Oct 28, 2026 • 08:00 AM", return: "Oct 28, 2026 • 06:00 PM", status: "Pending Review", costCenter: "APX-LOG-OPS-2026", notes: "" },
-            { id: "RQ-1039", vehicleType: "MPV (Toyota Coaster)", units: 1, pickup: "BGC Corporate Center, Taguig", destination: "NAIA Int'l Airport Terminal 3", start: "Oct 29, 2026 • 02:30 PM", return: "Oct 29, 2026 • 09:00 PM", status: "Pending Review", costCenter: "APX-LOG-OPS-2026", notes: "" },
-            { id: "RQ-1025", vehicleType: "Van (Toyota HiAce)", units: 1, pickup: "Quezon City (North Hub)", destination: "Ortigas Center Corporate Plaza", start: "Oct 26, 2026 • 07:30 AM", return: "Oct 26, 2026 • 05:00 PM", status: "Confirmed", costCenter: "APX-LOG-OPS-2026", notes: "" },
-            { id: "RQ-1018", vehicleType: "Cargo / Dual (L300 FB)", units: 2, pickup: "NAIA Cargo Logistics Hub", destination: "Cavite Gateway Hub", start: "Oct 22, 2026 • 06:15 PM", return: "Completed On Schedule", status: "Completed", costCenter: "APX-LOG-OPS-2026", notes: "" }
-        ];
-
-        if (!roverDB.reservations || !roverDB.reservations.some(r => r.pickup)) {
-            roverDB.reservations = defaultReservations;
-            localStorage.setItem("roverDB", JSON.stringify(roverDB));
-        }
-
-        // 3. Render Table & Metrics
-        function renderClientReservations() {
-            roverDB = JSON.parse(localStorage.getItem("roverDB")) || {};
-            const reservations = roverDB.reservations || [];
-            const tbody = document.getElementById("clientReservationTableBody");
-            tbody.innerHTML = "";
-
-            const searchTerm = (document.getElementById("reservationSearchInput").value || "").toLowerCase();
-            const statusFilter = document.getElementById("statusFilterSelect").value;
-
-            const filtered = reservations.filter(r => {
-                const matchesSearch = !searchTerm || 
-                    (r.id && r.id.toLowerCase().includes(searchTerm)) ||
-                    (r.pickup && r.pickup.toLowerCase().includes(searchTerm)) ||
-                    (r.destination && r.destination.toLowerCase().includes(searchTerm)) ||
-                    (r.vehicleType && r.vehicleType.toLowerCase().includes(searchTerm));
-                const matchesStatus = statusFilter === "ALL" || r.status === statusFilter;
-                return matchesSearch && matchesStatus;
-            });
-
-            // Calculate Metric Counts
-            const pendingCount = reservations.filter(r => r.status === "Pending Review").length;
-            const confirmedCount = reservations.filter(r => r.status === "Confirmed").length;
-            document.getElementById("metricPendingReview").innerText = pendingCount;
-            document.getElementById("metricConfirmedShuttles").innerText = confirmedCount;
-            const totalCount = Math.max(18, reservations.length);
-            document.getElementById("metricTotalBookings").innerText = totalCount;
-            document.getElementById("recordCountBadge").innerText = `${totalCount} records`;
-            document.getElementById("paginationInfo").innerText = `Showing 1 to ${filtered.length} of ${totalCount} requests`;
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2.5rem; color: #9E9E9E; font-size: 13px;">No reservations found matching your criteria.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(r => {
-                const tr = document.createElement("tr");
-                tr.style.borderBottom = "1px solid #ECEFF1";
-
-                let statusBadge = "";
-                if (r.status === "Pending Review") {
-                    statusBadge = `<span class="status-pill status-pending">Pending Review</span>`;
-                } else if (r.status === "Confirmed") {
-                    statusBadge = `<span class="status-pill status-confirmed">Confirmed</span>`;
-                } else {
-                    statusBadge = `<span class="status-pill status-completed">${r.status}</span>`;
-                }
-
-                const actionText = r.status === "Completed" ? "View Invoice" : "View Details";
-
-                tr.innerHTML = `
-                    <td style="padding: 16px 20px; font-size: 13px; font-weight: 700; color: #212121;">${r.id}</td>
-                    <td style="padding: 16px 20px; font-size: 13px; color: #37474F;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="background: #EDE7F6; color: #512DA8; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">${r.units}x UNIT${r.units > 1 ? 'S' : ''}</span>
-                            <span style="font-weight: 500;">${r.vehicleType}</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #D32F2F; font-size: 12px; line-height: 1;">&#9679;</span>
-                            <span>${r.pickup}</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #2E7D32; font-size: 12px; line-height: 1;">&#9679;</span>
-                            <span>${r.destination}</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px 20px; font-size: 12px; color: #37474F;">
-                        <div style="font-weight: 600;">${r.start}</div>
-                        <div style="color: #78909C; font-size: 11px; margin-top: 2px;">Return: ${r.return}</div>
-                    </td>
-                    <td style="padding: 16px 20px;">${statusBadge}</td>
-                    <td style="padding: 16px 20px;">
-                        <a href="#" style="color: #1976D2; font-size: 12px; font-weight: 600; text-decoration: none;">${actionText}</a>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // 4. Date Formatter Helper
-        function formatDateTimeString(dtStr) {
-            if (!dtStr) return "";
-            const d = new Date(dtStr);
-            if (isNaN(d.getTime())) return dtStr;
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const month = months[d.getMonth()];
-            const day = String(d.getDate()).padStart(2, '0');
-            const year = d.getFullYear();
-            let hours = d.getHours();
-            const minutes = String(d.getMinutes()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            const strHours = String(hours).padStart(2, '0');
-            return `${month} ${day}, ${year} • ${strHours}:${minutes} ${ampm}`;
-        }
-
-        // 5. Modal Handling & Submission
-        const modal = document.getElementById("reservationModal");
-        const openBtn = document.getElementById("openReservationModalBtn");
-        const closeBtn = document.getElementById("closeReservationModalBtn");
-        const cancelBtn = document.getElementById("cancelReservationBtn");
-        const submitBtn = document.getElementById("submitReservationBtn");
-        const errorDiv = document.getElementById("reservationModalError");
-
-        function openModal() {
-            errorDiv.style.display = "none";
-            modal.style.display = "flex";
-        }
-
-        function closeModal() {
-            modal.style.display = "none";
-            document.getElementById("reservationForm").reset();
-        }
-
-        openBtn.addEventListener("click", openModal);
-        closeBtn.addEventListener("click", closeModal);
-        cancelBtn.addEventListener("click", closeModal);
-
-        submitBtn.addEventListener("click", () => {
-            const pickupDate = document.getElementById("pickupDateTimeInput").value;
-            const returnDate = document.getElementById("returnDateTimeInput").value;
-            const pickupLoc = document.getElementById("pickupLocationInput").value.trim();
-            const destLoc = document.getElementById("destinationInput").value.trim();
-            const vehicleType = document.getElementById("vehicleTypeSelect").value;
-            const units = parseInt(document.getElementById("unitQuantityInput").value, 10);
-            const disclaimer = document.getElementById("disclaimerCheckbox").checked;
-
-            if (!pickupDate || !returnDate || !pickupLoc || !destLoc || !vehicleType || isNaN(units) || units < 1 || !disclaimer) {
-                errorDiv.style.display = "block";
-                return;
-            }
-
-            const newReservation = {
-                id: "RQ-" + Math.floor(1000 + Math.random() * 9000),
-                vehicleType: vehicleType,
-                units: units,
-                pickup: pickupLoc,
-                destination: destLoc,
-                start: formatDateTimeString(pickupDate),
-                return: formatDateTimeString(returnDate),
-                status: "Pending Review",
-                costCenter: document.getElementById("costCenterInput").value.trim(),
-                notes: document.getElementById("tripNotesInput").value.trim()
-            };
-
-            roverDB = JSON.parse(localStorage.getItem("roverDB")) || {};
-            if (!roverDB.reservations) roverDB.reservations = [];
-            roverDB.reservations.unshift(newReservation);
-            localStorage.setItem("roverDB", JSON.stringify(roverDB));
-
-            closeModal();
-            renderClientReservations();
-        });
-
-        // 6. Search, Filter, and Logout Handlers
-        document.getElementById("reservationSearchInput").addEventListener("input", renderClientReservations);
-        document.getElementById("statusFilterSelect").addEventListener("change", renderClientReservations);
-
-        document.getElementById("clientLogoutBtn").addEventListener("click", () => {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-
-        // CSV Export Trigger
-        document.getElementById("exportCsvBtn").addEventListener("click", () => {
-            const reservations = roverDB.reservations || [];
-            let csv = "REQUEST ID,VEHICLE TYPE,UNITS,PICKUP,DESTINATION,SCHEDULE,STATUS\n";
-            reservations.forEach(r => {
-                csv += `"${r.id}","${r.vehicleType}","${r.units}","${r.pickup}","${r.destination}","${r.start} - ${r.return}","${r.status}"\n`;
-            });
-            const blob = new Blob([csv], { type: "text/csv" });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.setAttribute("href", url);
-            a.setAttribute("download", `reservations_export_${Date.now()}.csv`);
-            a.click();
-        });
-
-        // Initial Render Execution
-        renderClientReservations();
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/client-gateway.js"></script>
 </body>
 </html>

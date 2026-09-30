@@ -1,0 +1,191 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - OPERATIONS MANAGER VIEW (css/manager.css)
+   Scoped Multi-Page Architecture (MPA)
+   Scoped strictly under .manager-view
+   ========================================================================== */
+
+.manager-view {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #FDFDFD;
+}
+
+/* Metrics Row */
+.manager-view .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.manager-view .metric-box {
+    background-color: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.manager-view .metric-title {
+    font-size: 0.75rem;
+    color: #757575;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.manager-view .metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212121;
+    margin: 0.5rem 0;
+}
+
+/* Telemetry Chart Section */
+.manager-view .telemetry-chart-container {
+    background: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #EEEEEE;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.manager-view .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 140px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #E0E0E0;
+}
+
+.manager-view .chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #9E9E9E;
+    font-weight: 500;
+}
+
+/* Data Table Container & Toolbar */
+.manager-view .data-table-container {
+    background-color: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.manager-view .table-toolbar {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #EEEEEE;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.manager-view .table-toolbar input {
+    width: 260px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.manager-view .table-toolbar input:focus {
+    border-color: #D32F2F;
+}
+
+.manager-view .data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.manager-view .data-table th,
+.manager-view .data-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.manager-view .data-table th {
+    font-weight: 600;
+    color: #757575;
+    background-color: #FAFAFA;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.manager-view .data-table td {
+    color: #424242;
+    line-height: 1.5;
+}
+
+.manager-view .data-table tr:hover td {
+    background-color: #FAFAFA;
+}
+
+.manager-view .table-pagination {
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    color: #757575;
+    font-weight: 500;
+}
+
+/* Status Badges */
+.manager-view .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.manager-view .status-enroute {
+    background: #E8F5E9;
+    color: #2E7D32;
+}
+
+.manager-view .status-idle {
+    background: #FFF3E0;
+    color: #E65100;
+}
+
+.manager-view .status-delayed {
+    background: #FCECEB;
+    color: #D32F2F;
+}
+
+/* Telemetry Action Button */
+.manager-view .btn-telemetry {
+    color: #D32F2F;
+    border: 1px solid #FFCDD2;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.manager-view .btn-telemetry:hover {
+    background: #FCECEB;
+    border-color: #D32F2F;
+}

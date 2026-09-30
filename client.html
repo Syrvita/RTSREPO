@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/client-gateway.css">
 </head>
 <body>
     <div class="client-layout">
@@ -44,7 +45,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content" style="background-color: #F8F9FA;">
+        <main class="main-content client-gateway-view" style="background-color: #F8F9FA;">
             <!-- Top Navigation -->
             <header class="top-nav" style="height: 64px; border-bottom: 1px solid #EAEAEA; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; box-sizing: border-box;">
                 <div class="search-bar">
@@ -86,7 +87,7 @@
                     <p style="font-size: 0.875rem; color: #757575;">Authorized Liaison & Fleet Operations Lead &bull; Corporate Account: Apex Logistics Global Inc.</p>
                 </div>
                 <div class="welcome-right">
-                    <button class="btn-primary-small" style="padding: 1rem 1.5rem; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(211,47,47,0.2); cursor: pointer;" onclick="window.location.href='request-service.html'">+ Initiate New Shuttle Request</button>
+                    <a href="request-service.html" class="btn-primary-small" style="padding: 1rem 1.5rem; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(211,47,47,0.2); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center;">+ Initiate New Shuttle Request</a>
                 </div>
             </div>
 
@@ -236,27 +237,7 @@
         </main>
     </div>
 
-    <script>
-        // Session Security Logic
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Client") {
-                window.location.href = "index.html";
-            } else {
-                // Dynamically inject the logged-in user's name
-                document.getElementById("clientNameWelcomeDisplay").innerText = user.name;
-                document.getElementById("clientNameSidebarDisplay").innerText = user.name;
-            }
-        }
-
-        // Logout
-        document.getElementById("logoutBtn").addEventListener("click", function() {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/client-gateway.js"></script>
 </body>
 </html>

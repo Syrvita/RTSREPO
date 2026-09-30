@@ -7,23 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Specific tweaks for Modal if not entirely in style.css */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-    </style>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/service-orders.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -59,7 +44,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content service-orders-view">
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -187,166 +172,7 @@
         </div>
     </div>
 
-    <script>
-        // Check Session
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Manager" && user.role !== "Admin") {
-                window.location.href = "index.html";
-            } else {
-                if (document.getElementById("userFullName")) {
-                    document.getElementById("userFullName").innerText = user.name;
-                }
-                if (document.getElementById("userRoleText")) {
-                    document.getElementById("userRoleText").innerText = user.role === "Admin" ? "SYSTEM ADMINISTRATOR" : "OPERATIONS MANAGER";
-                }
-                let initials = user.role === "Admin" ? "AD" : "SM";
-                if(user.name) {
-                    const parts = user.name.split(' ');
-                    initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
-                }
-                const avatar = document.getElementById("userAvatarInitials");
-                if (avatar) {
-                    avatar.innerText = initials.toUpperCase();
-                    if (user.role === "Admin") {
-                        avatar.style.background = "#D32F2F";
-                    }
-                }
-                if(document.getElementById("topNavAvatar")) {
-                    document.getElementById("topNavAvatar").innerText = initials.toUpperCase();
-                }
-
-                // If logged in as Admin, adapt the sidebar navigation
-                if (user.role === "Admin") {
-                    const subtext = document.getElementById("sidebarSubtext");
-                    if (subtext) subtext.innerHTML = "ADMIN PORTAL &bull; FLEET SYSTEMS";
-                    const nav = document.getElementById("sidebarNav");
-                    if (nav) {
-                        nav.innerHTML = `
-                            <a href="admin.html" class="nav-item">Dashboard</a>
-                            <a href="admin.html" class="nav-item">KYC Verification</a>
-                            <a href="service-orders.html" class="nav-item active">Service Orders</a>
-                            <a href="#" class="nav-item">Fleet Registry</a>
-                            <a href="users.html" class="nav-item">User Management</a>
-                            <a href="#" class="nav-item">Driver Directory</a>
-                            <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
-                            <a href="#" class="nav-item">Expense Reports</a>
-                        `;
-                    }
-                }
-            }
-        }
-        
-        document.getElementById("logoutBtn").addEventListener("click", () => {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-
-        // Setup DB
-        let db = JSON.parse(localStorage.getItem("roverDB"));
-        if (!db.reservations) {
-            db.reservations = [
-                { id: "#RQ-8821", client: "Rowena Mae Castaneda", route: "Daily Commute BGC", schedule: "Oct 01, 2026 - Night Shift", vehiclePref: "3x Corporate Shuttle (14-Seater)", status: "Pending", units: 3 },
-                { id: "#RQ-8819", client: "Eduardo Lopez", route: "Airport Transfer (NAIA 3)", schedule: "Oct 02, 2026 - Morning", vehiclePref: "2x Executive SUV (4-Seater)", status: "Pending", units: 2 },
-                { id: "#RQ-8814", client: "Maria Santos", route: "Company Outing (Tagaytay)", schedule: "Oct 15, 2026 - Full Day", vehiclePref: "4x Corporate Van (14-Seater)", status: "Pending", units: 4 }
-            ];
-            localStorage.setItem("roverDB", JSON.stringify(db));
-        }
-
-        let selectedReservationId = null;
-
-        function renderTable() {
-            db = JSON.parse(localStorage.getItem("roverDB"));
-            const tbody = document.getElementById("dispatchTableBody");
-            tbody.innerHTML = "";
-            const pending = db.reservations.filter(r => r.status === "Pending");
-            
-            pending.forEach(r => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td style="padding:1rem 1.5rem; font-size:0.875rem; font-weight:700;">${r.id}</td>
-                    <td style="padding:1rem 1.5rem; font-size:0.875rem; color:#424242; font-weight:600;">${r.client}</td>
-                    <td style="padding:1rem 1.5rem; font-size:0.875rem; color:#424242;">${r.schedule}<br><span style="font-size:0.75rem; color:#757575;">${r.route}</span></td>
-                    <td style="padding:1rem 1.5rem;"><span style="background:#F5F5F5; color:#616161; padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem; font-weight:600;">${r.vehiclePref}</span></td>
-                    <td style="padding:1rem 1.5rem;"><span style="background:#FFF3E0; color:#E65100; padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem; font-weight:700;">Pending Review</span></td>
-                    <td style="padding:1rem 1.5rem;"><a href="#" class="confirm-link" data-id="${r.id}" style="color:#D32F2F; font-size:0.875rem; font-weight:700; text-decoration:none;">Confirm Booking</a></td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.querySelectorAll(".confirm-link").forEach(link => {
-                link.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    openModal(this.getAttribute("data-id"));
-                });
-            });
-        }
-
-        function openModal(id) {
-            const req = db.reservations.find(r => r.id === id);
-            if(!req) return;
-            selectedReservationId = id;
-            document.getElementById("modalClientName").innerText = req.client;
-            document.getElementById("modalRequestId").innerText = req.id;
-            document.getElementById("modalRoute").innerText = req.schedule + " | " + req.route;
-            document.getElementById("validationError").style.display = "none";
-
-            const container = document.getElementById("unitAssignmentContainer");
-            container.innerHTML = "";
-            for(let i=1; i<=req.units; i++) {
-                container.innerHTML += `
-                    <div style="background:white; border:1px solid #E0E0E0; border-radius:8px; padding:1.25rem; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
-                        <div style="font-size:0.75rem; font-weight:700; color:#424242; margin-bottom:0.75rem;">UNIT ${i} ASSIGNMENT</div>
-                        <div style="display:flex; gap:1rem;">
-                            <select style="flex:1; padding:0.75rem; border:1px solid #E0E0E0; border-radius:6px; font-size:0.875rem; outline:none; cursor:pointer;" required>
-                                <option value="">Select Vehicle...</option>
-                                <option value="V1">MPV Unit 14 (NVA-1234)</option>
-                                <option value="V2">Corporate Van (XYZ-987)</option>
-                                <option value="V3">Executive SUV (ABC-123)</option>
-                            </select>
-                            <select style="flex:1; padding:0.75rem; border:1px solid #E0E0E0; border-radius:6px; font-size:0.875rem; outline:none; cursor:pointer;" required>
-                                <option value="">Select Driver...</option>
-                                <option value="D1">Eduardo Santos</option>
-                                <option value="D2">Sigmund Malacas</option>
-                                <option value="D3">Maria Gonzalez</option>
-                            </select>
-                        </div>
-                    </div>
-                `;
-            }
-            document.getElementById("confirmationModal").classList.add("active");
-        }
-
-        document.getElementById("cancelModalBtn").addEventListener("click", () => {
-            document.getElementById("confirmationModal").classList.remove("active");
-        });
-
-        document.getElementById("confirmDispatchBtn").addEventListener("click", () => {
-            if(!selectedReservationId) return;
-            
-            // Inline Validation
-            const selects = document.getElementById("unitAssignmentContainer").querySelectorAll("select");
-            let valid = true;
-            selects.forEach(s => { if(!s.value) valid = false; });
-            
-            if(!valid) {
-                document.getElementById("validationError").style.display = "flex";
-                return;
-            }
-
-            const req = db.reservations.find(r => r.id === selectedReservationId);
-            if(req) req.status = "Confirmed"; // Mutate DB State
-            
-            localStorage.setItem("roverDB", JSON.stringify(db));
-            document.getElementById("confirmationModal").classList.remove("active");
-            renderTable(); // Triggers instant UI update (row removed from pending)
-        });
-
-        // Initial render
-        renderTable();
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/service-orders.js"></script>
 </body>
 </html>

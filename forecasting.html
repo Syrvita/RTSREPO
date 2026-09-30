@@ -6,8 +6,8 @@
     <title>ROVER | Booking Demand Forecasting Engine (PB-018)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/forecasting.css">
 </head>
 <body>
     <div class="app-layout">
@@ -46,7 +46,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content" style="grid-column: 2; display: flex; flex-direction: column; min-height: 100vh; background: #FDFDFD; padding: 0;">
+        <main class="main-content forecasting-view" style="grid-column: 2; display: flex; flex-direction: column; min-height: 100vh; background: #FDFDFD; padding: 0;">
             <!-- Top Navigation Bar -->
             <header class="top-nav" style="height: 64px; border-bottom: 1px solid #EAEAEA; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; box-sizing: border-box;">
                 <div class="search-bar">
@@ -302,6 +302,7 @@
         </main>
     </div>
 
+    <script src="js/db.js"></script>
     <script src="js/forecasting.js"></script>
 </body>
 </html>

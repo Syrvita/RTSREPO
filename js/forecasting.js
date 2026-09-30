@@ -6,29 +6,18 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Session Security Check
-    const sessionData = sessionStorage.getItem("activeSession");
-    if (!sessionData) {
-        window.location.href = "index.html";
-        return;
-    } else {
+    const currentUser = window.ROVER_AUTH ? ROVER_AUTH.requireRole(["Admin", "Manager"]) : null;
+    if (window.ROVER_AUTH && !currentUser) return;
+    if (!window.ROVER_AUTH) {
+        const sessionData = sessionStorage.getItem("activeSession");
+        if (!sessionData) {
+            window.location.href = "index.html";
+            return;
+        }
         const user = JSON.parse(sessionData);
         if (user.role !== "Admin" && user.role !== "Manager") {
             window.location.href = "index.html";
             return;
-        } else {
-            if (document.getElementById("userFullName") && user.name) {
-                document.getElementById("userFullName").innerText = user.name;
-            }
-            if (document.getElementById("userAvatarInitials") && user.name) {
-                const parts = user.name.split(" ");
-                const initials = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0].substring(0, 2);
-                document.getElementById("userAvatarInitials").innerText = initials.toUpperCase();
-            }
-            if (document.getElementById("topNavAvatar") && user.name) {
-                const parts = user.name.split(" ");
-                const initials = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0].substring(0, 2);
-                document.getElementById("topNavAvatar").innerText = initials.toUpperCase();
-            }
         }
     }
 

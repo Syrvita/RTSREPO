@@ -1,0 +1,138 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - DRIVER TERMINAL VIEW (css/driver.css)
+   Scoped Multi-Page Architecture (MPA)
+   ========================================================================== */
+
+body.driver-body {
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    background-color: #ECEFF1;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.driver-terminal {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #FFF9F9;
+    position: relative;
+    padding-bottom: 70px; /* space for bottom nav */
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* Hide scrollbar for native app feel */
+.driver-terminal::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.driver-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1rem;
+}
+
+.driver-content {
+    padding: 0 1.25rem;
+}
+
+.driver-profile-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+    border: 1px solid #F5F5F5;
+}
+
+.driver-status-box {
+    background: #FCECEB;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.driver-btn-toggle {
+    background: #1976D2;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 10px rgba(25,118,210,0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.driver-btn-toggle.offline {
+    background: #757575;
+    box-shadow: none;
+}
+
+/* Telemetry Map Simulation Box */
+.driver-telemetry-map {
+    height: 220px;
+    background: linear-gradient(135deg, #2C1E1E, #4A3A3A);
+    border-radius: 12px;
+    position: relative;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.driver-map-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.driver-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #FFFFFF;
+    border-top: 1px solid #EEEEEE;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.75rem 0;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+    z-index: 100;
+}
+
+.driver-nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: #9E9E9E;
+    cursor: pointer;
+    flex: 1;
+    transition: color 0.2s;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.driver-nav-tab.active {
+    color: #D32F2F;
+    font-weight: 700;
+}
+
+.driver-nav-tab span.tab-icon {
+    font-size: 1.25rem;
+}

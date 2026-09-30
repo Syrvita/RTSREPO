@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/manager.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -43,7 +44,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content manager-view">
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -235,33 +236,7 @@
         </main>
     </div>
 
-    <script>
-        // Session Security Logic
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Manager") {
-                window.location.href = "index.html";
-            } else {
-                // Dynamically inject the logged-in user's name
-                document.getElementById("userFullName").innerText = user.name;
-                document.getElementById("userRoleText").innerText = user.role === "Manager" ? "OPERATIONS MANAGER" : user.role.toUpperCase();
-                let initials = "SM";
-                if(user.name) {
-                    const parts = user.name.split(' ');
-                    initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
-                }
-                document.getElementById("userAvatarInitials").innerText = initials.toUpperCase();
-            }
-        }
-
-        // Logout
-        document.getElementById("logoutBtn").addEventListener("click", function() {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/manager.js"></script>
 </body>
 </html>

@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/admin-portal.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -46,7 +47,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content admin-portal-view">
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div class="search-bar">
@@ -170,217 +171,7 @@
         </div>
     </div>
 
-    <script>
-        // Session Security Logic
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Admin") {
-                window.location.href = "index.html";
-            } else {
-                document.getElementById("userFullName").innerText = user.name;
-                document.getElementById("userRoleText").innerText = user.role === "Admin" ? "SYSTEM ADMINISTRATOR" : user.role.toUpperCase();
-                let initials = "AD";
-                if(user.name) {
-                    const parts = user.name.split(' ');
-                    initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
-                }
-                document.getElementById("userAvatarInitials").innerText = initials.toUpperCase();
-            }
-        }
-
-        // Logout
-        document.getElementById("logoutBtn").addEventListener("click", function() {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-
-        // Dynamic Table Rendering
-        function renderTable() {
-            const db = JSON.parse(localStorage.getItem("roverDB"));
-            if (!db) return;
-            
-            const tbody = document.getElementById("userTableBody");
-            tbody.innerHTML = "";
-            
-            let activeCount = 0;
-            let suspendedCount = 0;
-
-            db.users.forEach(u => {
-                if (u.status === 'suspended') suspendedCount++;
-                else activeCount++;
-
-                const tr = document.createElement("tr");
-                
-                let roleColor = "#9E9E9E";
-                let roleBg = "#F5F5F5";
-                if (u.role === "Admin") { roleColor = "#D32F2F"; roleBg = "#FCECEB"; }
-                if (u.role === "Manager") { roleColor = "#1976D2"; roleBg = "#E3F2FD"; }
-                if (u.role === "Driver") { roleColor = "#388E3C"; roleBg = "#E8F5E9"; }
-                if (u.role === "Client") { roleColor = "#F57C00"; roleBg = "#FFF3E0"; }
-                
-                let statusHtml = '';
-                if (u.status === 'suspended') {
-                    statusHtml = `<span style="color: #D32F2F; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; font-size: 0.875rem;"><span style="width: 8px; height: 8px; background: #F44336; border-radius: 50%; display: inline-block;"></span> Suspended</span>`;
-                } else {
-                    statusHtml = `<span style="color: #388E3C; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; font-size: 0.875rem;"><span style="width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; display: inline-block;"></span> Active</span>`;
-                }
-
-                tr.innerHTML = `
-                    <td><strong>${u.name}</strong></td>
-                    <td>${u.email}</td>
-                    <td><span style="background: ${roleBg}; color: ${roleColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${u.role}</span></td>
-                    <td>${statusHtml}</td>
-                    <td>
-                        <a href="#" onclick="editUser('${u.id}'); return false;" style="color: #1976D2; text-decoration: none; margin-right: 1rem; font-size: 0.875rem; font-weight: 500;">Edit</a>
-                        <a href="#" onclick="${u.status === 'suspended' ? `activateUser('${u.id}')` : `deactivateUser('${u.id}')`}; return false;" style="color: ${u.status === 'suspended' ? '#388E3C' : '#D32F2F'}; text-decoration: none; font-size: 0.875rem; font-weight: 500;">${u.status === 'suspended' ? 'Activate' : 'Deactivate'}</a>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            
-            const total = db.users.length;
-            document.getElementById("totalUsersMetric").innerText = total;
-            document.getElementById("activeUsersMetric").innerText = activeCount;
-            document.getElementById("suspendedUsersMetric").innerText = suspendedCount;
-            document.getElementById("tablePagination").innerText = `Showing 1 to ${total} of ${total} user accounts (Personnel Cap Enforced)`;
-        }
-
-        renderTable();
-
-        let editingUserId = null;
-
-        window.editUser = function(id) {
-            const db = JSON.parse(localStorage.getItem("roverDB"));
-            const user = db.users.find(u => u.id === id);
-            if(!user) return;
-            
-            editingUserId = id;
-            document.querySelector("#provisionModal h3").innerText = "Edit User Account";
-            document.getElementById("modalError").style.display = "none";
-            
-            document.getElementById("newUserName").value = user.name;
-            document.getElementById("newUserEmail").value = user.email;
-            document.getElementById("newUserPass").value = user.password;
-            document.getElementById("newUserRole").value = user.role;
-            
-            document.getElementById("provisionModal").style.display = "flex";
-        };
-
-        window.deactivateUser = function(id) {
-            let db = JSON.parse(localStorage.getItem("roverDB"));
-            const user = db.users.find(u => u.id === id);
-            if(user) {
-                user.status = 'suspended';
-                localStorage.setItem("roverDB", JSON.stringify(db));
-                renderTable();
-            }
-        };
-
-        window.activateUser = function(id) {
-            let db = JSON.parse(localStorage.getItem("roverDB"));
-            const user = db.users.find(u => u.id === id);
-            if(user) {
-                user.status = 'active';
-                localStorage.setItem("roverDB", JSON.stringify(db));
-                renderTable();
-            }
-        };
-
-        // Modal Logic
-        const modal = document.getElementById("provisionModal");
-        document.getElementById("openProvisionBtn").addEventListener("click", () => {
-            editingUserId = null;
-            document.querySelector("#provisionModal h3").innerText = "Provision New User";
-            document.getElementById("modalError").style.display = "none";
-            document.getElementById("newUserName").value = "";
-            document.getElementById("newUserEmail").value = "";
-            document.getElementById("newUserPass").value = "";
-            modal.style.display = "flex";
-        });
-        
-        document.getElementById("cancelProvisionBtn").addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-
-        document.getElementById("saveAccountBtn").addEventListener("click", () => {
-            let db = JSON.parse(localStorage.getItem("roverDB"));
-            if (!db) db = { users: [], fleetCapacity: 31 };
-
-            const errorDiv = document.getElementById("modalError");
-            errorDiv.style.display = "none";
-            
-            const newName = document.getElementById("newUserName").value;
-            const newEmail = document.getElementById("newUserEmail").value;
-            const newPass = document.getElementById("newUserPass").value;
-            const newRole = document.getElementById("newUserRole").value;
-            
-            if(!newName || !newEmail || !newPass) {
-                errorDiv.innerText = "Please fill in all fields.";
-                errorDiv.style.display = "block";
-                return;
-            }
-
-            // Enforce limits
-            const counts = { "Admin": 0, "Manager": 0, "Driver": 0, "Client": 0 };
-            db.users.forEach(u => {
-                if (editingUserId && u.id === editingUserId) return; // Don't count the user being edited
-                if(counts[u.role] !== undefined) counts[u.role]++;
-            });
-
-            if (newRole === "Admin" && counts["Admin"] >= 3) {
-                errorDiv.innerText = "Creation blocked: Max limit of 3 Admins reached.";
-                errorDiv.style.display = "block";
-                return;
-            }
-            if (newRole === "Manager" && counts["Manager"] >= 3) {
-                errorDiv.innerText = "Creation blocked: Max limit of 3 Managers reached.";
-                errorDiv.style.display = "block";
-                return;
-            }
-            if (newRole === "Driver" && counts["Driver"] >= 15) {
-                errorDiv.innerText = "Creation blocked: Max limit of 15 Drivers reached.";
-                errorDiv.style.display = "block";
-                return;
-            }
-
-            if (editingUserId) {
-                const idx = db.users.findIndex(u => u.id === editingUserId);
-                if (idx > -1) {
-                    db.users[idx].name = newName;
-                    db.users[idx].email = newEmail;
-                    db.users[idx].password = newPass;
-                    db.users[idx].role = newRole;
-                }
-            } else {
-                const newId = `RVR-${newRole.substring(0,3).toUpperCase()}-${Math.floor(Math.random()*1000)}`;
-                db.users.push({
-                    id: newId,
-                    email: newEmail,
-                    password: newPass,
-                    role: newRole,
-                    name: newName,
-                    status: 'active'
-                });
-            }
-            
-            localStorage.setItem("roverDB", JSON.stringify(db));
-            
-            // Visual feedback
-            const saveBtn = document.getElementById("saveAccountBtn");
-            const originalText = saveBtn.innerText;
-            saveBtn.innerText = "Saved ✓";
-            saveBtn.style.backgroundColor = "#388E3C";
-            
-            setTimeout(() => {
-                modal.style.display = "none";
-                saveBtn.innerText = originalText;
-                saveBtn.style.backgroundColor = "";
-                renderTable();
-            }, 600);
-        });
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/admin-portal.js"></script>
 </body>
 </html>

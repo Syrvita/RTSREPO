@@ -1,0 +1,188 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - SERVICE ORDERS & DISPATCH VIEW (css/service-orders.css)
+   Scoped Multi-Page Architecture (MPA)
+   ========================================================================== */
+
+.service-orders-view .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.service-orders-view .dashboard-header h1 {
+    color: #212121;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.service-orders-view .dashboard-header .subtext {
+    margin-top: 0.25rem;
+    color: #757575;
+    font-size: 0.875rem;
+}
+
+.service-orders-view .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.service-orders-view .dashboard-metric-card {
+    background: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.service-orders-view .metric-label {
+    font-size: 0.75rem;
+    color: #757575;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.service-orders-view .metric-num {
+    font-size: 36px;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+}
+
+.service-orders-view .data-table-container {
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    border: 1px solid #EAEAEA;
+    overflow-x: auto;
+}
+
+.service-orders-view .table-toolbar {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #EAEAEA;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.service-orders-view .filter-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.service-orders-view .filter-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid #EAEAEA;
+    background: #FFFFFF;
+    color: #757575;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.service-orders-view .filter-btn.active {
+    background: #D32F2F;
+    color: #FFFFFF;
+    border-color: #D32F2F;
+}
+
+.service-orders-view .data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.service-orders-view .data-table th,
+.service-orders-view .data-table td {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.service-orders-view .data-table th {
+    font-weight: 600;
+    color: #757575;
+    background-color: #FAFAFA;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.service-orders-view .status-pill {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.service-orders-view .status-pending {
+    background: #FFF8E1;
+    color: #F57F17;
+    border: 1px solid #FFE082;
+}
+
+.service-orders-view .status-confirmed {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
+
+.service-orders-view .btn-assign {
+    padding: 6px 14px;
+    background: #D32F2F;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.service-orders-view .btn-assign:hover {
+    background: #B71C1C;
+}
+
+.service-orders-view .btn-confirmed {
+    padding: 6px 14px;
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+/* Modal Specifics */
+.service-orders-view .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-orders-view .modal-overlay.active {
+    display: flex;
+}

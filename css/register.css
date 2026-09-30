@@ -1,0 +1,172 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - REGISTRATION VIEW (css/register.css)
+   Scoped Multi-Page Architecture (MPA)
+   ========================================================================== */
+
+.register-body {
+    background-color: #FFF9F9;
+    color: #212121;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+}
+
+.register-nav {
+    background: #FFFFFF;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.register-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 3rem auto;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    padding: 3rem;
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.form-grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border-input, #E0E0E0);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: var(--color-primary, #D32F2F);
+}
+
+.drag-drop-box {
+    border: 2px dashed #BDBDBD;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background: #FAFAFA;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-bottom: 1rem;
+}
+
+.drag-drop-box:hover {
+    background: #F5F5F5;
+    border-color: var(--color-primary, #D32F2F);
+}
+
+.drag-drop-box.file-selected {
+    border-color: #2E7D32;
+    background: #E8F5E9;
+}
+
+.alert-box {
+    background: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    padding: 1rem;
+    border-radius: 6px;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    color: #616161;
+    margin-top: 1.5rem;
+}
+
+.progress-container {
+    margin-bottom: 2.5rem;
+}
+
+.progress-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #757575;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: #EEEEEE;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--color-primary, #D32F2F);
+    transition: width 0.3s ease;
+}
+
+.register-footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    color: #9E9E9E;
+}
+
+.register-footer a {
+    color: #9E9E9E;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+.pw-strength {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.pw-bar {
+    flex: 1;
+    height: 4px;
+    background: #EEEEEE;
+    border-radius: 2px;
+}
+
+.pw-bar.active {
+    background: var(--color-primary, #D32F2F);
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    .form-grid-2x2 {
+        grid-template-columns: 1fr;
+    }
+}

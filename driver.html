@@ -7,38 +7,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #ECEFF1; 
-            display: flex; 
-            justify-content: center; 
-        }
-        #mobileTerminal {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            background: #FFF9F9;
-            position: relative;
-            padding-bottom: 70px; /* space for bottom nav */
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        /* Hide scrollbar for a native app feel */
-        ::-webkit-scrollbar { width: 0; background: transparent; }
-    </style>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/driver.css">
 </head>
-<body>
-    <div id="mobileTerminal">
+<body class="driver-body">
+    <div id="mobileTerminal" class="driver-terminal">
         <!-- Top Nav -->
-        <header style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1rem;">
+        <header class="driver-header">
             <div style="font-size: 1.5rem; color: #424242; cursor: pointer;">&#9776;</div>
             <div style="font-size: 1.25rem; font-weight: 800; color: #D32F2F; letter-spacing: 0.1em;">ROVER</div>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div style="position: relative; font-size: 1.25rem; color: #757575;">
                     &#128276;<span style="position: absolute; top: -2px; right: -2px; background: #D32F2F; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #FFF9F9;"></span>
                 </div>
-                <div style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">ES</div>
+                <div id="driverAvatarInitials" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">ES</div>
             </div>
         </header>
 
@@ -56,12 +38,12 @@
                 <div style="background: #FCECEB; border-radius: 8px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                            <span style="width: 8px; height: 8px; background: #1976D2; border-radius: 50%; display: inline-block;"></span>
-                            <span style="font-size: 0.875rem; font-weight: 700; color: #212121;">Available for Dispatch</span>
+                            <span id="driverStatusIndicator" style="width: 8px; height: 8px; background: #1976D2; border-radius: 50%; display: inline-block;"></span>
+                            <span id="driverStatusText" style="font-size: 0.875rem; font-weight: 700; color: #212121;">Available for Dispatch</span>
                         </div>
                         <div style="font-size: 0.75rem; color: #757575; font-weight: 500;">GPS Active &bull; Metro Manila Hub</div>
                     </div>
-                    <button style="background: #1976D2; color: white; border: none; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; box-shadow: 0 4px 10px rgba(25,118,210,0.3); cursor: pointer;">ONLINE</button>
+                    <button id="driverStatusToggleBtn" class="driver-btn-toggle">ONLINE</button>
                 </div>
             </div>
 
@@ -134,46 +116,27 @@
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <nav style="position: absolute; bottom: 0; left: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #EEEEEE; display: flex; justify-content: space-around; padding: 0.75rem 0; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); z-index: 10;">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #D32F2F; cursor: pointer; flex: 1;">
-                <span style="font-size: 1.25rem;">&#128171;</span>
-                <span style="font-size: 0.65rem; font-weight: 700;">Route</span>
+        <nav class="driver-bottom-nav">
+            <div class="driver-nav-tab active">
+                <span class="tab-icon">&#128171;</span>
+                <span>Route</span>
             </div>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1;">
-                <span style="font-size: 1.25rem;">&#128197;</span>
-                <span style="font-size: 0.65rem; font-weight: 600;">Schedule</span>
+            <div class="driver-nav-tab">
+                <span class="tab-icon">&#128197;</span>
+                <span>Schedule</span>
             </div>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1;">
-                <span style="font-size: 1.25rem;">&#128221;</span>
-                <span style="font-size: 0.65rem; font-weight: 600;">Logs</span>
+            <div class="driver-nav-tab">
+                <span class="tab-icon">&#128221;</span>
+                <span>Logs</span>
             </div>
-            <div id="navProfileLogout" style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1; transition: color 0.2s;">
-                <span style="font-size: 1.25rem;">&#128100;</span>
-                <span style="font-size: 0.65rem; font-weight: 600;">Profile</span>
+            <div id="navProfileLogout" class="driver-nav-tab">
+                <span class="tab-icon">&#128100;</span>
+                <span>Profile</span>
             </div>
         </nav>
     </div>
 
-    <script>
-        // Session Security Logic
-        const sessionData = sessionStorage.getItem("activeSession");
-        if (!sessionData) {
-            window.location.href = "index.html";
-        } else {
-            const user = JSON.parse(sessionData);
-            if (user.role !== "Driver") {
-                window.location.href = "index.html";
-            } else {
-                // Dynamically inject the logged-in driver's name
-                document.getElementById("driverName").innerText = user.name;
-            }
-        }
-
-        // Logout via Profile Tab
-        document.getElementById("navProfileLogout").addEventListener("click", function() {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
-    </script>
+    <script src="js/db.js"></script>
+    <script src="js/driver.js"></script>
 </body>
 </html>

@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/register.css">
 </head>
 <body class="register-body">
 
@@ -52,19 +53,19 @@
             <div class="form-grid-2x2">
                 <div>
                     <label class="form-label">Company Name</label>
-                    <input type="text" class="form-input" placeholder="Registered Corporate Name">
+                    <input type="text" id="regCompanyName" class="form-input" placeholder="Registered Corporate Name" value="Apex Logistics Global Inc.">
                 </div>
                 <div>
                     <label class="form-label">Authorized Representative</label>
-                    <input type="text" class="form-input" placeholder="Full Name">
+                    <input type="text" id="regRepName" class="form-input" placeholder="Full Name" value="Rowena Mae Castaneda">
                 </div>
                 <div>
                     <label class="form-label">Corporate Email Address</label>
-                    <input type="email" class="form-input" placeholder="name@company.com">
+                    <input type="email" id="regEmail" class="form-input" placeholder="name@company.com" value="r.castaneda@apexlogistics.ph">
                 </div>
                 <div>
                     <label class="form-label">Contact Number</label>
-                    <input type="tel" class="form-input" placeholder="+63 900 000 0000">
+                    <input type="tel" id="regContact" class="form-input" placeholder="+63 900 000 0000" value="+63 917 555 0192">
                 </div>
             </div>
 
@@ -92,8 +93,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #EEEEEE;">
-                <button onclick="window.location.href='index.html'" class="btn-ghost" style="padding: 0.75rem 1.5rem;">Cancel</button>
-                <button onclick="document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block';" class="btn-primary-small" style="padding: 0.75rem 2rem;">NEXT STEP &rarr;</button>
+                <button type="button" id="btnCancel" class="btn-ghost" style="padding: 0.75rem 1.5rem;">Cancel</button>
+                <button type="button" id="btnNextStep" class="btn-primary-small" style="padding: 0.75rem 2rem;">NEXT STEP &rarr;</button>
             </div>
         </div>
 
@@ -111,7 +112,7 @@
             <div class="form-grid-2x2" style="margin-bottom: 0.5rem;">
                 <div>
                     <label class="form-label">Create Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••">
+                    <input type="password" id="regPassword" class="form-input" placeholder="••••••••">
                     <div class="pw-strength">
                         <div class="pw-bar active"></div>
                         <div class="pw-bar active"></div>
@@ -124,7 +125,7 @@
                 </div>
                 <div>
                     <label class="form-label">Confirm Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••">
+                    <input type="password" id="regPasswordConfirm" class="form-input" placeholder="••••••••">
                     <div style="font-size: 0.75rem; color: #4CAF50; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
                         &#10004; Passwords match
                     </div>
@@ -145,7 +146,7 @@
                     All data is processed in accordance with the Data Privacy Act of 2012...
                 </div>
                 <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
-                    <input type="checkbox" style="margin-top: 0.2rem;">
+                    <input type="checkbox" id="termsCheckbox" style="margin-top: 0.2rem;">
                     <span style="font-size: 0.875rem; color: #424242;">I have read and agree to the <strong>Terms of Service</strong> and <strong>Enterprise Master Services Agreement</strong>. I certify that I am an authorized representative of the company.</span>
                 </label>
             </div>
@@ -159,8 +160,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #EEEEEE;">
-                <button onclick="document.getElementById('step2').style.display='none'; document.getElementById('step1').style.display='block';" class="btn-ghost" style="padding: 0.75rem 1.5rem;">&larr; Back</button>
-                <button onclick="document.getElementById('step2').style.display='none'; document.getElementById('successStep').style.display='block';" class="btn-primary-small" style="padding: 0.75rem 2rem; background: #D32F2F;">SUBMIT REGISTRATION &rarr;</button>
+                <button type="button" id="btnPrevStep" class="btn-ghost" style="padding: 0.75rem 1.5rem;">&larr; Back</button>
+                <button type="button" id="btnSubmitReg" class="btn-primary-small" style="padding: 0.75rem 2rem; background: #D32F2F;">SUBMIT REGISTRATION &rarr;</button>
             </div>
         </div>
 
@@ -181,7 +182,7 @@
                 </div>
             </div>
 
-            <button onclick="window.location.href='index.html'" class="btn-primary-small" style="padding: 0.875rem 2rem; font-size: 1rem;">Return to Login &rarr;</button>
+            <button type="button" id="btnReturnLogin" class="btn-primary-small" style="padding: 0.875rem 2rem; font-size: 1rem;">Return to Login &rarr;</button>
         </div>
     </main>
 
@@ -194,5 +195,7 @@
             <a href="#" style="color: #9E9E9E; text-decoration: none; margin: 0 0.5rem;">Compliance Standards</a>
         </div>
     </footer>
+    <script src="js/db.js"></script>
+    <script src="js/register.js"></script>
 </body>
 </html>

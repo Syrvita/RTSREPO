@@ -1,0 +1,107 @@
+/* ==========================================================================
+   ROVER FLEET SYSTEMS - CLIENT GATEWAY VIEW (css/client-gateway.css)
+   Scoped Multi-Page Architecture (MPA)
+   ========================================================================== */
+
+.client-gateway-view .welcome-banner {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.client-gateway-view .notice-banner {
+    background: #E3F2FD;
+    border: 1px solid #BBDEFB;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.client-gateway-view .client-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.client-gateway-view .client-metric-card {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.client-gateway-view .reservation-metric-card {
+    background: #FFFFFF;
+    border: 1px solid #ECEFF1;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.client-gateway-view .modal-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 6px;
+}
+
+.client-gateway-view .modal-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    background: #FFFFFF;
+}
+
+.client-gateway-view .modal-input:focus {
+    border-color: #C62828;
+}
+
+.client-gateway-view .status-pill {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.client-gateway-view .status-pending {
+    background: #FFF8E1;
+    color: #F57F17;
+    border: 1px solid #FFE082;
+}
+
+.client-gateway-view .status-confirmed {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
+
+.client-gateway-view .status-completed {
+    background: #F5F5F5;
+    color: #616161;
+    border: 1px solid #E0E0E0;
+}
