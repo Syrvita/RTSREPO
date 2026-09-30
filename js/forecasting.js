@@ -8,6 +8,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Session Security Check
     const currentUser = window.ROVER_AUTH ? ROVER_AUTH.requireRole(["Admin", "Manager"]) : null;
     if (window.ROVER_AUTH && !currentUser) return;
+
+    // Adapt sidebar if logged in as Manager
+    if (currentUser && currentUser.role === "Manager") {
+        const subtext = document.getElementById("sidebarSubtext");
+        if (subtext) subtext.innerHTML = "MANAGEMENT &bull; FLEET OPERATIONS";
+        const nav = document.getElementById("sidebarNav");
+        if (nav) {
+            nav.innerHTML = `
+                <a href="manager.html" class="nav-item">Fleet Telemetry</a>
+                <a href="service-orders.html" class="nav-item">Service Orders</a>
+                <a href="#" class="nav-item">Dispatch Queue</a>
+                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="forecasting.html" class="nav-item active">Demand Forecasting</a>
+                <a href="#" class="nav-item">SLA Analytics</a>
+                <a href="#" class="nav-item">Maintenance Logs</a>
+            `;
+        }
+    }
     if (!window.ROVER_AUTH) {
         const sessionData = sessionStorage.getItem("activeSession");
         if (!sessionData) {

@@ -5,9 +5,28 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. RBAC Route Protection (Manager only)
-    const currentUser = ROVER_AUTH.requireRole("Manager");
+    // 1. RBAC Route Protection (Allows Manager and Admin)
+    const currentUser = ROVER_AUTH.requireRole(["Manager", "Admin"]);
     if (!currentUser) return;
+
+    // Adapt sidebar if logged in as Admin
+    if (currentUser.role === "Admin") {
+        const subtext = document.getElementById("sidebarSubtext");
+        if (subtext) subtext.innerHTML = "ADMIN PORTAL &bull; FLEET SYSTEMS";
+        const nav = document.getElementById("sidebarNav");
+        if (nav) {
+            nav.innerHTML = `
+                <a href="admin.html" class="nav-item">Dashboard</a>
+                <a href="admin.html" class="nav-item">KYC Verification</a>
+                <a href="service-orders.html" class="nav-item">Service Orders</a>
+                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="users.html" class="nav-item">User Management</a>
+                <a href="#" class="nav-item">Driver Directory</a>
+                <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
+                <a href="#" class="nav-item">Expense Reports</a>
+            `;
+        }
+    }
 
     // 2. Telemetry Queue Dataset
     const telemetryDispatches = [
