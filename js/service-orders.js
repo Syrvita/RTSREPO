@@ -1,7 +1,7 @@
 /**
  * ROVER FLEET SYSTEMS - SERVICE ORDERS & DISPATCH CONTROLLER (js/service-orders.js)
  * Scoped Multi-Page Architecture (MPA)
- * Centralized State Machine & Render Loop
+ * Concurrency Clearance & Overlap Resolution Controller (PB-008)
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,221 +28,184 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 2. Centralized State Object
-    const state = {
-        filter: "all", // 'all' | 'pending' | 'assigned'
-        searchQuery: "",
-        selectedReservationId: null,
-        reservations: []
-    };
+    // Modal elements
+    const conflictModal = document.getElementById("conflictModal");
+    const btnResolveRQ1042 = document.getElementById("btnResolveRQ1042");
+    const closeConflictModalBtn = document.getElementById("closeConflictModalBtn");
+    const cancelConflictBtn = document.getElementById("cancelConflictBtn");
+    const confirmAssignmentBtn = document.getElementById("confirmAssignmentBtn");
 
-    // Load initial reservations from ROVER_DB
-    function loadReservations() {
-        const db = ROVER_DB.get();
-        state.reservations = db.reservations || [];
-    }
-
-    // 3. Centralized Render Loop
-    function render() {
-        const tbody = document.getElementById("reservationsTableBody");
-        if (!tbody) return;
-
-        // Apply filters & search query
-        const filtered = state.reservations.filter(req => {
-            const matchesFilter = 
-                state.filter === "all" ? true :
-                state.filter === "pending" ? req.status === "Pending" :
-                state.filter === "assigned" ? req.status === "Confirmed" : true;
-
-            const q = state.searchQuery.toLowerCase();
-            const matchesSearch = !q || 
-                (req.id && req.id.toLowerCase().includes(q)) ||
-                (req.client && req.client.toLowerCase().includes(q)) ||
-                (req.route && req.route.toLowerCase().includes(q));
-
-            return matchesFilter && matchesSearch;
-        });
-
-        // Update Metrics Counters
-        const pendingCount = state.reservations.filter(r => r.status === "Pending").length;
-        const assignedCount = state.reservations.filter(r => r.status === "Confirmed").length;
-        
-        const metricPending = document.getElementById("metricPendingCount");
-        if (metricPending) metricPending.innerText = pendingCount;
-
-        // Update Filter Button Badges / Counts
-        const btnAll = document.getElementById("filterAllBtn");
-        const btnPending = document.getElementById("filterPendingBtn");
-        const btnAssigned = document.getElementById("filterAssignedBtn");
-
-        if (btnAll) btnAll.innerText = `All Requests (${state.reservations.length})`;
-        if (btnPending) btnPending.innerText = `Pending Review (${pendingCount})`;
-        if (btnAssigned) btnAssigned.innerText = `Assigned (${assignedCount})`;
-
-        // Render Table Rows
-        tbody.innerHTML = "";
-        if (filtered.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: #757575; padding: 2rem;">
-                        No service orders match the selected criteria.
-                    </td>
-                </tr>
-            `;
-            return;
+    function openConflictModal() {
+        if (conflictModal) {
+            conflictModal.classList.add("active");
         }
-
-        filtered.forEach(req => {
-            const tr = document.createElement("tr");
-            const isPending = req.status === "Pending";
-
-            tr.innerHTML = `
-                <td><strong style="color: #1565C0;">${req.id}</strong></td>
-                <td><strong>${req.client}</strong><br><span style="font-size: 0.75rem; color: #757575;">Apex Logistics Global Inc.</span></td>
-                <td>${req.route}</td>
-                <td>${req.schedule}</td>
-                <td>${req.vehiclePref || (req.units + 'x ' + req.vehicleType)}</td>
-                <td>
-                    <span class="status-pill ${isPending ? 'status-pending' : 'status-confirmed'}">
-                        ${req.status}
-                    </span>
-                </td>
-                <td>
-                    ${isPending ? 
-                        `<button class="btn-assign" data-id="${req.id}">Review &amp; Assign</button>` : 
-                        `<span class="btn-confirmed">&#10004; Dispatched</span>`
-                    }
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        // Rebind assign buttons
-        tbody.querySelectorAll(".btn-assign").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const id = btn.getAttribute("data-id");
-                openModal(id);
-            });
-        });
     }
 
-    // 4. Modal Management & Unit Allocation
-    function openModal(id) {
-        state.selectedReservationId = id;
-        const req = state.reservations.find(r => r.id === id);
-        if (!req) return;
+    function closeConflictModal() {
+        if (conflictModal) {
+            conflictModal.classList.remove("active");
+        }
+    }
 
-        const modal = document.getElementById("confirmationModal");
-        const modalReqId = document.getElementById("modalRequestId") || document.getElementById("modalReqId");
-        const modalClient = document.getElementById("modalClientName") || document.getElementById("modalClient");
-        const modalUnits = document.getElementById("modalUnits");
-        const modalRoute = document.getElementById("modalRoute");
-        const valError = document.getElementById("validationError");
-        const container = document.getElementById("unitAssignmentContainer");
+    if (btnResolveRQ1042) {
+        btnResolveRQ1042.addEventListener("click", openConflictModal);
+    }
 
-        if (modalReqId) modalReqId.innerText = req.id;
-        if (modalClient) modalClient.innerText = req.client;
-        if (modalUnits) modalUnits.innerText = req.units || 1;
-        if (modalRoute) modalRoute.innerText = `${req.schedule} • ${req.route}`;
-        if (valError) valError.style.display = "none";
+    if (closeConflictModalBtn) {
+        closeConflictModalBtn.addEventListener("click", closeConflictModal);
+    }
 
-        if (container) {
-            container.innerHTML = "";
-            const unitCount = req.units || 1;
-            for (let i = 1; i <= unitCount; i++) {
-                container.innerHTML += `
-                    <div style="background: white; border: 1px solid #E0E0E0; border-radius: 8px; padding: 1.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 0.75rem;">
-                        <div style="font-size: 0.75rem; font-weight: 700; color: #424242; margin-bottom: 0.75rem;">UNIT ${i} ASSIGNMENT</div>
-                        <div style="display: flex; gap: 1rem;">
-                            <select class="unit-select-vehicle" style="flex: 1; padding: 0.75rem; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 0.875rem; outline: none; cursor: pointer;" required>
-                                <option value="">Select Vehicle...</option>
-                                <option value="V1">MPV Unit 14 (NVA-1234)</option>
-                                <option value="V2">Corporate Van (XYZ-987)</option>
-                                <option value="V3">Executive SUV (ABC-123)</option>
-                            </select>
-                            <select class="unit-select-driver" style="flex: 1; padding: 0.75rem; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 0.875rem; outline: none; cursor: pointer;" required>
-                                <option value="">Select Driver...</option>
-                                <option value="D1">Eduardo Santos</option>
-                                <option value="D2">Sigmund Malacas</option>
-                                <option value="D3">Maria Gonzalez</option>
-                            </select>
-                        </div>
-                    </div>
-                `;
+    if (cancelConflictBtn) {
+        cancelConflictBtn.addEventListener("click", closeConflictModal);
+    }
+
+    if (conflictModal) {
+        conflictModal.addEventListener("click", (e) => {
+            if (e.target === conflictModal) {
+                closeConflictModal();
             }
-        }
-
-        if (modal) modal.classList.add("active");
-    }
-
-    function closeModal() {
-        const modal = document.getElementById("confirmationModal");
-        if (modal) modal.classList.remove("active");
-        state.selectedReservationId = null;
-    }
-
-    function confirmDispatch() {
-        if (!state.selectedReservationId) return;
-
-        const container = document.getElementById("unitAssignmentContainer");
-        const selects = container ? container.querySelectorAll("select") : [];
-        let valid = true;
-        selects.forEach(s => {
-            if (!s.value) valid = false;
         });
-
-        const valError = document.getElementById("validationError");
-        if (!valid) {
-            if (valError) valError.style.display = "flex";
-            return;
-        }
-
-        // Mutate status in state and ROVER_DB
-        const req = state.reservations.find(r => r.id === state.selectedReservationId);
-        if (req) {
-            req.status = "Confirmed";
-            const db = ROVER_DB.get();
-            db.reservations = state.reservations;
-            ROVER_DB.save(db);
-        }
-
-        closeModal();
-        render(); // Trigger central reactive UI re-render
     }
 
-    // 5. Event Listeners Setup
+    // Apply resolved state to #RQ-1042 in the DOM
+    function applyResolvedStateInDOM(vehicleText = "RV-VAN-112") {
+        const auditCell = document.getElementById("auditStatusRQ1042");
+        if (auditCell) {
+            auditCell.className = "pill-audit pill-assigned";
+            auditCell.innerHTML = `<span class="dot-assigned"></span> Assigned (Clear)`;
+        }
+
+        const fleetCell = document.getElementById("fleetCellRQ1042");
+        if (fleetCell) {
+            fleetCell.innerHTML = `<div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce Commuter <span style="font-size: 11px; color: #2E7D32; font-weight: normal;">(${vehicleText} Assigned)</span></div>`;
+        }
+
+        const actionCell = document.getElementById("actionCellRQ1042");
+        if (actionCell) {
+            actionCell.innerHTML = `<a href="#" class="action-link">View Details</a>`;
+        }
+
+        const filterPendingBtn = document.getElementById("filterPendingBtn");
+        if (filterPendingBtn) filterPendingBtn.innerText = "Pending Conflicts (0)";
+
+        const filterAssignedBtn = document.getElementById("filterAssignedBtn");
+        if (filterAssignedBtn) filterAssignedBtn.innerText = "Assigned (3)";
+
+        const rowRQ1042 = document.getElementById("row-RQ-1042");
+        if (rowRQ1042) {
+            rowRQ1042.dataset.status = "Assigned";
+        }
+    }
+
+    // Check existing database state on load
+    const db = ROVER_DB.get();
+    const rq1042 = db.reservations ? db.reservations.find(r => r.id === "#RQ-1042") : null;
+    if (rq1042 && rq1042.status === "Assigned") {
+        applyResolvedStateInDOM(rq1042.assignedVehicle || "RV-VAN-112");
+    }
+
+    // Handle Confirm Assignment & Clear Conflict
+    if (confirmAssignmentBtn) {
+        confirmAssignmentBtn.addEventListener("click", () => {
+            const vehicleSelect = document.getElementById("reassignVehicleSelect");
+            const driverSelect = document.getElementById("reassignDriverSelect");
+            const notesText = document.getElementById("dispatchNotesText");
+
+            const selectedVehicle = vehicleSelect ? vehicleSelect.value : "RV-VAN-112";
+            const selectedDriver = driverSelect ? (driverSelect.options[driverSelect.selectedIndex]?.text || "Eduardo Santos") : "Eduardo Santos";
+            const dispatchNotes = notesText ? notesText.value : "PB-008 automated concurrency clearance verified.";
+
+            // 1. Mutate ROVER_DB in localStorage
+            const freshDb = ROVER_DB.get();
+            const target = freshDb.reservations.find(r => r.id === "#RQ-1042");
+            if (target) {
+                target.status = "Assigned";
+                target.auditStatus = "Assigned (Clear)";
+                target.assignedVehicle = selectedVehicle;
+                target.assignedDriver = selectedDriver;
+                target.dispatchNotes = dispatchNotes;
+                target.resolvedAt = new Date().toISOString();
+            }
+
+            if (freshDb.fleet) {
+                const fleetUnit = freshDb.fleet.find(v => v.id === selectedVehicle);
+                if (fleetUnit) {
+                    fleetUnit.status = "Assigned";
+                    fleetUnit.currentTrip = "#RQ-1042";
+                }
+            }
+
+            ROVER_DB.save(freshDb);
+
+            // 2. Dynamically update table row
+            applyResolvedStateInDOM(selectedVehicle);
+
+            // 3. Close Modal
+            closeConflictModal();
+        });
+    }
+
+    // Search and Filter handling
     const searchInput = document.getElementById("orderSearchInput");
-    if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-            state.searchQuery = e.target.value.trim();
-            render();
-        });
-    }
-
     const filterAllBtn = document.getElementById("filterAllBtn");
     const filterPendingBtn = document.getElementById("filterPendingBtn");
     const filterAssignedBtn = document.getElementById("filterAssignedBtn");
+    let currentFilter = "all";
 
-    function setFilter(newFilter, activeBtn) {
-        state.filter = newFilter;
-        [filterAllBtn, filterPendingBtn, filterAssignedBtn].forEach(btn => {
-            if (btn) btn.classList.remove("active");
+    function filterRows() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+        const rows = document.querySelectorAll("#dispatchTableBody tr");
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const isAssigned = row.querySelector(".pill-assigned") || row.querySelector(".pill-dispatched") || row.querySelector(".pill-locked");
+            const isPending = row.querySelector(".pill-overlap");
+
+            let matchesFilter = true;
+            if (currentFilter === "pending") {
+                matchesFilter = !!isPending;
+            } else if (currentFilter === "assigned") {
+                matchesFilter = !!isAssigned;
+            }
+
+            const matchesQuery = !query || text.includes(query);
+
+            if (matchesFilter && matchesQuery) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
         });
-        if (activeBtn) activeBtn.classList.add("active");
-        render();
     }
 
-    if (filterAllBtn) filterAllBtn.addEventListener("click", () => setFilter("all", filterAllBtn));
-    if (filterPendingBtn) filterPendingBtn.addEventListener("click", () => setFilter("pending", filterPendingBtn));
-    if (filterAssignedBtn) filterAssignedBtn.addEventListener("click", () => setFilter("assigned", filterAssignedBtn));
+    if (searchInput) {
+        searchInput.addEventListener("input", filterRows);
+    }
 
-    const cancelModalBtn = document.getElementById("cancelModalBtn");
-    if (cancelModalBtn) cancelModalBtn.addEventListener("click", closeModal);
+    if (filterAllBtn) {
+        filterAllBtn.addEventListener("click", () => {
+            currentFilter = "all";
+            [filterAllBtn, filterPendingBtn, filterAssignedBtn].forEach(b => b && b.classList.remove("active"));
+            filterAllBtn.classList.add("active");
+            filterRows();
+        });
+    }
 
-    const confirmDispatchBtn = document.getElementById("confirmDispatchBtn");
-    if (confirmDispatchBtn) confirmDispatchBtn.addEventListener("click", confirmDispatch);
+    if (filterPendingBtn) {
+        filterPendingBtn.addEventListener("click", () => {
+            currentFilter = "pending";
+            [filterAllBtn, filterPendingBtn, filterAssignedBtn].forEach(b => b && b.classList.remove("active"));
+            filterPendingBtn.classList.add("active");
+            filterRows();
+        });
+    }
 
-    // Initial Execution
-    loadReservations();
-    render();
+    if (filterAssignedBtn) {
+        filterAssignedBtn.addEventListener("click", () => {
+            currentFilter = "assigned";
+            [filterAllBtn, filterPendingBtn, filterAssignedBtn].forEach(b => b && b.classList.remove("active"));
+            filterAssignedBtn.classList.add("active");
+            filterRows();
+        });
+    }
 });

@@ -12,17 +12,124 @@ const ROVER_DB_SEED = {
         { id: "RVR-CLT-001", email: "r.castaneda@apexlogistics.ph", password: "pass", role: "Client", name: "Rowena Mae Castaneda", status: "active" }
     ],
     fleetCapacity: 31,
+    fleet: [
+        { id: "RV-VAN-101", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-102", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-103", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-104", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Locked / In-Use", currentTrip: "#RQ-1038" },
+        { id: "RV-VAN-105", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-106", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-107", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-108", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-109", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-110", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-111", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-112", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available", scheduleBuffer: "100% Clear" },
+        { id: "RV-VAN-113", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-114", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-VAN-115", model: "Toyota HiAce Commuter", type: "Van", capacity: 14, status: "Available" },
+        { id: "RV-HLX-201", model: "Toyota Hilux Utility", type: "Utility", capacity: 5, status: "Available" },
+        { id: "RV-HLX-202", model: "Toyota Hilux Utility", type: "Utility", capacity: 5, status: "Available" },
+        { id: "RV-HLX-203", model: "Toyota Hilux Utility", type: "Utility", capacity: 5, status: "Available" },
+        { id: "RV-HLX-204", model: "Toyota Hilux Utility", type: "Utility", capacity: 5, status: "Available" },
+        { id: "RV-HLX-205", model: "Toyota Hilux Utility", type: "Utility", capacity: 5, status: "Available" },
+        { id: "RV-SUV-301", model: "Toyota Fortuner Exec", type: "Executive SUV", capacity: 7, status: "Available" },
+        { id: "RV-SUV-302", model: "Toyota Fortuner Exec", type: "Executive SUV", capacity: 7, status: "Available" },
+        { id: "RV-SUV-303", model: "Toyota Fortuner Exec", type: "Executive SUV", capacity: 7, status: "Available" },
+        { id: "RV-SUV-304", model: "Toyota Fortuner Exec", type: "Executive SUV", capacity: 7, status: "Available" },
+        { id: "RV-SUV-305", model: "Toyota Fortuner Exec", type: "Executive SUV", capacity: 7, status: "Available" },
+        { id: "RV-SED-401", model: "Toyota Camry Hybrid", type: "Sedan", capacity: 4, status: "Available" },
+        { id: "RV-SED-402", model: "Toyota Camry Hybrid", type: "Sedan", capacity: 4, status: "Available" },
+        { id: "RV-SED-403", model: "Toyota Camry Hybrid", type: "Sedan", capacity: 4, status: "Available" },
+        { id: "RV-MPV-501", model: "Toyota Innova", type: "MPV", capacity: 8, status: "Available" },
+        { id: "RV-MPV-502", model: "Toyota Innova", type: "MPV", capacity: 8, status: "Available" },
+        { id: "RV-MPV-503", model: "Toyota Innova", type: "MPV", capacity: 8, status: "Available" }
+    ],
+    drivers: [
+        { id: "RVR-FLT-0382", name: "Eduardo Santos", phone: "+63 917 555 0101", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0211", name: "Marco Polo", phone: "+63 917 555 0102", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0144", name: "Ramon Magsaysay", phone: "+63 917 555 0103", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0199", name: "Danilo Reyes", phone: "+63 917 555 0104", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0233", name: "Arnel Pineda", phone: "+63 917 555 0105", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0288", name: "Noel Cabangon", phone: "+63 917 555 0106", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0312", name: "Gary Valenciano", phone: "+63 917 555 0107", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0355", name: "Ogie Alcasid", phone: "+63 917 555 0108", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0410", name: "Martin Nievera", phone: "+63 917 555 0109", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0442", name: "Ely Buendia", phone: "+63 917 555 0110", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0480", name: "Chito Miranda", phone: "+63 917 555 0111", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0515", name: "Bamboo Manalac", phone: "+63 917 555 0112", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0530", name: "Vic Sotto", phone: "+63 917 555 0113", status: "Active Trip", clearance: "En Route" },
+        { id: "RVR-FLT-0555", name: "Joey de Leon", phone: "+63 917 555 0114", status: "Active Trip", clearance: "En Route" },
+        { id: "RVR-FLT-0580", name: "Tito Sotto", phone: "+63 917 555 0115", status: "Active Trip", clearance: "En Route" }
+    ],
     reservations: [
         {
+            id: "#RQ-1042",
+            client: "Apex Logistics Global Inc.",
+            clientContact: "Rowena Mae Castaneda",
+            route: "Makati CBD → Clark Logistics Hub",
+            schedule: "Oct 28, 2026 • 08:00 – 18:00 PHT",
+            pickupWindow: "Oct 28, 2026 • 08:00 – 18:00 PHT",
+            vehiclePref: "1x HiAce Commuter",
+            vehicleType: "Toyota HiAce Commuter",
+            status: "Conflict",
+            auditStatus: "Schedule Overlap",
+            units: 1,
+            origin: "Makati CBD (Ayala Tower 1)",
+            destination: "Clark Logistics Hub Terminal 2",
+            assignedVehicle: null,
+            assignedDriver: null,
+            notes: "High-priority corporate dispatch."
+        },
+        {
+            id: "#RQ-1039",
+            client: "San Miguel Aerocity Core",
+            clientContact: "Ramon Ang",
+            route: "BGC → Bulacan Airport Site",
+            schedule: "Oct 28, 2026 • 09:30 – 16:00 PHT",
+            pickupWindow: "Oct 28, 2026 • 09:30 – 16:00 PHT",
+            vehiclePref: "2x Hilux Utility",
+            vehicleType: "Toyota Hilux Utility",
+            status: "Dispatched",
+            auditStatus: "Dispatched",
+            units: 2,
+            origin: "BGC Corporate Center",
+            destination: "Bulacan Airport Site",
+            assignedVehicle: "RV-HLX-201, RV-HLX-202",
+            assignedDriver: "Vic Sotto, Joey de Leon",
+            notes: "Site engineering team transport."
+        },
+        {
+            id: "#RQ-1038",
+            client: "Subic FreePort Trans",
+            clientContact: "Fernando Zobel",
+            route: "Manila → SBMA Terminal",
+            schedule: "Oct 28, 2026 • 07:30 – 13:30 PHT",
+            pickupWindow: "Oct 28, 2026 • 07:30 – 13:30 PHT",
+            vehiclePref: "1x HiAce",
+            vehicleType: "Toyota HiAce Commuter",
+            status: "En Route",
+            auditStatus: "En Route (Locked)",
+            units: 1,
+            origin: "Port of Manila Gate 4",
+            destination: "SBMA Terminal 1",
+            assignedVehicle: "RV-VAN-104",
+            assignedDriver: "Tito Sotto",
+            notes: "Active morning corridor transit."
+        },
+        {
             id: "#RQ-8821",
-            client: "Rowena Mae Castaneda",
+            client: "Apex Logistics Global Inc.",
+            clientContact: "Rowena Mae Castaneda",
             route: "Daily Commute BGC",
             schedule: "Oct 01, 2026 - Night Shift",
+            pickupWindow: "Oct 01, 2026 • 17:30 – 02:00 PHT",
             vehiclePref: "3x Corporate Shuttle (14-Seater)",
             vehicleType: "Corporate Shuttle",
             status: "Pending",
+            auditStatus: "Pending Review",
             units: 3,
-            pickup: "Ortigas Center, Pasig",
+            origin: "Ortigas Center, Pasig",
             destination: "BGC Corporate Center, Taguig",
             start: "17:30 PHT",
             return: "02:00 PHT",
@@ -30,14 +137,17 @@ const ROVER_DB_SEED = {
         },
         {
             id: "#RQ-8819",
-            client: "Eduardo Lopez",
+            client: "Apex Logistics Global Inc.",
+            clientContact: "Eduardo Lopez",
             route: "Airport Transfer (NAIA 3)",
             schedule: "Oct 02, 2026 - Morning",
+            pickupWindow: "Oct 02, 2026 • 06:00 – 10:00 PHT",
             vehiclePref: "2x Executive SUV (4-Seater)",
             vehicleType: "Executive SUV",
             status: "Pending",
+            auditStatus: "Pending Review",
             units: 2,
-            pickup: "Makati CBD",
+            origin: "Makati CBD",
             destination: "NAIA Terminal 3",
             start: "06:00 PHT",
             return: "10:00 PHT",
@@ -45,14 +155,17 @@ const ROVER_DB_SEED = {
         },
         {
             id: "#RQ-8814",
-            client: "Maria Santos",
+            client: "Apex Logistics Global Inc.",
+            clientContact: "Maria Santos",
             route: "Company Outing (Tagaytay)",
             schedule: "Oct 15, 2026 - Full Day",
+            pickupWindow: "Oct 15, 2026 • 07:00 – 19:00 PHT",
             vehiclePref: "4x Corporate Van (14-Seater)",
             vehicleType: "Corporate Van",
             status: "Pending",
+            auditStatus: "Pending Review",
             units: 4,
-            pickup: "Alabang Town Center",
+            origin: "Alabang Town Center",
             destination: "Tagaytay Highlands",
             start: "07:00 PHT",
             return: "19:00 PHT",
@@ -67,7 +180,19 @@ window.ROVER_DB = {
             const raw = localStorage.getItem("roverDB");
             if (!raw) return this.seed();
             const data = JSON.parse(raw);
-            if (!data.reservations || !data.users) return this.seed();
+            if (!data.reservations || !data.users || !data.fleet || !data.drivers) {
+                return this.seed();
+            }
+            // Ensure PB-008 seed reservations are present
+            if (!data.reservations.some(r => r.id === "#RQ-1042")) {
+                data.reservations = [
+                    ...ROVER_DB_SEED.reservations.filter(sr => !data.reservations.some(r => r.id === sr.id)),
+                    ...data.reservations
+                ];
+                if (!data.fleet) data.fleet = ROVER_DB_SEED.fleet;
+                if (!data.drivers) data.drivers = ROVER_DB_SEED.drivers;
+                this.save(data);
+            }
             return data;
         } catch (e) {
             console.error("Failed to parse roverDB:", e);
@@ -121,7 +246,9 @@ window.ROVER_AUTH = {
         if (!user) return;
         
         let initials = "OP";
-        if (user.name) {
+        if (user.role === "Admin") {
+            initials = "OP";
+        } else if (user.name) {
             const parts = user.name.split(" ").filter(p => p.length > 0 && p !== "•");
             if (parts.length > 1) {
                 initials = parts[0][0] + parts[parts.length - 1][0];

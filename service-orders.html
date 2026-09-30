@@ -22,6 +22,7 @@
                 <a href="manager.html" class="nav-item">Fleet Telemetry</a>
                 <a href="service-orders.html" class="nav-item active">Service Orders</a>
                 <a href="#" class="nav-item">Dispatch Queue</a>
+                <a href="#" class="nav-item">Fleet Registry</a>
                 <a href="#" class="nav-item">SLA Analytics</a>
                 <a href="#" class="nav-item">Maintenance Logs</a>
             </nav>
@@ -48,126 +49,312 @@
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div class="breadcrumbs" style="color: #757575; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin: 0;">OPERATIONS / DISPATCH / FORM PB-017</div>
-                    <span class="badge green-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;"><span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SYSTEM ONLINE &bull; MANILA HUB</span>
+                    <div class="breadcrumbs" style="color: #757575; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin: 0;">OPERATIONS / DISPATCH / FORM PB-008</div>
+                    <span class="badge green-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SYSTEM OPERATIONAL &bull; ALL SENSORS LIVE
+                    </span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: #424242;">
-                    <span class="datetime" style="font-weight: 500; font-size: 12px; color: #64748B;">Oct 02, 2026 08:00 AM</span>
+                    <span class="datetime" style="font-weight: 500; font-size: 12px; color: #64748B;">Oct 28, 2026 08:00 AM PHT</span>
                     <select style="padding: 0.25rem 0.5rem; border: 1px solid #EAEAEA; border-radius: 4px; font-weight: 600; outline: none; background: white; cursor: pointer; font-size: 12px;">
                         <option>Manila Hub</option>
+                        <option>Clark Logistics Hub</option>
+                        <option>Cebu Hub</option>
                     </select>
                 </div>
             </header>
 
             <div class="dashboard-container">
                 <!-- Header Section -->
-                <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div class="dashboard-header">
                     <div>
-                        <h1 style="color:#212121; margin: 0; font-size: 1.5rem;">Booking Confirmation &amp; Dispatch</h1>
-                        <p class="subtext" style="margin-top: 0.25rem;">Review client requests and assign fleet units.</p>
+                        <h1>Booking Confirmation &amp; Dispatch</h1>
+                        <p class="subtext">Review client requests, validate vehicle concurrency, and execute conflict resolution.</p>
                     </div>
                     <div class="header-actions" style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
-                        <button class="btn-ghost" style="padding: 10px 20px; border-radius: 4px; width: max-content;">Audit Log Archive</button>
-                        <button class="btn-primary" style="padding: 10px 20px; background: #D32F2F; border-radius: 4px; width: max-content;">Export Dispatch Log</button>
+                        <button class="btn-ghost" style="padding: 10px 20px; border-radius: 4px; width: fit-content; border: 1px solid #EAEAEA; background: white; cursor: pointer; font-weight: 600; font-size: 0.875rem;">Audit Log Archive</button>
+                        <button class="btn-primary" style="padding: 10px 20px; background: #D32F2F; color: white; border: none; border-radius: 4px; width: fit-content; cursor: pointer; font-weight: 600; font-size: 0.875rem;">Export Dispatch Log</button>
                     </div>
                 </div>
 
-                <!-- Metrics Row -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- 4-Column Metric Grid -->
+                <div class="metrics-grid">
                     <div class="dashboard-metric-card">
-                        <div style="font-size:0.75rem; color:#757575; font-weight:700; margin-bottom:0.5rem;">PENDING REQUESTS</div>
-                        <div style="font-size:36px; font-weight:700; color:#212121; margin-bottom:0.5rem;">14</div>
-                        <div>
-                            <div style="font-size:0.75rem; color:#4CAF50; font-weight:600;">+3 today</div>
-                            <div style="font-size:0.75rem; color:#757575;">Hub: Manila &bull; Cluster 01</div>
+                        <div class="metric-label">PENDING BOOKINGS</div>
+                        <div class="metric-num" id="metricPendingCount">14</div>
+                        <div class="metric-meta">
+                            <span style="color: #D32F2F; font-weight: 600;">3 Escalated</span> &bull; <span>Manila Cluster 01</span>
                         </div>
                     </div>
                     <div class="dashboard-metric-card">
-                        <div style="font-size:0.75rem; color:#757575; font-weight:700; margin-bottom:0.5rem;">AVAILABLE VEHICLES</div>
-                        <div style="font-size:36px; font-weight:700; color:#212121; margin-bottom:0.5rem;">28</div>
-                        <div>
-                            <div style="font-size:0.75rem; color:#1976D2; font-weight:600;">90.3% Active Fleet</div>
-                            <div style="font-size:0.75rem; color:#757575;">Total: 31 Licensed Units</div>
+                        <div class="metric-label">AVAILABLE FLEET</div>
+                        <div class="metric-num">28 <span class="metric-sub-num">/ 31 Units</span></div>
+                        <div class="metric-meta">
+                            <span style="color: #1976D2; font-weight: 600;">90.3% Active Fleet</span> &bull; <span>3 Under Service</span>
                         </div>
                     </div>
                     <div class="dashboard-metric-card">
-                        <div style="font-size:0.75rem; color:#757575; font-weight:700; margin-bottom:0.5rem;">AVAILABLE DRIVERS</div>
-                        <div style="font-size:36px; font-weight:700; color:#212121; margin-bottom:0.5rem;">12 <span style="font-size:24px;color:#9E9E9E;">/ 15</span></div>
-                        <div>
-                            <div style="font-size:0.75rem; color:#4CAF50; font-weight:600;">Tier-1 Optimal</div>
-                            <div style="font-size:0.75rem; color:#757575;">3 Drivers on Active Trip</div>
+                        <div class="metric-label">DUTY DRIVERS</div>
+                        <div class="metric-num">12 <span class="metric-sub-num">/ 15</span></div>
+                        <div class="metric-meta">
+                            <span style="color: #2E7D32; font-weight: 600;">Tier-1 Optimal</span> &bull; <span>3 on Active Trip</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-metric-card">
+                        <div class="metric-label">DISPATCH LATENCY</div>
+                        <div class="metric-num">4.2m</div>
+                        <div class="metric-meta">
+                            <span style="color: #2E7D32; font-weight: 600;">Target &lt; 5.0m</span> &bull; <span>SLA Benchmark</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Data Table UI -->
-                <!-- Data Table UI -->
-                <div class="data-table-container" style="background:white; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.02); border:1px solid #EAEAEA;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid #EAEAEA;">
+                <!-- Table Container -->
+                <div class="data-table-container">
+                    <div class="table-toolbar">
                         <div style="display: flex; align-items: center; gap: 16px;">
-                            <h2 style="font-size: 1rem; color: #212121; margin: 0;">Pending Booking Requests</h2>
-                            <input type="text" placeholder="Search Request ID..." style="width: 250px; padding: 8px 12px; border: 1px solid #EAEAEA; border-radius: 4px; outline: none; font-size: 0.875rem;">
+                            <h2 style="font-size: 1rem; color: #212121; margin: 0; font-weight: 700;">Fleet Concurrency &amp; Booking Queue</h2>
+                            <input type="text" id="orderSearchInput" class="table-search-input" placeholder="Search Booking ID, Client, Route...">
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 12px; color: #888; font-weight: 600;">FILTER:</span>
-                            <button style="background: #F5F5F5; border: 1px solid #EAEAEA; border-radius: 16px; padding: 4px 12px; font-size: 0.75rem; color: #424242; cursor: pointer; font-weight: 600;">All</button>
-                            <button style="background: #FFF; border: 1px solid #D32F2F; border-radius: 16px; padding: 4px 12px; font-size: 0.75rem; color: #D32F2F; cursor: pointer; font-weight: 600;">Pending</button>
-                            <button style="background: #F5F5F5; border: 1px solid #EAEAEA; border-radius: 16px; padding: 4px 12px; font-size: 0.75rem; color: #424242; cursor: pointer; font-weight: 600;">Assigned</button>
-                            <button class="btn-primary" style="background: #D32F2F; padding: 6px 16px; border-radius: 4px; width: max-content; font-size: 0.875rem; margin-left: 8px;">+ Manual Booking</button>
+                        <div class="filter-group">
+                            <span style="font-size: 12px; color: #888888; font-weight: 600;">FILTER:</span>
+                            <button id="filterAllBtn" class="filter-btn active">All Requests (3)</button>
+                            <button id="filterPendingBtn" class="filter-btn">Pending Conflicts (1)</button>
+                            <button id="filterAssignedBtn" class="filter-btn">Assigned (2)</button>
+                            <button class="btn-primary" style="background: #D32F2F; color: white; border: none; padding: 6px 16px; border-radius: 4px; width: fit-content; font-size: 0.875rem; font-weight: 600; cursor: pointer; margin-left: 8px;">+ Manual Dispatch</button>
                         </div>
                     </div>
-                    <table style="width:100%; border-collapse:collapse; text-align:left;">
-                        <thead style="border-bottom: 1px solid #EAEAEA;">
+                    <table class="data-table">
+                        <thead>
                             <tr>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">REQUEST ID</th>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">CLIENT LIAISON</th>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">SCHEDULED PICKUP</th>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">VEHICLE PREF</th>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">STATUS</th>
-                                <th style="background-color: #FDFDFD; color: #888888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px;">ACTIONS</th>
+                                <th>BOOKING ID</th>
+                                <th>CLIENT ENTITY</th>
+                                <th>ORIGIN &amp; ROUTE</th>
+                                <th>PICKUP WINDOW</th>
+                                <th>FLEET REQUIRED</th>
+                                <th>SCHEDULE AUDIT</th>
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody id="dispatchTableBody">
-                            <!-- Injected via JS -->
+                            <!-- Row #RQ-1042 -->
+                            <tr id="row-RQ-1042">
+                                <td><strong style="color: #1565C0;">#RQ-1042</strong></td>
+                                <td>
+                                    <div style="font-weight: 600; color: #212121;">Apex Logistics Global Inc.</div>
+                                    <div style="font-size: 11px; color: #757575;">Corporate Tier-1 Client</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: #212121;">Makati CBD &rarr; Clark Logistics Hub</div>
+                                </td>
+                                <td>
+                                    <div style="font-size: 13px; color: #424242;">Oct 28, 2026 &bull; 08:00 &ndash; 18:00 PHT</div>
+                                </td>
+                                <td id="fleetCellRQ1042">
+                                    <div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce Commuter</div>
+                                </td>
+                                <td>
+                                    <span class="pill-audit pill-overlap" id="auditStatusRQ1042">
+                                        <span class="dot-overlap"></span> Schedule Overlap
+                                    </span>
+                                </td>
+                                <td id="actionCellRQ1042">
+                                    <button id="btnResolveRQ1042" class="btn-conflict-action">Resolve Conflict &rarr;</button>
+                                </td>
+                            </tr>
+                            <!-- Row #RQ-1039 -->
+                            <tr id="row-RQ-1039">
+                                <td><strong style="color: #1565C0;">#RQ-1039</strong></td>
+                                <td>
+                                    <div style="font-weight: 600; color: #212121;">San Miguel Aerocity Core</div>
+                                    <div style="font-size: 11px; color: #757575;">Industrial Enterprise</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: #212121;">BGC &rarr; Bulacan Airport Site</div>
+                                </td>
+                                <td>
+                                    <div style="font-size: 13px; color: #424242;">Oct 28, 2026 &bull; 09:30 &ndash; 16:00 PHT</div>
+                                </td>
+                                <td>
+                                    <div style="font-size: 13px; font-weight: 600; color: #212121;">2x Hilux Utility</div>
+                                </td>
+                                <td>
+                                    <span class="pill-audit pill-dispatched">
+                                        <span class="dot-dispatched"></span> Dispatched
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-link">View Details</a>
+                                </td>
+                            </tr>
+                            <!-- Row #RQ-1038 -->
+                            <tr id="row-RQ-1038">
+                                <td><strong style="color: #1565C0;">#RQ-1038</strong></td>
+                                <td>
+                                    <div style="font-weight: 600; color: #212121;">Subic FreePort Trans</div>
+                                    <div style="font-size: 11px; color: #757575;">Logistics Transit</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: #212121;">Manila &rarr; SBMA Terminal</div>
+                                </td>
+                                <td>
+                                    <div style="font-size: 13px; color: #424242;">Oct 28, 2026 &bull; 07:30 &ndash; 13:30 PHT</div>
+                                </td>
+                                <td>
+                                    <div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce <span style="font-size: 11px; color: #64748B; font-weight: normal;">(RV-VAN-104 Assigned)</span></div>
+                                </td>
+                                <td>
+                                    <span class="pill-audit pill-locked">
+                                        <span class="dot-locked"></span> En Route (Locked)
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-link">Telemetry</a>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
-                    <div style="padding:1rem 1.5rem; font-size:0.75rem; color:#757575; border-top:1px solid #EEE;">
-                        Showing 1 to 5 of 14 requests
+                    <div style="padding: 1rem 1.5rem; font-size: 0.75rem; color: #757575; border-top: 1px solid #EEEEEE; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Showing 3 active bookings &bull; PB-008 Automated Concurrency Engine Active</span>
+                        <span>Corridor: Manila – NLEX / Clark / Subic</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Multi-Unit Confirmation Modal -->
-    <div id="confirmationModal" class="modal-overlay">
-        <div style="background:white; border-radius:12px; width:100%; max-width:650px; padding:2rem; box-shadow:0 10px 40px rgba(0,0,0,0.15);">
-            <h2 style="font-size:1.25rem; color:#212121; margin-bottom:1.5rem;">Confirm Booking Request</h2>
-            
-            <div style="background:#FAFAFA; padding:1.25rem; border-radius:8px; border:1px solid #EEEEEE; margin-bottom:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                <div>
-                    <div style="font-size:0.7rem; font-weight:700; color:#9E9E9E; margin-bottom:0.25rem; letter-spacing:0.05em;">CLIENT NAME</div>
-                    <div id="modalClientName" style="font-size:0.875rem; font-weight:600; color:#212121;"></div>
+    <!-- Conflict Resolution Modal Overlay -->
+    <div id="conflictModal" class="modal-overlay">
+        <div class="conflict-modal-dialog">
+            <div class="conflict-modal-header">
+                <div class="conflict-modal-title">
+                    <span>Vehicle Allocation &amp; Conflict Validation</span>
+                    <span class="modal-badge-form">FORM PB-008</span>
                 </div>
-                <div>
-                    <div style="font-size:0.7rem; font-weight:700; color:#9E9E9E; margin-bottom:0.25rem; letter-spacing:0.05em;">REQUEST ID</div>
-                    <div id="modalRequestId" style="font-size:0.875rem; font-weight:600; color:#212121;"></div>
-                </div>
-                <div style="grid-column: span 2;">
-                    <div style="font-size:0.7rem; font-weight:700; color:#9E9E9E; margin-bottom:0.25rem; letter-spacing:0.05em;">SCHEDULE &amp; ROUTE</div>
-                    <div id="modalRoute" style="font-size:0.875rem; font-weight:600; color:#212121;"></div>
-                </div>
+                <button id="closeConflictModalBtn" class="conflict-modal-close" title="Close Modal">&times;</button>
             </div>
+            <div class="conflict-modal-body">
+                <!-- Summary Card -->
+                <div class="conflict-summary-card">
+                    <div>
+                        <div class="summary-item-label">CLIENT ENTITY</div>
+                        <div class="summary-item-value" id="summaryClientName">Apex Logistics Global</div>
+                    </div>
+                    <div>
+                        <div class="summary-item-label">ROUTE CORRIDOR</div>
+                        <div class="summary-item-value" id="summaryRoute">Makati CBD &rarr; Clark</div>
+                    </div>
+                    <div>
+                        <div class="summary-item-label">SCHEDULE WINDOW</div>
+                        <div class="summary-item-value" id="summaryWindow">Oct 28 &bull; 08:00 &ndash; 18:00</div>
+                    </div>
+                    <div>
+                        <div class="summary-item-label">FLEET REQUIRED</div>
+                        <div class="summary-item-value" id="summaryRequired">1x HiAce Commuter</div>
+                    </div>
+                </div>
 
-            <h3 style="font-size:0.875rem; color:#424242; font-weight:700; margin-bottom:1rem; letter-spacing:0.05em;">UNIT ASSIGNMENT PLAN</h3>
-            <div id="unitAssignmentContainer" style="overflow-y:auto; max-height:300px; padding-right:0.5rem; display:flex; flex-direction:column; gap:1rem; margin-bottom:2rem;">
-                <!-- Dynamically generated block(s) -->
+                <!-- Collision Alert Card -->
+                <div class="collision-alert-card">
+                    <div class="collision-alert-icon">&#9888;</div>
+                    <div class="collision-alert-text">
+                        <strong>Schedule Overlap Collision Detected.</strong> Vehicle <strong>RV-VAN-104</strong> is locked for Trip <strong>#RQ-1038 (07:30 &ndash; 13:30)</strong>. Overlap: <strong>5 hrs 30 mins</strong>. PB-008 concurrency validation blocks this assignment.
+                    </div>
+                </div>
+
+                <!-- Gantt Schedule Timeline -->
+                <div class="gantt-container">
+                    <div class="gantt-title-row">
+                        <span class="gantt-title">Fleet Schedule Concurrency Timeline (06:00 &ndash; 20:00 PHT)</span>
+                        <span style="font-size: 11px; color: #64748B;">Validation Grid &bull; 14-Hour Span</span>
+                    </div>
+                    <div class="gantt-scale-header">
+                        <span class="gantt-tick">06:00</span>
+                        <span class="gantt-tick">08:00</span>
+                        <span class="gantt-tick">10:00</span>
+                        <span class="gantt-tick">12:00</span>
+                        <span class="gantt-tick">14:00</span>
+                        <span class="gantt-tick">16:00</span>
+                        <span class="gantt-tick">18:00</span>
+                        <span class="gantt-tick">20:00</span>
+                    </div>
+
+                    <!-- Track 1: RV-VAN-104 -->
+                    <div class="gantt-track-item">
+                        <div class="gantt-track-header">
+                            <span class="gantt-track-name">RV-VAN-104 (HiAce Commuter)</span>
+                            <span class="gantt-badge-locked">LOCKED &bull; TRIP #RQ-1038 (07:30&ndash;13:30)</span>
+                        </div>
+                        <div class="gantt-track-bar-wrapper">
+                            <!-- Vertical grid markings -->
+                            <div class="gantt-gridline" style="left: 14.3%;"></div>
+                            <div class="gantt-gridline" style="left: 28.6%;"></div>
+                            <div class="gantt-gridline" style="left: 42.9%;"></div>
+                            <div class="gantt-gridline" style="left: 57.1%;"></div>
+                            <div class="gantt-gridline" style="left: 71.4%;"></div>
+                            <div class="gantt-gridline" style="left: 85.7%;"></div>
+                            
+                            <!-- Base trip bar: 07:30 - 13:30 -->
+                            <div class="gantt-bar-blocked">Trip #RQ-1038</div>
+                            <!-- Collision window: 08:00 - 13:30 -->
+                            <div class="gantt-bar-collision-stripe">COLLISION: 5h 30m OVERLAP</div>
+                        </div>
+                    </div>
+
+                    <!-- Track 2: RV-VAN-112 -->
+                    <div class="gantt-track-item" style="margin-bottom: 0;">
+                        <div class="gantt-track-header">
+                            <span class="gantt-track-name">RV-VAN-112 (HiAce Commuter)</span>
+                            <span class="gantt-badge-clear">100% BUFFER AVAILABLE</span>
+                        </div>
+                        <div class="gantt-track-bar-wrapper">
+                            <!-- Vertical grid markings -->
+                            <div class="gantt-gridline" style="left: 14.3%;"></div>
+                            <div class="gantt-gridline" style="left: 28.6%;"></div>
+                            <div class="gantt-gridline" style="left: 42.9%;"></div>
+                            <div class="gantt-gridline" style="left: 57.1%;"></div>
+                            <div class="gantt-gridline" style="left: 71.4%;"></div>
+                            <div class="gantt-gridline" style="left: 85.7%;"></div>
+                            
+                            <!-- Clear buffer bar: 08:00 - 18:00 -->
+                            <div class="gantt-bar-clear-buffer">CLEARED BUFFER &bull; ASSIGNMENT READY (08:00&ndash;18:00)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reassignment Selectors Form -->
+                <form id="conflictReassignForm" onsubmit="event.preventDefault();">
+                    <div class="reassignment-form-grid">
+                        <div class="form-group">
+                            <label for="reassignVehicleSelect" class="form-label">REASSIGN FLEET UNIT</label>
+                            <select id="reassignVehicleSelect" class="form-select" required>
+                                <option value="RV-VAN-104" disabled>RV-VAN-104 - Blocked: Overlap</option>
+                                <option value="RV-VAN-112" selected>RV-VAN-112 - Clear Schedule Buffer</option>
+                                <option value="RV-VAN-115">RV-VAN-115 - Available</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reassignDriverSelect" class="form-label">ASSIGN CERTIFIED DRIVER</label>
+                            <select id="reassignDriverSelect" class="form-select" required>
+                                <option value="RVR-FLT-0382" selected>Eduardo Santos - ID: RVR-FLT-0382 &bull; Clear</option>
+                                <option value="RVR-FLT-0211">Marco Polo - ID: RVR-FLT-0211 &bull; Clear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 14px;">
+                        <label for="dispatchNotesText" class="form-label">DISPATCH NOTES</label>
+                        <textarea id="dispatchNotesText" class="form-textarea" rows="2">PB-008 automated concurrency clearance verified.</textarea>
+                    </div>
+                </form>
             </div>
-
-            <div style="display:flex; justify-content:flex-end; gap:1rem; border-top:1px solid #EEEEEE; padding-top:1.5rem;">
-                <button id="cancelModalBtn" class="btn-ghost" style="padding:0.75rem 1.5rem; background:none; border:1px solid #E0E0E0; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
-                <div id="validationError" style="display:none; align-items:center; color:#D32F2F; font-size:0.875rem; font-weight:600; margin-right:auto;">Please select all drivers/vehicles.</div>
-                <button id="confirmDispatchBtn" class="btn-primary" style="padding:0.75rem 2rem; background:#D32F2F; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Confirm &amp; Dispatch &rarr;</button>
+            <div class="conflict-modal-footer">
+                <span style="font-size: 12px; color: #64748B; display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #2E7D32; font-weight: 700;">&#10004;</span> PB-008 Concurrency Validation Ready
+                </span>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <button type="button" id="cancelConflictBtn" class="btn-ghost-modal">Cancel</button>
+                    <button type="button" id="confirmAssignmentBtn" class="btn-confirm-conflict">Confirm Assignment &amp; Clear Conflict</button>
+                </div>
             </div>
         </div>
     </div>
