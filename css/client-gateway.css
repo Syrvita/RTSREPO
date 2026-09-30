@@ -55,15 +55,18 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-.client-gateway-view .modal-label {
+.client-gateway-view .modal-label,
+.modal-label {
     display: block;
     font-size: 12px;
     font-weight: 600;
     color: #424242;
     margin-bottom: 6px;
+    letter-spacing: 0.02em;
 }
 
-.client-gateway-view .modal-input {
+.client-gateway-view .modal-input,
+.modal-input {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #E0E0E0;
@@ -72,12 +75,31 @@
     font-size: 13px;
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     background: #FFFFFF;
+    color: #212121;
 }
 
-.client-gateway-view .modal-input:focus {
+.client-gateway-view .modal-input:focus,
+.modal-input:focus {
     border-color: #C62828;
+    box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.1);
+}
+
+#closeReservationModalBtn:hover {
+    color: #212121 !important;
+}
+
+#cancelReservationBtn:hover {
+    background-color: #F5F5F5 !important;
+}
+
+#submitReservationBtn:hover {
+    background-color: #B71C1C !important;
+}
+
+#modalDeleteResBtn:hover {
+    background-color: #FFCDD2 !important;
 }
 
 .client-gateway-view .status-pill {

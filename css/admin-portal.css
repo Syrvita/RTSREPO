@@ -267,20 +267,27 @@
 }
 
 /* User Provisioning Modal */
-.admin-portal-view .form-group {
+.admin-portal-view .form-group,
+.form-group {
     margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
-.admin-portal-view .form-group label {
+.admin-portal-view .form-group label,
+.form-group label {
     display: block;
     font-size: 0.75rem;
     font-weight: 600;
     color: #424242;
     margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
 }
 
 .admin-portal-view .form-group input,
-.admin-portal-view .form-group select {
+.admin-portal-view .form-group select,
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid #E0E0E0;
@@ -288,17 +295,25 @@
     font-family: inherit;
     font-size: 0.875rem;
     outline: none;
-    transition: border-color 0.2s;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    color: #212121;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .admin-portal-view .form-group input:focus,
-.admin-portal-view .form-group select:focus {
+.admin-portal-view .form-group select:focus,
+.form-group input:focus,
+.form-group select:focus {
     border-color: #D32F2F;
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
 }
 
-.admin-portal-view .modal-actions {
+.admin-portal-view .modal-actions,
+.modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 2.5rem;
+    align-items: center;
 }

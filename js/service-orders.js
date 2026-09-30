@@ -133,15 +133,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!req) return;
 
         const modal = document.getElementById("confirmationModal");
-        const modalReqId = document.getElementById("modalReqId");
-        const modalClient = document.getElementById("modalClient");
+        const modalReqId = document.getElementById("modalRequestId") || document.getElementById("modalReqId");
+        const modalClient = document.getElementById("modalClientName") || document.getElementById("modalClient");
         const modalUnits = document.getElementById("modalUnits");
+        const modalRoute = document.getElementById("modalRoute");
         const valError = document.getElementById("validationError");
         const container = document.getElementById("unitAssignmentContainer");
 
         if (modalReqId) modalReqId.innerText = req.id;
         if (modalClient) modalClient.innerText = req.client;
         if (modalUnits) modalUnits.innerText = req.units || 1;
+        if (modalRoute) modalRoute.innerText = `${req.schedule} • ${req.route}`;
         if (valError) valError.style.display = "none";
 
         if (container) {

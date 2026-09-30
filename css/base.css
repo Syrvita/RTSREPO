@@ -364,7 +364,7 @@ button, input, select, textarea {
     background-color: #F5F5F5;
 }
 
-/* 7. Base Modal Overlay Architecture */
+/* 7. Base Modal Overlay Architecture & Universal Dialog System */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -378,22 +378,26 @@ button, input, select, textarea {
     z-index: 1000;
 }
 
-.modal-overlay.active, .modal-overlay[style*="display: flex"] {
+.modal-overlay.active, 
+.modal-overlay[style*="display: flex"] {
     display: flex;
 }
 
 .modal-content {
-    background-color: var(--color-surface);
+    background-color: var(--color-surface, #FFFFFF);
     padding: 2.5rem;
     border-radius: 12px;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
+    position: relative;
 }
 
+.modal-content h2, 
 .modal-content h3 {
     font-size: 1.5rem;
+    font-weight: 700;
     color: #212121;
     margin-bottom: 0.5rem;
 }
@@ -402,4 +406,95 @@ button, input, select, textarea {
     font-size: 0.875rem;
     color: #757575;
     margin-bottom: 2rem;
+    line-height: 1.4;
+}
+
+/* Universal Form Groups (Users Provisioning & Admin Dialogs) */
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border-input, #E0E0E0);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: #212121;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-primary, #D32F2F);
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    align-items: center;
+}
+
+/* Universal Modal Labels & Inputs (Client Reservation Gateway PB-005) */
+.modal-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-input, #E0E0E0);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #212121;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #FFFFFF;
+}
+
+.modal-input:focus {
+    border-color: #C62828;
+    box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.1);
+}
+
+select.modal-input, 
+select.unit-select-vehicle, 
+select.unit-select-driver {
+    appearance: auto;
+    cursor: pointer;
+    background-color: #FFFFFF;
+}
+
+input[type="datetime-local"].modal-input {
+    color-scheme: light;
+    min-height: 38px;
+    cursor: pointer;
 }

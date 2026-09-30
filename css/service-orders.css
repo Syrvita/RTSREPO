@@ -172,17 +172,33 @@
 }
 
 /* Modal Specifics */
-.service-orders-view .modal-overlay {
+.service-orders-view .modal-overlay,
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     align-items: center;
     justify-content: center;
 }
 
-.service-orders-view .modal-overlay.active {
+.service-orders-view .modal-overlay.active,
+.modal-overlay.active {
     display: flex;
+}
+
+.unit-select-vehicle:focus,
+.unit-select-driver:focus {
+    border-color: #D32F2F !important;
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+}
+
+#cancelModalBtn:hover {
+    background-color: #F5F5F5 !important;
+}
+
+#confirmDispatchBtn:hover {
+    background-color: #B71C1C !important;
 }
