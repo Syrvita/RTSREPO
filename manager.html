@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Operations Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ROVER</h2>
+                <div class="subtext">MANAGEMENT &bull; FLEET OPERATIONS</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="manager.html" class="nav-item active">Fleet Telemetry</a>
+                <a href="service-orders.html" class="nav-item">Service Orders</a>
+                <a href="#" class="nav-item">Dispatch Queue</a>
+                <a href="#" class="nav-item">SLA Analytics</a>
+                <a href="#" class="nav-item">Maintenance Logs</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div class="avatar" id="userAvatarInitials" style="width: 32px; height: 32px; border-radius: 50%; background: #212121; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">SM</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span id="userFullName" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Sigmund Malacas</span>
+                        <span id="userRoleText" style="font-size: 0.7rem; color: #9E9E9E; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;">OPERATIONS MANAGER</span>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="logout-btn" title="Log Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="breadcrumbs" style="color: #757575; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin: 0;">ROVER ENTERPRISE / FLEET SYSTEMS / MANAGEMENT DASHBOARD</div>
+                    <div class="badge green-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SYSTEM OPERATIONAL &bull; ALL SENSORS LIVE
+                    </div>
+                </div>
+                <div class="user-meta" style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="timestamp" style="font-size: 12px; color: #64748B; font-weight: 500;">2026-09-29 18:25 PHT</span>
+                    <select style="padding: 0.25rem 0.5rem; border: 1px solid #EAEAEA; border-radius: 4px; font-weight: 600; outline: none; background: white; cursor: pointer; font-size: 12px;">
+                        <option>Manila Hub</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="workspace-container">
+
+            <!-- Header Section -->
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="header-left">
+                    <h1 style="display: flex; align-items: center; gap: 0.75rem; margin: 0; font-size: 1.75rem; color: #212121;">
+                        Fleet Telemetry & Operations Oversight
+                        <span style="background: #D32F2F; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.25rem;">
+                            <span style="width: 6px; height: 6px; background: white; border-radius: 50%; display: inline-block;"></span> LIVE MESH
+                        </span>
+                    </h1>
+                </div>
+                <div class="header-actions" style="display: flex; gap: 0.75rem; align-items: center;">
+                    <select class="btn-ghost" style="padding: 0.5rem 1rem; appearance: auto; font-size: 0.875rem;">
+                        <option>Today</option>
+                    </select>
+                    <select class="btn-ghost" style="padding: 0.5rem 1rem; appearance: auto; font-size: 0.875rem;">
+                        <option>All Hubs</option>
+                    </select>
+                    <button class="btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.875rem;">REFRESH</button>
+                    <button class="btn-primary-small" style="padding: 0.5rem 1.5rem; font-size: 0.875rem;">+ CREATE URGENT DISPATCH</button>
+                </div>
+            </div>
+
+            <!-- Metrics Row -->
+            <div class="metrics-row" style="margin-top: 2rem;">
+                <div class="metric-box">
+                    <div class="metric-title" style="letter-spacing: 0.05em; color: #757575;">TOTAL FLEET CAPACITY</div>
+                    <div class="metric-value" style="font-size: 2rem; margin: 0.5rem 0;">31 <span style="font-size: 1.125rem; color: #757575;">Units</span></div>
+                    <div style="font-size: 0.875rem; color: #616161; line-height: 1.5;">
+                        <strong>28</strong> Deployed &nbsp;&bull;&nbsp; <strong>3</strong> Standby <br>
+                        <span style="color: #388E3C; font-weight: 600;">90.3% Active</span>
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title" style="letter-spacing: 0.05em; color: #757575;">ACTIVE DRIVERS ON SHIFT</div>
+                    <div class="metric-value" style="font-size: 2rem; margin: 0.5rem 0;">12 / 15 <span style="font-size: 1.125rem; color: #757575;">Drivers</span></div>
+                    <div style="font-size: 0.875rem; color: #616161; line-height: 1.5;">
+                        <strong>3</strong> Mandatory Rest <br>
+                        <span style="color: #1976D2; font-weight: 600;">80% Load</span>
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title" style="letter-spacing: 0.05em; color: #757575;">SLA COMPLIANCE INDEX</div>
+                    <div class="metric-value" style="font-size: 2rem; margin: 0.5rem 0;">99.8%</div>
+                    <div style="font-size: 0.875rem; color: #616161; line-height: 1.5;">
+                        <strong>0</strong> Critical Incidents <br>
+                        <span style="color: #388E3C; font-weight: 600;">99.4% On-Time</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telemetry Chart Section -->
+            <div class="telemetry-chart-container" style="background: white; border-radius: 8px; border: 1px solid #EEEEEE; padding: 1.5rem; margin-top: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <h3 style="font-size: 0.75rem; color: #757575; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 1.5rem; margin-top: 0;">CORRIDOR TELEMETRY THROUGHPUT</h3>
+                <div class="chart-bars" style="display: flex; align-items: flex-end; gap: 8px; height: 140px; padding-bottom: 0.5rem; border-bottom: 1px dashed #E0E0E0;">
+                    <div style="flex: 1; background: #E3F2FD; height: 30%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #90CAF9; height: 45%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #42A5F5; height: 80%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #EF5350; height: 95%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #D32F2F; height: 100%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #42A5F5; height: 85%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #E0E0E0; height: 60%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #E0E0E0; height: 40%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #90CAF9; height: 55%; border-radius: 2px 2px 0 0;"></div>
+                    <div style="flex: 1; background: #42A5F5; height: 75%; border-radius: 2px 2px 0 0;"></div>
+                </div>
+                <div class="chart-labels" style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: #9E9E9E; font-weight: 500;">
+                    <span>06:00</span>
+                    <span>08:00</span>
+                    <span>10:00</span>
+                    <span>12:00</span>
+                    <span>14:00</span>
+                    <span>15:00</span>
+                </div>
+            </div>
+
+            <!-- Workspace -->
+            <div class="data-table-container" style="margin-top: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div class="table-toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #EEEEEE; padding-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <h2 style="font-size: 1rem; color: #212121; margin: 0;">Active Dispatch Queue & Live Telemetry</h2>
+                        <input type="text" placeholder="Search vehicle ID, driver, or client..." style="width: 250px; padding: 0.5rem 1rem; border: 1px solid #E0E0E0; border-radius: 4px; font-size: 0.875rem;">
+                    </div>
+                    <div class="toolbar-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span style="font-size: 0.75rem; color: #757575; font-weight: 600; text-transform: uppercase;">Filter:</span>
+                        <button class="btn-ghost" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #212121; font-weight: 700; background: #F5F5F5;">ALL (12)</button>
+                        <button class="btn-ghost" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #757575;">EN ROUTE (9)</button>
+                        <button class="btn-ghost" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #757575;">IDLE / LOADING (3)</button>
+                        <div style="width: 1px; height: 20px; background: #E0E0E0; margin: 0 0.5rem;"></div>
+                        <button class="btn-ghost" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 600;">EXPORT LOG</button>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>VEHICLE ID & MODEL</th>
+                            <th>ASSIGNED DRIVER</th>
+                            <th>CLIENT ASSIGNMENT</th>
+                            <th>TELEMETRY STATUS</th>
+                            <th>ETA / TIMELINE</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RV-VAN-104</strong><br><span style="color: #757575; font-size: 0.75rem;">Toyota Hiace Commuter</span></td>
+                            <td>Eduardo Santos<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0382</span></td>
+                            <td>Apex Logistics<br><span style="color: #757575; font-size: 0.75rem;">Makati HQ Route</span></td>
+                            <td><span style="background: #E8F5E9; color: #2E7D32; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">EN ROUTE</span></td>
+                            <td>08:45 AM<br><span style="color: #388E3C; font-size: 0.75rem;">On-Time</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RV-BUS-022</strong><br><span style="color: #757575; font-size: 0.75rem;">Nissan Civilian</span></td>
+                            <td>Marco Polo<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0211</span></td>
+                            <td>Global Tech Inc.<br><span style="color: #757575; font-size: 0.75rem;">BGC Night Shift</span></td>
+                            <td><span style="background: #E8F5E9; color: #2E7D32; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">EN ROUTE</span></td>
+                            <td>09:15 AM<br><span style="color: #388E3C; font-size: 0.75rem;">On-Time</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RV-SUV-008</strong><br><span style="color: #757575; font-size: 0.75rem;">Ford Everest</span></td>
+                            <td>Juan Dela Cruz<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0045</span></td>
+                            <td>Executive Transit<br><span style="color: #757575; font-size: 0.75rem;">Ortigas VIP Run</span></td>
+                            <td><span style="background: #FFF3E0; color: #E65100; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">IDLE / LOADING</span></td>
+                            <td>--:--<br><span style="color: #757575; font-size: 0.75rem;">Waiting for Client</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RV-VAN-115</strong><br><span style="color: #757575; font-size: 0.75rem;">Nissan Urvan</span></td>
+                            <td>Luis Antonio<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0410</span></td>
+                            <td>Apex Logistics<br><span style="color: #757575; font-size: 0.75rem;">Pasig Warehouse</span></td>
+                            <td><span style="background: #E8F5E9; color: #2E7D32; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">EN ROUTE</span></td>
+                            <td>09:30 AM<br><span style="color: #388E3C; font-size: 0.75rem;">On-Time</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RV-VAN-089</strong><br><span style="color: #757575; font-size: 0.75rem;">Toyota Hiace</span></td>
+                            <td>Ricardo Gomez<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0305</span></td>
+                            <td>Manila Freight<br><span style="color: #757575; font-size: 0.75rem;">Alabang Route</span></td>
+                            <td><span style="background: #FCECEB; color: #D32F2F; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">DELAYED</span></td>
+                            <td>10:00 AM<br><span style="color: #D32F2F; font-size: 0.75rem;">Traffic Congestion</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RV-BUS-014</strong><br><span style="color: #757575; font-size: 0.75rem;">Mitsubishi Rosa</span></td>
+                            <td>Pedro Penduko<br><span style="color: #757575; font-size: 0.75rem;">ID: RVR-FLT-0150</span></td>
+                            <td>Global Tech Inc.<br><span style="color: #757575; font-size: 0.75rem;">QC Morning Shift</span></td>
+                            <td><span style="background: #E8F5E9; color: #2E7D32; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">EN ROUTE</span></td>
+                            <td>10:15 AM<br><span style="color: #388E3C; font-size: 0.75rem;">On-Time</span></td>
+                            <td><button class="btn-ghost" style="color: #D32F2F; border: 1px solid #FFCDD2; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem;">TELEMETRY</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-pagination" style="font-size: 0.75rem; font-weight: 500;">
+                    Showing 1 to 6 of 12 active dispatches
+                </div>
+            </div>
+
+            <!-- Bottom Banner -->
+            <div style="margin-top: 1.5rem; background: #2C1E1E; color: white; padding: 1rem 1.5rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="background: rgba(255,255,255,0.1); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; letter-spacing: 0.05em;">SYSTEM v4.2</span>
+                    <strong>Rover Telemetry Mesh</strong> 
+                </div>
+                <div style="display: flex; gap: 1.5rem; color: #9E9E9E; font-size: 0.75rem; font-weight: 600;">
+                    <span style="display: flex; align-items: center; gap: 0.25rem;"><span style="color: #4CAF50;">&#10004;</span> 256-bit SSL Encryption Active</span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;"><span style="color: #4CAF50;">&#10004;</span> Hub Latency: 12ms</span>
+                </div>
+            </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Session Security Logic
+        const sessionData = sessionStorage.getItem("activeSession");
+        if (!sessionData) {
+            window.location.href = "index.html";
+        } else {
+            const user = JSON.parse(sessionData);
+            if (user.role !== "Manager") {
+                window.location.href = "index.html";
+            } else {
+                // Dynamically inject the logged-in user's name
+                document.getElementById("userFullName").innerText = user.name;
+                document.getElementById("userRoleText").innerText = user.role === "Manager" ? "OPERATIONS MANAGER" : user.role.toUpperCase();
+                let initials = "SM";
+                if(user.name) {
+                    const parts = user.name.split(' ');
+                    initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
+                }
+                document.getElementById("userAvatarInitials").innerText = initials.toUpperCase();
+            }
+        }
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

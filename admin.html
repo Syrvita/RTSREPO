@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ROVER</h2>
+                <div class="subtext">ADMIN PORTAL &bull; FLEET SYSTEMS</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item">Dashboard</a>
+                <a href="admin.html" class="nav-item active">KYC Verification</a>
+                <a href="service-orders.html" class="nav-item">Service Orders</a>
+                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="users.html" class="nav-item">User Management</a>
+                <a href="#" class="nav-item">Driver Directory</a>
+                <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
+                <a href="#" class="nav-item">Expense Reports</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div class="avatar" id="userAvatarInitials" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">AM</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span id="userFullName" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Admin &bull; Ops Manila</span>
+                        <span id="userRoleText" style="font-size: 0.7rem; color: #9E9E9E; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;">SYSTEM ADMINISTRATOR</span>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="logout-btn" title="Log Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search accounts, fleets, or drivers..." style="width: 380px; padding: 8px 14px; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 13px; outline: none; background: #FFFFFF; font-family: inherit;">
+                </div>
+                <div class="top-nav-right" style="display: flex; align-items: center; gap: 1.25rem;">
+                    <div class="badge pill-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SYSTEM ONLINE &bull; MANILA HUB
+                    </div>
+                    <span class="timestamp" style="font-size: 12px; color: #64748B; font-weight: 500;">2026-09-29 18:03 PHT</span>
+                    <div style="position: relative; cursor: pointer; color: #64748B; font-size: 1.2rem; display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span style="position: absolute; top: -2px; right: -2px; background: #D32F2F; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #FFFFFF;"></span>
+                    </div>
+                    <div id="topNavAvatar" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">AM</div>
+                </div>
+            </header>
+
+            <div class="workspace-container">
+
+            <!-- Header Section -->
+            <div class="page-header">
+                <div class="header-left">
+                    <div class="breadcrumbs">COMPLIANCE & RISK / CLIENT ONBOARDING DOSSIER</div>
+                    <h1>KYC Verification & Client Onboarding</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-ghost">Audit Log Archive</button>
+                    <button class="btn-primary-small">Export Audit Log</button>
+                </div>
+            </div>
+
+            <!-- Metrics Row -->
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="metric-title">Awaiting Verification</div>
+                    <div class="metric-value">14</div>
+                    <div class="status-pill status-yellow">Priority Action</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Verified Corporate Accounts</div>
+                    <div class="metric-value">128</div>
+                    <div class="status-pill status-green">In Good Standing</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Flagged & Rejected</div>
+                    <div class="metric-value">2</div>
+                    <div class="status-pill status-red">Requires Review</div>
+                </div>
+            </div>
+
+            <!-- Workspace Split -->
+            <div class="workspace-split">
+                <!-- Data Table -->
+                <div class="data-table-container">
+                    <div class="table-toolbar">
+                        <input type="text" placeholder="Filter applications...">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company & Industry</th>
+                                <th>Representative & Role</th>
+                                <th>Contact Verification</th>
+                                <th>Submission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="active-row">
+                                <td><strong>Apex Logistics Global Inc.</strong><br>Supply Chain</td>
+                                <td>Rowena Mae Castaneda<br>Operations Director</td>
+                                <td>r.castaneda@apexlogistics.ph<br>+63 917 555 1029</td>
+                                <td>2 Hours Ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manila Freight Co.</strong><br>Logistics</td>
+                                <td>Juan Dela Cruz<br>Procurement Lead</td>
+                                <td>juan@manilafreight.com<br>+63 918 555 2038</td>
+                                <td>4 Hours Ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pacific E-Commerce Solutions</strong><br>E-Commerce</td>
+                                <td>Maria Santos<br>CEO</td>
+                                <td>msantos@pacificecom.ph<br>+63 919 555 3847</td>
+                                <td>1 Day Ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Global Tech Distributors</strong><br>Retail</td>
+                                <td>Mark Anthony Reyes<br>Logistics Head</td>
+                                <td>m.reyes@globaltech.com<br>+63 920 555 4958</td>
+                                <td>2 Days Ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Islands Cargo Transport</strong><br>Shipping</td>
+                                <td>Ana Lim<br>Operations Manager</td>
+                                <td>ana.lim@islandscargo.ph<br>+63 921 555 5869</td>
+                                <td>3 Days Ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-pagination">
+                        1 to 5 of 14
+                    </div>
+                </div>
+
+                <!-- Application Dossier Panel -->
+                <aside class="dossier-panel">
+                    <h3>Apex Logistics Global Inc.</h3>
+                    
+                    <div class="dossier-grid">
+                        <div class="dossier-label">SEC/DTI Reg No</div>
+                        <div class="dossier-value">CS20261948572</div>
+                        
+                        <div class="dossier-label">Corporate Tax ID</div>
+                        <div class="dossier-value">004-839-293-000</div>
+                        
+                        <div class="dossier-label">HQ Address</div>
+                        <div class="dossier-value">BGC, Taguig City, NCR</div>
+                    </div>
+
+                    <div class="dossier-attachments">
+                        <h4>Submitted KYC Attachments</h4>
+                        <div class="mock-pdf">
+                            <span class="icon">&#128196;</span>
+                            <div class="pdf-details">
+                                <span class="pdf-name">SEC_Registration_Apex.pdf</span>
+                                <span class="pdf-size">2.4 MB</span>
+                            </div>
+                        </div>
+                        <div class="mock-pdf">
+                            <span class="icon">&#128196;</span>
+                            <div class="pdf-details">
+                                <span class="pdf-name">Directors_Valid_IDs.pdf</span>
+                                <span class="pdf-size">5.1 MB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dossier-actions">
+                        <button class="btn-ghost-reject">Reject Application</button>
+                        <button class="btn-primary-approve">Approve Account</button>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Bottom Banner -->
+            <div class="bottom-banner">
+                <span class="banner-icon">&#9888;</span>
+                Rover Transport Metro Manila Regulatory Guideline 2026-B: Ensure all logistics partners have submitted updated DTI permits before KYC approval.
+            </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Session Security Logic
+        const sessionData = sessionStorage.getItem("activeSession");
+        if (!sessionData) {
+            window.location.href = "index.html";
+        } else {
+            const user = JSON.parse(sessionData);
+            if (user.role !== "Admin") {
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("userFullName").innerText = user.name;
+                document.getElementById("userRoleText").innerText = user.role === "Admin" ? "SYSTEM ADMINISTRATOR" : user.role.toUpperCase();
+                let initials = "AD";
+                if(user.name) {
+                    const parts = user.name.split(' ');
+                    initials = parts.length > 1 ? parts[0][0] + parts[parts.length-1][0] : parts[0].substring(0,2);
+                }
+                document.getElementById("userAvatarInitials").innerText = initials.toUpperCase();
+            }
+        }
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

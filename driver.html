@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROVER | Driver Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #ECEFF1; 
+            display: flex; 
+            justify-content: center; 
+        }
+        #mobileTerminal {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: #FFF9F9;
+            position: relative;
+            padding-bottom: 70px; /* space for bottom nav */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        /* Hide scrollbar for a native app feel */
+        ::-webkit-scrollbar { width: 0; background: transparent; }
+    </style>
+</head>
+<body>
+    <div id="mobileTerminal">
+        <!-- Top Nav -->
+        <header style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1rem;">
+            <div style="font-size: 1.5rem; color: #424242; cursor: pointer;">&#9776;</div>
+            <div style="font-size: 1.25rem; font-weight: 800; color: #D32F2F; letter-spacing: 0.1em;">ROVER</div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="position: relative; font-size: 1.25rem; color: #757575;">
+                    &#128276;<span style="position: absolute; top: -2px; right: -2px; background: #D32F2F; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #FFF9F9;"></span>
+                </div>
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">ES</div>
+            </div>
+        </header>
+
+        <div style="padding: 0 1.25rem;">
+            <!-- Profile Card -->
+            <div style="background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 1.5rem; border: 1px solid #F5F5F5;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #E8F5E9; color: #2E7D32; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem;">&#10004;</span>
+                        <strong id="driverName" style="font-size: 1.125rem; color: #212121; font-weight: 700;">Eduardo Santos</strong>
+                    </div>
+                    <span style="background: #E3F2FD; color: #1976D2; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">07:00-19:00</span>
+                </div>
+                <div style="font-size: 0.875rem; color: #757575; margin-bottom: 1rem; font-weight: 500;">ID: RVR-FLT-0382 &bull; Fleet MPV Pool</div>
+                <div style="background: #FCECEB; border-radius: 8px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                            <span style="width: 8px; height: 8px; background: #1976D2; border-radius: 50%; display: inline-block;"></span>
+                            <span style="font-size: 0.875rem; font-weight: 700; color: #212121;">Available for Dispatch</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #757575; font-weight: 500;">GPS Active &bull; Metro Manila Hub</div>
+                    </div>
+                    <button style="background: #1976D2; color: white; border: none; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; box-shadow: 0 4px 10px rgba(25,118,210,0.3); cursor: pointer;">ONLINE</button>
+                </div>
+            </div>
+
+            <!-- Current Dispatch Section -->
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 8px; height: 8px; background: #D32F2F; border-radius: 50%; display: inline-block;"></span>
+                        <strong style="font-size: 0.875rem; color: #212121; letter-spacing: 0.05em;">CURRENT DISPATCH</strong>
+                    </div>
+                    <span style="background: #FCECEB; color: #D32F2F; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">#DSP-9941</span>
+                </div>
+
+                <!-- Telemetry Map Placeholder -->
+                <div style="height: 220px; background: linear-gradient(135deg, #2C1E1E, #4A3A3A); border-radius: 12px; position: relative; margin-bottom: 1.25rem; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.15);">
+                    <!-- Map background pattern simulation -->
+                    <div style="position: absolute; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    
+                    <!-- Top Left Pill -->
+                    <div style="position: absolute; top: 1rem; left: 1rem; background: white; padding: 0.5rem 0.75rem; border-radius: 999px; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <span style="color: #1976D2; font-size: 1rem; font-weight: 700;">&#10140;</span>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #212121;">Ayala Ave in 2.4 km</span>
+                    </div>
+                    
+                    <!-- Top Right Pill -->
+                    <div style="position: absolute; top: 1rem; right: 1rem; background: #1976D2; padding: 0.5rem 0.75rem; border-radius: 999px; display: flex; align-items: center; gap: 0.5rem; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <span style="font-size: 0.875rem;">&#9432;</span>
+                        <span style="font-size: 0.75rem; font-weight: 700;">48 km/h</span>
+                    </div>
+                    
+                    <!-- Bottom Left Box -->
+                    <div style="position: absolute; bottom: 1rem; left: 1rem; background: rgba(0,0,0,0.6); padding: 0.6rem 0.875rem; border-radius: 6px; color: white; font-size: 0.75rem; backdrop-filter: blur(4px); font-weight: 500; border: 1px solid rgba(255,255,255,0.1);">
+                        Smooth EDSA South Corridor
+                    </div>
+                    
+                    <!-- Bottom Right Box -->
+                    <div style="position: absolute; bottom: 1rem; right: 1rem; background: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); color: #1976D2; font-size: 1.25rem; transform: rotate(-45deg);">
+                        &#10148;
+                    </div>
+                </div>
+
+                <!-- Enterprise Account Card -->
+                <div style="background: #FCECEB; border-radius: 12px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border: 1px solid #F8D8D6;">
+                    <div>
+                        <div style="font-size: 0.7rem; color: #D32F2F; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem;">ENTERPRISE ACCOUNT</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #212121;">Apex Logistics Global Inc.</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.7rem; color: #757575; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: 0.05em;">ESTIMATED ETA</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #D32F2F; line-height: 1;">45 min</div>
+                    </div>
+                </div>
+
+                <!-- Unit & Manifest Cards -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <!-- Left Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #F5F5F5;">
+                        <div style="font-size: 0.7rem; color: #9E9E9E; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.75rem;">ASSIGNED UNIT</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #212121; margin-bottom: 0.25rem;">MPV Unit 14</div>
+                        <div style="font-size: 0.75rem; color: #757575; font-weight: 500;">NVA-1234 &bull; HiAce</div>
+                    </div>
+                    <!-- Right Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #F5F5F5;">
+                        <div style="font-size: 0.7rem; color: #9E9E9E; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.75rem;">MANIFEST</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #212121; margin-bottom: 0.25rem;">Executive Shuttle</div>
+                        <div style="font-size: 0.75rem; color: #1976D2; font-weight: 700;">8 Pax Registered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav style="position: absolute; bottom: 0; left: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #EEEEEE; display: flex; justify-content: space-around; padding: 0.75rem 0; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); z-index: 10;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #D32F2F; cursor: pointer; flex: 1;">
+                <span style="font-size: 1.25rem;">&#128171;</span>
+                <span style="font-size: 0.65rem; font-weight: 700;">Route</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1;">
+                <span style="font-size: 1.25rem;">&#128197;</span>
+                <span style="font-size: 0.65rem; font-weight: 600;">Schedule</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1;">
+                <span style="font-size: 1.25rem;">&#128221;</span>
+                <span style="font-size: 0.65rem; font-weight: 600;">Logs</span>
+            </div>
+            <div id="navProfileLogout" style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: #9E9E9E; cursor: pointer; flex: 1; transition: color 0.2s;">
+                <span style="font-size: 1.25rem;">&#128100;</span>
+                <span style="font-size: 0.65rem; font-weight: 600;">Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Session Security Logic
+        const sessionData = sessionStorage.getItem("activeSession");
+        if (!sessionData) {
+            window.location.href = "index.html";
+        } else {
+            const user = JSON.parse(sessionData);
+            if (user.role !== "Driver") {
+                window.location.href = "index.html";
+            } else {
+                // Dynamically inject the logged-in driver's name
+                document.getElementById("driverName").innerText = user.name;
+            }
+        }
+
+        // Logout via Profile Tab
+        document.getElementById("navProfileLogout").addEventListener("click", function() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

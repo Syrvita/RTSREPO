@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER Transport | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="split-layout">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="panel-top">
+                <div class="logo">ROVER FLEET SYSTEMS</div>
+                <div class="badge pill-badge">
+                    <span class="status-dot"></span> System Online &bull; Manila Hub
+                </div>
+            </div>
+            
+            <div class="panel-middle">
+                <div class="badge red-badge">MISSION-CRITICAL OPERATIONS</div>
+                <h1>Enterprise Fleet & Corporate Logistics Platform</h1>
+                <p class="subtext">Powering daily commute networks...</p>
+                <div class="metrics">
+                    <div class="metric-card">
+                        <span class="trend-up">&uarr;</span> 99.8% ON-TIME SLA GUARANTEE
+                    </div>
+                    <div class="metric-card">
+                        30+ Active FLEET UNITS TODAY
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-bottom">
+                <span>ISO 27001 Certified</span>
+                <span>DPA Compliant Fleet</span>
+                <span>VER 3.14.9-PROD</span>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="badge pink-badge">ENTERPRISE PORTAL ACCESS</div>
+                <h2>Sign In to Rover Transport</h2>
+                <p class="form-subtext">Access your corporate account dashboard.</p>
+                
+                <form id="loginForm">
+                    <div class="input-group">
+                        <span class="icon">&#9993;</span>
+                        <input type="email" id="email" required placeholder="Corporate Email">
+                    </div>
+                    <div class="input-group">
+                        <span class="icon">&#128274;</span>
+                        <input type="password" id="password" required placeholder="Password">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">LOG IN</button>
+                    <div id="errorMessage" class="error-message">Invalid credentials or unverified role.</div>
+                </form>
+
+                <div class="divider">
+                    <span>OR AUTHENTICATE WITH</span>
+                </div>
+
+                <div class="secondary-auth">
+                    <button type="button" class="btn-tertiary">Enterprise SAML</button>
+                    <button type="button" class="btn-tertiary">Hardware Key</button>
+                </div>
+
+                <div class="request-access-box">
+                    <span>New Corporate Client?</span>
+                    <a href="register.html" class="btn-text">Request Access &rarr;</a>
+                </div>
+
+                <div class="footer-text">
+                    &copy; 2026 Rover Transport. SSL Encrypted connection.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
