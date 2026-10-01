@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="admin.html" class="nav-item">Dashboard</a>
                 <a href="admin.html" class="nav-item">KYC Verification</a>
                 <a href="service-orders.html" class="nav-item">Service Orders</a>
-                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
                 <a href="users.html" class="nav-item">User Management</a>
                 <a href="#" class="nav-item">Driver Directory</a>
                 <a href="forecasting.html" class="nav-item">Demand Forecasting</a>

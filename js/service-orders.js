@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="admin.html" class="nav-item">Dashboard</a>
                 <a href="admin.html" class="nav-item">KYC Verification</a>
                 <a href="service-orders.html" class="nav-item active">Service Orders</a>
-                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
                 <a href="users.html" class="nav-item">User Management</a>
                 <a href="#" class="nav-item">Driver Directory</a>
                 <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Apply resolved state to #RQ-1042 in the DOM
     function applyResolvedStateInDOM(vehicleText = "RV-VAN-112") {
+        const safeVehicleText = escapeHTML(vehicleText);
         const auditCell = document.getElementById("auditStatusRQ1042");
         if (auditCell) {
             auditCell.className = "pill-audit pill-assigned";
@@ -77,12 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const fleetCell = document.getElementById("fleetCellRQ1042");
         if (fleetCell) {
-            fleetCell.innerHTML = `<div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce Commuter <span style="font-size: 11px; color: #2E7D32; font-weight: normal;">(${vehicleText} Assigned)</span></div>`;
+            fleetCell.innerHTML = `<div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce Commuter <span style="font-size: 11px; color: #2E7D32; font-weight: normal;">(${safeVehicleText} Assigned)</span></div>`;
         }
 
         const actionCell = document.getElementById("actionCellRQ1042");
         if (actionCell) {
-            actionCell.innerHTML = `<a href="#" class="action-link">View Details</a>`;
+            actionCell.innerHTML = `<a href="reservation-details.html?id=RQ-1042" class="action-link">View Details</a>`;
         }
 
         const filterPendingBtn = document.getElementById("filterPendingBtn");

@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll(".driver-nav-tab");
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
-            if (tab.id === "navProfileLogout") {
+            if (tab.id === "driverLogoutBtn" || tab.id === "navProfileLogout") {
                 // Logout is handled via ROVER_AUTH.bindLogoutButtons
                 return;
             }
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 5. Profile Tab Logout Fallback
-    const profileLogout = document.getElementById("navProfileLogout");
+    const profileLogout = document.getElementById("driverLogoutBtn") || document.getElementById("navProfileLogout");
     if (profileLogout) {
         profileLogout.addEventListener("click", () => {
             const confirmLogout = confirm("Confirm log out from Driver Terminal?");

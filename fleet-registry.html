@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Fleet Asset Registry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/fleet-registry.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ROVER</h2>
+                <div id="sidebarSubtext" class="subtext">MANAGEMENT &bull; FLEET OPERATIONS</div>
+            </div>
+            <nav class="sidebar-nav" id="sidebarNav">
+                <a href="manager.html" class="nav-item">Fleet Telemetry</a>
+                <a href="service-orders.html" class="nav-item">Service Orders</a>
+                <a href="service-orders.html" class="nav-item">Dispatch Queue</a>
+                <a href="fleet-registry.html" class="nav-item active">Fleet Registry</a>
+                <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
+                <a href="#" class="nav-item">SLA Analytics</a>
+                <a href="#" class="nav-item">Maintenance Logs</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div class="avatar" id="userAvatarInitials" style="width: 32px; height: 32px; border-radius: 50%; background: #212121; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">SM</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span id="userFullName" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Sigmund Malacas</span>
+                        <span id="userRoleText" style="font-size: 0.7rem; color: #9E9E9E; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;">OPERATIONS MANAGER</span>
+                    </div>
+                </div>
+                <button id="managerLogoutBtn" class="logout-btn" title="Log Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content fleet-registry-view">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="breadcrumbs" style="color: #757575; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin: 0;">ROVER ENTERPRISE / FLEET SYSTEMS / FLEET REGISTRY</div>
+                    <div class="badge green-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SYSTEM OPERATIONAL &bull; ALL SENSORS LIVE
+                    </div>
+                </div>
+                <div class="user-meta" style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="timestamp" style="font-size: 12px; color: #64748B; font-weight: 500;">2026-10-01 16:00 PHT</span>
+                    <select style="padding: 0.25rem 0.5rem; border: 1px solid #EAEAEA; border-radius: 4px; font-weight: 600; outline: none; background: white; cursor: pointer; font-size: 12px;">
+                        <option>Manila Hub</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="workspace-container" style="padding: 32px;">
+                <!-- Header Section -->
+                <div class="dashboard-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h1>Fleet Registry &amp; Asset Inventory</h1>
+                            <span style="background: #E3F2FD; color: #1976D2; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 700;">31 UNITS ACTIVE</span>
+                        </div>
+                        <p class="subtext">Comprehensive vehicle asset registry, real-time allocation status, and driver assignments across Metro Manila Hub.</p>
+                    </div>
+                    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+                        <button id="exportFleetCsvBtn" class="btn-primary" style="padding: 10px 18px; background: #D32F2F; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 6px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Export Fleet Manifest
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4-Column Metric Grid -->
+                <div class="metrics-grid">
+                    <div class="dashboard-metric-card">
+                        <div class="metric-label">TOTAL FLEET CAPACITY</div>
+                        <div class="metric-num" id="metricFleetTotal">31</div>
+                        <div class="metric-meta">
+                            <span style="color: #2E7D32; font-weight: 600;">100% Operational</span> &bull; <span>Hub Staged</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-metric-card">
+                        <div class="metric-label">AVAILABLE UNITS</div>
+                        <div class="metric-num" id="metricFleetAvailable">28</div>
+                        <div class="metric-meta">
+                            <span style="color: #1976D2; font-weight: 600;">Immediate Clearance</span> &bull; <span>Standby</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-metric-card">
+                        <div class="metric-label">ACTIVE ON MISSION</div>
+                        <div class="metric-num" id="metricFleetActive">3</div>
+                        <div class="metric-meta">
+                            <span style="color: #E65100; font-weight: 600;">Corridor Transit</span> &bull; <span>GPS Live</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-metric-card">
+                        <div class="metric-label">MAINTENANCE / OFFLINE</div>
+                        <div class="metric-num" id="metricFleetMaintenance">0</div>
+                        <div class="metric-meta">
+                            <span style="color: #757575; font-weight: 600;">Tier-1 SLA</span> &bull; <span>Zero Defect</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="data-table-container">
+                    <div class="table-toolbar">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <h2 style="font-size: 1rem; color: #212121; margin: 0; font-weight: 700;">Vehicle Asset Inventory</h2>
+                            <input type="text" id="fleetSearchInput" class="table-search-input" placeholder="Search Unit ID, Model, or Type...">
+                        </div>
+                        <div class="filter-group">
+                            <span style="font-size: 12px; color: #888888; font-weight: 600;">FILTER:</span>
+                            <button id="filterFleetAll" class="filter-btn active">All Units (31)</button>
+                            <button id="filterFleetAvailable" class="filter-btn">Available (28)</button>
+                            <button id="filterFleetInUse" class="filter-btn">In-Use / Locked (3)</button>
+                            <button id="filterFleetVans" class="filter-btn">Vans (15)</button>
+                            <button id="filterFleetUtility" class="filter-btn">Utility &amp; MPV (8)</button>
+                            <button id="filterFleetExec" class="filter-btn">Executive (8)</button>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>UNIT ID</th>
+                                <th>VEHICLE MODEL</th>
+                                <th>CLASSIFICATION</th>
+                                <th>CAPACITY</th>
+                                <th>STATUS</th>
+                                <th>ALLOCATION BUFFER / TRIP</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetTableBody">
+                            <!-- Populated dynamically via js/fleet-registry.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/fleet-registry.js"></script>
+</body>
+</html>

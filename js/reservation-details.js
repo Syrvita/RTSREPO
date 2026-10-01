@@ -13,7 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Data Retrieval
     const urlParams = new URLSearchParams(window.location.search);
     let requestedId = urlParams.get("id");
-    if (!requestedId) requestedId = "#RQ-1042";
+    if (!requestedId && window.location.hash) {
+        requestedId = window.location.hash.replace(/^#/, "");
+    }
+    if (!requestedId) requestedId = "RQ-1042";
 
     const normalizedId = requestedId.startsWith("#") ? requestedId : "#" + requestedId;
     const plainId = requestedId.replace(/^#/, "");
@@ -144,14 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (allocationBoxEl) {
             if (isCancelled) {
                 const cancelTimeStr = res.cancelledAt ? new Date(res.cancelledAt).toLocaleString() : "Recent notice";
+                const safeReason = escapeHTML(res.cancellationReason || "Client Schedule Change");
+                const safeNotes = res.cancellationNotes ? escapeHTML(res.cancellationNotes) : "";
                 allocationBoxEl.style.background = "#FFEBEE";
                 allocationBoxEl.style.borderColor = "#FFCDD2";
                 allocationBoxEl.innerHTML = `
                     <span style="color: #D32F2F; font-size: 16px; margin-top: 1px;">✕</span>
                     <div style="font-size: 12.5px; color: #B71C1C; line-height: 1.5;">
-                        <strong>Reservation Cancelled by Client.</strong> Reason: <em>${res.cancellationReason || "Client Schedule Change"}</em>.<br>
+                        <strong>Reservation Cancelled by Client.</strong> Reason: <em>${safeReason}</em>.<br>
                         This ticket manifest was officially cancelled on ${cancelTimeStr}. Reserved fleet units have been returned to active dispatch inventory.
-                        ${res.cancellationNotes ? `<br><span style="color: #424242;"><strong>Justification:</strong> ${res.cancellationNotes}</span>` : ""}
+                        ${safeNotes ? `<br><span style="color: #424242;"><strong>Justification:</strong> ${safeNotes}</span>` : ""}
                     </div>
                 `;
             } else if (isConfirmed) {

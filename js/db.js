@@ -183,6 +183,15 @@ window.ROVER_DB = {
             if (!data.reservations || !data.users || !data.fleet || !data.drivers) {
                 return this.seed();
             }
+            // Ensure minimum 31 fleet units and 15 drivers are always available
+            if (!Array.isArray(data.fleet) || data.fleet.length < 31) {
+                data.fleet = ROVER_DB_SEED.fleet;
+                this.save(data);
+            }
+            if (!Array.isArray(data.drivers) || data.drivers.length < 15) {
+                data.drivers = ROVER_DB_SEED.drivers;
+                this.save(data);
+            }
             // Ensure PB-008 seed reservations are present
             if (!data.reservations.some(r => r.id === "#RQ-1042")) {
                 data.reservations = [
@@ -207,6 +216,19 @@ window.ROVER_DB = {
         return JSON.parse(JSON.stringify(ROVER_DB_SEED));
     }
 };
+
+window.ROVER_UTILS = {
+    escapeHtml: function(str) {
+        if (str === null || str === undefined) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+};
+window.escapeHTML = window.ROVER_UTILS.escapeHtml;
 
 window.ROVER_AUTH = {
     getSession: function() {
@@ -233,6 +255,7 @@ window.ROVER_AUTH = {
         const user = this.getSession();
 
         if (!user || !user.role || !roles.includes(user.role)) {
+            this.clearSession();
             window.location.href = "index.html";
             return null;
         }
@@ -292,12 +315,22 @@ window.ROVER_AUTH = {
         if (driverNameEl) driverNameEl.innerText = user.name;
     },
     bindLogoutButtons: function() {
-        const buttons = ["logoutBtn", "adminLogoutBtn", "clientLogoutBtn", "navProfileLogout"];
+        const buttons = [
+            "logoutBtn",
+            "adminLogoutBtn",
+            "managerLogoutBtn",
+            "clientLogoutBtn",
+            "driverLogoutBtn",
+            "navProfileLogout"
+        ];
         buttons.forEach(id => {
             const btn = document.getElementById(id);
             if (btn && !btn.dataset.bound) {
                 btn.dataset.bound = "true";
-                btn.addEventListener("click", () => this.logout());
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
             }
         });
     }

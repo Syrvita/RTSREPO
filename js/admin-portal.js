@@ -143,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     `<span style="color: #388E3C; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; font-size: 0.875rem;"><span style="width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; display: inline-block;"></span> Active</span>`;
 
                 tr.innerHTML = `
-                    <td><strong>${u.name}</strong></td>
-                    <td>${u.email}</td>
-                    <td><span style="background: ${roleBg}; color: ${roleColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${u.role}</span></td>
+                    <td><strong>${escapeHTML(u.name)}</strong></td>
+                    <td>${escapeHTML(u.email)}</td>
+                    <td><span style="background: ${roleBg}; color: ${roleColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${escapeHTML(u.role)}</span></td>
                     <td>${statusHtml}</td>
                     <td>
-                        <a href="#" class="btn-edit-user" data-id="${u.id}" style="color: #1976D2; text-decoration: none; margin-right: 1rem; font-size: 0.875rem; font-weight: 500;">Edit</a>
-                        <a href="#" class="btn-toggle-status" data-id="${u.id}" style="color: ${isSuspended ? '#388E3C' : '#D32F2F'}; text-decoration: none; font-size: 0.875rem; font-weight: 500;">${isSuspended ? 'Activate' : 'Deactivate'}</a>
+                        <a href="#" class="btn-edit-user" data-id="${escapeHTML(u.id)}" style="color: #1976D2; text-decoration: none; margin-right: 1rem; font-size: 0.875rem; font-weight: 500;">Edit</a>
+                        <a href="#" class="btn-toggle-status" data-id="${escapeHTML(u.id)}" style="color: ${isSuspended ? '#388E3C' : '#D32F2F'}; text-decoration: none; font-size: 0.875rem; font-weight: 500;">${isSuspended ? 'Activate' : 'Deactivate'}</a>
                     </td>
                 `;
                 userTableBody.appendChild(tr);

@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
             nav.innerHTML = `
                 <a href="manager.html" class="nav-item">Fleet Telemetry</a>
                 <a href="service-orders.html" class="nav-item">Service Orders</a>
-                <a href="#" class="nav-item">Dispatch Queue</a>
-                <a href="#" class="nav-item">Fleet Registry</a>
+                <a href="service-orders.html" class="nav-item">Dispatch Queue</a>
+                <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
                 <a href="forecasting.html" class="nav-item active">Demand Forecasting</a>
                 <a href="#" class="nav-item">SLA Analytics</a>
                 <a href="#" class="nav-item">Maintenance Logs</a>
@@ -325,9 +325,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initial render & resize listener
+    // Initial render & responsive listeners (ResizeObserver + window resize)
     drawChart();
     window.addEventListener("resize", drawChart);
+    if (window.ResizeObserver && canvas && canvas.parentElement) {
+        const resizeObserver = new ResizeObserver(() => {
+            drawChart();
+        });
+        resizeObserver.observe(canvas.parentElement);
+    }
 
     // 4. Interactivity & Defensive Exceptions (PB-018)
     const toggleDataScenarioBtn = document.getElementById("toggleDataScenarioBtn");

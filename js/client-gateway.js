@@ -104,32 +104,41 @@ document.addEventListener("DOMContentLoaded", () => {
             const actionText = isPending ? "Modify Request" : isConfirmed ? "View Details" : "Download Manifest";
 
             // Strict 7-Column Layout mapping 1:1 with Table Headers
+            const cleanId = (r.id || "").replace(/^#/, "");
+            const paramId = encodeURIComponent(cleanId);
+            const safeDisplayId = escapeHTML(r.id);
+            const safeVehicleType = escapeHTML(r.vehicleType || "Corporate Shuttle");
+            const safePickup = escapeHTML(r.pickup || "Metro Manila Hub");
+            const safeDestination = escapeHTML(r.destination || "Destination Terminal");
+            const safeSchedule = escapeHTML(r.schedule || r.start || "");
+            const safeReturn = r.return ? escapeHTML(r.return) : "";
+
             tr.innerHTML = `
                 <!-- 1. REQUEST ID -->
                 <td style="padding: 16px 20px; font-weight: 700; color: #C62828; white-space: nowrap;">
-                    <a href="reservation-details.html?id=${r.id}" style="color: #C62828; text-decoration: none; font-weight: 700;">${r.id}</a>
+                    <a href="reservation-details.html?id=${paramId}" style="color: #C62828; text-decoration: none; font-weight: 700;">${safeDisplayId}</a>
                 </td>
 
                 <!-- 2. VEHICLE TYPE -->
                 <td style="padding: 16px 20px;">
-                    <div style="font-weight: 600; color: #212121;">${r.vehicleType || "Corporate Shuttle"}</div>
+                    <div style="font-weight: 600; color: #212121;">${safeVehicleType}</div>
                     <div style="font-size: 11px; color: #78909C; margin-top: 2px;">${r.units || 1} Assigned Unit${(r.units > 1) ? 's' : ''}</div>
                 </td>
 
                 <!-- 3. PICKUP LOCATION -->
                 <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
-                    <div style="font-weight: 500;">${r.pickup || "Metro Manila Hub"}</div>
+                    <div style="font-weight: 500;">${safePickup}</div>
                 </td>
 
                 <!-- 4. DESTINATION -->
                 <td style="padding: 16px 20px; font-size: 13px; color: #424242;">
-                    <div style="font-weight: 500;">${r.destination || "Destination Terminal"}</div>
+                    <div style="font-weight: 500;">${safeDestination}</div>
                 </td>
 
                 <!-- 5. DATE & TIME -->
                 <td style="padding: 16px 20px; font-size: 12px; color: #37474F;">
-                    <div style="font-weight: 600;">${r.schedule || r.start}</div>
-                    ${r.return ? `<div style="color: #78909C; font-size: 11px; margin-top: 2px;">Return: ${r.return}</div>` : ''}
+                    <div style="font-weight: 600;">${safeSchedule}</div>
+                    ${safeReturn ? `<div style="color: #78909C; font-size: 11px; margin-top: 2px;">Return: ${safeReturn}</div>` : ''}
                 </td>
 
                 <!-- 6. STATUS -->
@@ -142,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${isCancelled ? `
                         <span style="color: #9E9E9E; font-style: italic; font-size: 12px;">Cancelled</span>
                     ` : `
-                        <a href="reservation-details.html?id=${r.id}" style="color: #D32F2F; text-decoration: none; font-weight: 600; font-size: 13px;">View Manifest →</a>
+                        <a href="reservation-details.html?id=${paramId}" style="color: #D32F2F; text-decoration: none; font-weight: 600; font-size: 13px;">View Manifest →</a>
                     `}
                 </td>
             `;
