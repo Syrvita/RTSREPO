@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const telemetryDispatches = [
         {
             vehicleId: "RV-VAN-104",
-            model: "Toyota Hiace Commuter",
+            model: "Toyota HiAce Commuter",
             driver: "Eduardo Santos",
             driverId: "RVR-FLT-0382",
             client: "Apex Logistics",
@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
             etaStatus: "ontime"
         },
         {
-            vehicleId: "RV-BUS-022",
-            model: "Nissan Civilian",
+            vehicleId: "RV-URV-101",
+            model: "Nissan NV350 Urvan",
             driver: "Marco Polo",
             driverId: "RVR-FLT-0211",
             client: "Global Tech Inc.",
@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
             etaStatus: "ontime"
         },
         {
-            vehicleId: "RV-SUV-008",
-            model: "Ford Everest",
+            vehicleId: "RV-STR-204",
+            model: "Hyundai Grand Starex",
             driver: "Juan Dela Cruz",
             driverId: "RVR-FLT-0045",
             client: "Executive Transit",
@@ -67,8 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
             etaStatus: "idle"
         },
         {
-            vehicleId: "RV-VAN-115",
-            model: "Nissan Urvan",
+            vehicleId: "RV-URV-108",
+            model: "Nissan NV350 Urvan",
             driver: "Luis Antonio",
             driverId: "RVR-FLT-0410",
             client: "Apex Logistics",
@@ -79,8 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
             etaStatus: "ontime"
         },
         {
-            vehicleId: "RV-VAN-089",
-            model: "Toyota Hiace",
+            vehicleId: "RV-VAN-106",
+            model: "Toyota HiAce Commuter",
             driver: "Ricardo Gomez",
             driverId: "RVR-FLT-0305",
             client: "Manila Freight",
@@ -91,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
             etaStatus: "delayed"
         },
         {
-            vehicleId: "RV-BUS-014",
-            model: "Mitsubishi Rosa",
+            vehicleId: "RV-TRV-401",
+            model: "Isuzu Traviz Utility",
             driver: "Pedro Penduko",
             driverId: "RVR-FLT-0150",
             client: "Global Tech Inc.",

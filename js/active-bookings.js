@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaultActiveTrips = [
         {
             id: "RQ-1038",
-            vehicle: "Toyota HiAce Commuter",
-            vehicleTag: "RV-VAN-104 • High Roof",
+            vehicle: "Toyota HiAce Commuter (1 Unit)",
+            vehicleTag: "RV-VAN-112 • High Roof",
             driver: "Eduardo Santos",
             driverTag: "ID: RVR-FLT-0382 • Tier-1 Clear",
             corridor: "Port of Manila → SBMA Terminal 1",
@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: "RQ-1039",
-            vehicle: "2x Hilux Utility",
-            vehicleTag: "RV-HLX-201, RV-HLX-202",
+            vehicle: "2x Mitsubishi L300 FB (Utility Shuttle)",
+            vehicleTag: "RV-L30-301, RV-L30-302",
             driver: "Vic Sotto, Joey de Leon",
             driverTag: "ID: RVR-FLT-0530, 0555",
             corridor: "BGC Corporate → Bulacan Airport Site",
@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: "RQ-8821",
-            vehicle: "3x Corporate Shuttle (14-Seater)",
-            vehicleTag: "Toyota HiAce Fleet Pool",
+            vehicle: "Nissan NV350 Urvan (3 Units)",
+            vehicleTag: "RV-URV-101, RV-URV-102, RV-URV-103",
             driver: "Marco Polo & Standby Crew",
             driverTag: "ID: RVR-FLT-0211 • Staged Hub Bay 4",
             corridor: "Ortigas Center → BGC Corporate Center",
@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: "RQ-1042",
-            vehicle: "Toyota HiAce Commuter",
-            vehicleTag: "RV-VAN-112 (PB-008 Reassigned)",
+            vehicle: "Toyota HiAce Commuter (1 Unit)",
+            vehicleTag: "RV-VAN-104 (PB-008 Overlap Blocked)",
             driver: "Marco Polo",
             driverTag: "ID: RVR-FLT-0211 • Manila Hub",
             corridor: "Makati CBD → Clark Logistics Hub",
@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
         callDeskBtn.addEventListener("click", () => {
             alert(
                 "ROVER ENTERPRISE STAGING DESK\n\n" +
-                "Connecting to Manila Hub Staging Desk for Unit RV-VAN-104.\n" +
+                "Connecting to Manila Hub Staging Desk for Unit RV-VAN-112.\n" +
                 "Duty Driver: Eduardo Santos (Clearance: Tier-1 Verified)\n" +
                 "Direct Dispatch Link: +63 2 8888 7683 (Bay 4 Staging)"
             );

@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return: "Oct 28, 2026 • 06:00 PM",
             pickup: "Makati CBD (Ayala Tower 1)",
             destination: "Clark Logistics Hub Terminal 2",
-            vehicleType: "HiAce Commuter (Van - 14 Seater)",
+            vehicleType: "Toyota HiAce Commuter (14 Pax - Standard Shuttle)",
             units: 1,
             estimatedPax: 14,
             costCenter: "APX-LOG-OPS-2026",
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const paxBadgeEl = document.getElementById("manifestPaxBadge");
         const unitBadgeEl = document.getElementById("manifestUnitCountBadge");
 
-        if (vehicleTypeEl) vehicleTypeEl.innerText = res.vehicleType || "HiAce Commuter (Van - 14 Seater)";
+        if (vehicleTypeEl) vehicleTypeEl.innerText = res.vehicleType || "Toyota HiAce Commuter (14 Pax - Standard Shuttle)";
         if (paxBadgeEl) paxBadgeEl.innerText = `${res.estimatedPax || (res.units ? res.units * 14 : 14)} PAX MAX`;
         if (unitBadgeEl) unitBadgeEl.innerText = `Manifest Unit 1 of ${res.units || 1}`;
 

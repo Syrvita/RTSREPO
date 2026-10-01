@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const cleanId = (r.id || "").replace(/^#/, "");
             const paramId = encodeURIComponent(cleanId);
             const safeDisplayId = escapeHTML(r.id);
-            const safeVehicleType = escapeHTML(r.vehicleType || "Corporate Shuttle");
+            const safeVehicleType = escapeHTML(r.vehicleType || "Toyota HiAce Commuter");
             const safePickup = escapeHTML(r.pickup || "Metro Manila Hub");
             const safeDestination = escapeHTML(r.destination || "Destination Terminal");
             const safeSchedule = escapeHTML(r.schedule || r.start || "");
@@ -230,6 +230,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorDiv = document.getElementById("reservationModalError");
     const modalTitle = document.getElementById("reservationModalTitle");
 
+    // Philippine Fleet Capacity Mapping
+    const FLEET_CAPACITIES = {
+        "Toyota HiAce Commuter (14 Pax - Standard Shuttle)": 14,
+        "Nissan NV350 Urvan (15 Pax - Commuter Van)": 15,
+        "Hyundai Grand Starex / Staria (10 Pax - Executive VIP)": 10,
+        "Mitsubishi L300 FB Body (16 Pax - Utility / Dual-Cargo)": 16,
+        "Toyota Coaster Minibus (24 Pax - High Capacity)": 24
+    };
+
+    function getVehicleCapacity(type) {
+        if (!type) return 14;
+        for (const [key, cap] of Object.entries(FLEET_CAPACITIES)) {
+            if (type.includes(key) || key.includes(type)) return cap;
+        }
+        if (type.includes("Coaster")) return 24;
+        if (type.includes("L300")) return 16;
+        if (type.includes("Urvan")) return 15;
+        if (type.includes("Starex") || type.includes("Staria")) return 10;
+        return 14;
+    }
+
+    const vehicleTypeSelectEl = document.getElementById("vehicleTypeSelect");
+    const unitQuantityInputEl = document.getElementById("unitQuantityInput");
+    const estimatedPaxInputEl = document.getElementById("estimatedPaxInput");
+
+    function updateCapacityGuards() {
+        if (!vehicleTypeSelectEl || !unitQuantityInputEl || !estimatedPaxInputEl) return;
+        const selectedType = vehicleTypeSelectEl.value;
+        const perUnitCap = getVehicleCapacity(selectedType);
+        const qty = parseInt(unitQuantityInputEl.value, 10) || 1;
+        const maxCapacity = perUnitCap * qty;
+        estimatedPaxInputEl.max = maxCapacity;
+        if (parseInt(estimatedPaxInputEl.value, 10) > maxCapacity || !estimatedPaxInputEl.value) {
+            estimatedPaxInputEl.value = maxCapacity;
+        }
+    }
+
+    if (vehicleTypeSelectEl) {
+        vehicleTypeSelectEl.addEventListener("change", updateCapacityGuards);
+    }
+    if (unitQuantityInputEl) {
+        unitQuantityInputEl.addEventListener("input", updateCapacityGuards);
+    }
+
     function openModal() {
         currentEditId = null;
         if (modalTitle) modalTitle.innerText = "New Reservation Request";
@@ -238,6 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (errorDiv) errorDiv.style.display = "none";
         const form = document.getElementById("reservationForm");
         if (form) form.reset();
+        updateCapacityGuards();
         if (modal) modal.style.display = "flex";
     }
 
@@ -255,18 +300,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const destLoc = document.getElementById("destinationInput");
         const vehicleType = document.getElementById("vehicleTypeSelect");
         const units = document.getElementById("unitQuantityInput");
+        const pax = document.getElementById("estimatedPaxInput");
         const costCenter = document.getElementById("costCenterInput");
         const notes = document.getElementById("tripNotesInput");
         const disclaimer = document.getElementById("disclaimerCheckbox");
 
         if (pickupLoc) pickupLoc.value = res.pickup || "";
         if (destLoc) destLoc.value = res.destination || "";
-        if (vehicleType) vehicleType.value = res.vehicleType || "HiAce Commuter (Van - 14 Seater)";
+        if (vehicleType) vehicleType.value = res.vehicleType || "Toyota HiAce Commuter (14 Pax - Standard Shuttle)";
         if (units) units.value = res.units || 1;
+        if (pax) pax.value = res.estimatedPax || (res.units ? res.units * getVehicleCapacity(res.vehicleType) : 14);
         if (costCenter) costCenter.value = res.costCenter || "";
         if (notes) notes.value = res.notes || "";
         if (disclaimer) disclaimer.checked = true;
 
+        updateCapacityGuards();
         if (modal) modal.style.display = "flex";
     }
 
@@ -313,13 +361,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const destLoc = document.getElementById("destinationInput") ? document.getElementById("destinationInput").value.trim() : "";
             const vehicleType = document.getElementById("vehicleTypeSelect") ? document.getElementById("vehicleTypeSelect").value : "";
             const units = parseInt(document.getElementById("unitQuantityInput") ? document.getElementById("unitQuantityInput").value : "1", 10);
+            const estimatedPax = parseInt(document.getElementById("estimatedPaxInput") ? document.getElementById("estimatedPaxInput").value : "0", 10);
             const disclaimer = document.getElementById("disclaimerCheckbox") ? document.getElementById("disclaimerCheckbox").checked : true;
+
+            const maxCapacity = getVehicleCapacity(vehicleType) * units;
 
             // In edit mode, allow keeping existing schedule if datetime wasn't re-entered
             if (currentEditId) {
                 if (!pickupLoc || !destLoc || !vehicleType || isNaN(units) || units < 1) {
                     if (errorDiv) {
                         errorDiv.innerText = "Please complete all required location and vehicle fields.";
+                        errorDiv.style.display = "block";
+                    }
+                    return;
+                }
+
+                if (estimatedPax > maxCapacity) {
+                    if (errorDiv) {
+                        errorDiv.innerText = `Passenger count (${estimatedPax}) exceeds maximum capacity of ${maxCapacity} for ${units}x unit(s).`;
                         errorDiv.style.display = "block";
                     }
                     return;
@@ -334,6 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     res.vehicleType = vehicleType;
                     res.vehiclePref = `${units}x ${vehicleType}`;
                     res.units = units;
+                    res.estimatedPax = estimatedPax || maxCapacity;
                     if (pickupDate) {
                         res.schedule = formatDateTimeString(pickupDate);
                         res.start = formatDateTimeString(pickupDate);
@@ -361,6 +421,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            if (estimatedPax > maxCapacity) {
+                if (errorDiv) {
+                    errorDiv.innerText = `Passenger count (${estimatedPax}) exceeds maximum capacity of ${maxCapacity} for ${units}x unit(s).`;
+                    errorDiv.style.display = "block";
+                }
+                return;
+            }
+
             const db = ROVER_DB.get();
             const newReservation = {
                 id: "#RQ-" + Math.floor(1000 + Math.random() * 9000),
@@ -368,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 vehicleType: vehicleType,
                 vehiclePref: `${units}x ${vehicleType}`,
                 units: units,
+                estimatedPax: estimatedPax || maxCapacity,
                 pickup: pickupLoc,
                 destination: destLoc,
                 route: `${pickupLoc} to ${destLoc}`,

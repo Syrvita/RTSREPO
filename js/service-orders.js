@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const fleetCell = document.getElementById("fleetCellRQ1042");
         if (fleetCell) {
-            fleetCell.innerHTML = `<div style="font-size: 13px; font-weight: 600; color: #212121;">1x HiAce Commuter <span style="font-size: 11px; color: #2E7D32; font-weight: normal;">(${safeVehicleText} Assigned)</span></div>`;
+            fleetCell.innerHTML = `<div style="font-size: 13px; font-weight: 600; color: #212121;">1x Toyota HiAce Commuter <span style="font-size: 11px; color: #2E7D32; font-weight: normal;">(${safeVehicleText} Assigned)</span></div>`;
         }
 
         const actionCell = document.getElementById("actionCellRQ1042");

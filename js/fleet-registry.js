@@ -65,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 (unit.id && unit.id.toLowerCase().includes(query)) ||
                 (unit.model && unit.model.toLowerCase().includes(query)) ||
                 (unit.type && unit.type.toLowerCase().includes(query)) ||
+                (unit.plate && unit.plate.toLowerCase().includes(query)) ||
+                (unit.hub && unit.hub.toLowerCase().includes(query)) ||
                 (unit.status && unit.status.toLowerCase().includes(query));
 
             if (!matchesQuery) return false;
@@ -72,9 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (currentFilter === "all") return true;
             if (currentFilter === "available") return unit.status === "Available";
             if (currentFilter === "in-use") return unit.status !== "Available" && unit.status !== "Maintenance";
-            if (currentFilter === "vans") return (unit.type || "").toLowerCase().includes("van");
-            if (currentFilter === "utility") return (unit.type || "").toLowerCase().includes("utility") || (unit.type || "").toLowerCase().includes("mpv");
-            if (currentFilter === "exec") return (unit.type || "").toLowerCase().includes("suv") || (unit.type || "").toLowerCase().includes("sedan");
+            if (currentFilter === "vans") return (unit.type || "").toLowerCase().includes("van") || (unit.model || "").toLowerCase().includes("hiace") || (unit.model || "").toLowerCase().includes("urvan");
+            if (currentFilter === "utility") return (unit.type || "").toLowerCase().includes("utility") || (unit.type || "").toLowerCase().includes("cargo") || (unit.model || "").toLowerCase().includes("l300") || (unit.model || "").toLowerCase().includes("traviz");
+            if (currentFilter === "exec") return (unit.type || "").toLowerCase().includes("executive") || (unit.model || "").toLowerCase().includes("starex") || (unit.model || "").toLowerCase().includes("staria") || (unit.model || "").toLowerCase().includes("grandia");
 
             return true;
         });
@@ -108,17 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 `<span class="pill-status pill-assigned">● Assigned (Clear)</span>` :
                 `<span class="pill-status pill-maintenance">● Maintenance</span>`;
 
+            const hubInfo = unit.hub || "Manila Hub";
+            const plateInfo = unit.plate ? `Plate: <strong>${escapeHTML(unit.plate)}</strong> • ` : "";
             const bufferInfo = unit.currentTrip ?
                 `<strong style="color: #D32F2F;">Trip ${escapeHTML(unit.currentTrip)}</strong>` :
                 unit.scheduleBuffer ?
                 `<span style="color: #2E7D32; font-weight: 500;">${escapeHTML(unit.scheduleBuffer)}</span>` :
-                `<span style="color: #757575;">Ready at Manila Hub</span>`;
+                `<span style="color: #757575;">Ready at ${escapeHTML(hubInfo)}</span>`;
 
             tr.innerHTML = `
                 <td><strong style="color: #1565C0;">${escapeHTML(unit.id)}</strong></td>
                 <td>
                     <div style="font-weight: 600; color: #212121;">${escapeHTML(unit.model)}</div>
-                    <div style="font-size: 11px; color: #757575;">Euro-4 Compliant • RFID Active</div>
+                    <div style="font-size: 11px; color: #757575;">${plateInfo}${escapeHTML(hubInfo)} • RFID Active</div>
                 </td>
                 <td><span class="type-badge">${escapeHTML(unit.type)}</span></td>
                 <td><strong>${unit.capacity} PAX</strong></td>
