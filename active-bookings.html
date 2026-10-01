@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Active Bookings & Live Dispatches</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar: Client Enterprise Tier -->
+        <aside class="sidebar" style="background-color: #2C1E1E;">
+            <div class="sidebar-header" style="display: flex; align-items: center; gap: 0.5rem; padding: 24px 24px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
+                <h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.05em; color: white;">ROVER</h2>
+                <span style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 700; letter-spacing: 0.05em; color: white;">ENTERPRISE</span>
+            </div>
+            <div style="font-size: 10px; color: #A0A0A0; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 0 24px; margin-bottom: 8px;">CLIENT WORKSPACE</div>
+            <nav class="sidebar-nav">
+                <a href="client.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    My Dashboard
+                </a>
+                <a href="request-service.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    Request Service
+                </a>
+                <a href="active-bookings.html" class="nav-item active" style="background-color: #D32F2F; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        Active Bookings
+                    </span>
+                    <span style="background: rgba(255,255,255,0.25); padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">3</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    Billing &amp; Invoices
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding: 18px 24px; margin-top: auto;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="avatar" style="width: 36px; height: 36px; border-radius: 6px; background: #212121; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1);">AL</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span id="clientCompanyNameDisplay" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Apex Logistics Global Inc.</span>
+                            <span id="clientNameSidebarDisplay" style="font-size: 0.75rem; color: #9E9E9E; margin-top: 4px;">Rowena Mae Castaneda</span>
+                        </div>
+                    </div>
+                    <button id="clientLogoutBtn" class="logout-btn" title="Log Out">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content active-bookings-view">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav" style="height: 64px; background: #FFFFFF; border-bottom: 1px solid #EAEAEA; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; margin: -32px -32px 32px -32px;">
+                <div class="nav-search-container" style="display: flex; align-items: center; gap: 12px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search active bookings, routes, vehicle telemetry..." style="width: 380px; padding: 8px 14px; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 13px; outline: none; background: #FFFFFF; font-family: inherit;">
+                </div>
+                <div class="nav-right" style="display: flex; align-items: center; gap: 16px;">
+                    <div class="badge pill-badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+                        Verified Corporate Tier-1 &bull; Active Agreement
+                    </div>
+                    <a href="#" style="font-size: 13px; color: #616161; text-decoration: none; font-weight: 600;">Support</a>
+                    <div style="position: relative; cursor: pointer; color: #757575; font-size: 1.2rem; display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span style="position: absolute; top: -2px; right: -2px; background: #D32F2F; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #FFFFFF;"></span>
+                    </div>
+                    <div id="topNavAvatar" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">RC</div>
+                </div>
+            </header>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>
+                        Active Bookings &amp; Live Dispatches
+                        <span class="manifest-count-badge" id="headerManifestBadge">● 3 Active Manifests</span>
+                    </h1>
+                    <p class="subtext">Real-time telematics, corridor status, and tracking for corporate fleet units in transit.</p>
+                </div>
+                <div class="header-actions">
+                    <button id="refreshTelemetryBtn" class="btn-ghost" title="Refresh GPS Telemetry">
+                        <svg id="refreshIconSvg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        Refresh Telemetry
+                    </button>
+                    <a href="request-service.html" id="newReservationBtn" class="btn-primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        + New Reservation Request
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3-Column Metrics Grid -->
+            <div class="metrics-grid">
+                <!-- Card 1 -->
+                <div class="metric-card">
+                    <div class="metric-card-content">
+                        <span class="metric-card-label">LIVE IN-TRANSIT</span>
+                        <div class="metric-card-val" id="metricLiveInTransit">2 Units</div>
+                        <div class="metric-card-subtext">
+                            <span style="color: #1976D2; font-weight: 700;">● GPS Active</span> &bull; NLEX &amp; SLEX Corridors
+                        </div>
+                    </div>
+                    <div class="metric-card-icon-box icon-box-blue">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="metric-card">
+                    <div class="metric-card-content">
+                        <span class="metric-card-label">CONFIRMED &amp; STAGED</span>
+                        <div class="metric-card-val" id="metricConfirmedStaged">1 Unit</div>
+                        <div class="metric-card-subtext">
+                            <span style="color: #2E7D32; font-weight: 700;">✓ Manila Hub Bay 4</span> &bull; Boarding 17:30 PHT
+                        </div>
+                    </div>
+                    <div class="metric-card-icon-box icon-box-green">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="metric-card">
+                    <div class="metric-card-content">
+                        <span class="metric-card-label">ACTIVE PASSENGERS</span>
+                        <div class="metric-card-val" id="metricActivePassengers">26 Pax</div>
+                        <div class="metric-card-subtext">
+                            <span style="color: #616161; font-weight: 600;">Executive Shuttle</span> &bull; Airport Transfer
+                        </div>
+                    </div>
+                    <div class="metric-card-icon-box icon-box-red">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Live Trip Tracker Card -->
+            <div class="live-tracker-card">
+                <!-- Title Bar -->
+                <div class="tracker-header">
+                    <div class="tracker-title-wrap">
+                        <span class="pulse-badge"><span class="pulse-dot"></span> Live Transit Telemetry</span>
+                        <h2 class="tracker-title" style="margin: 0;">Trip #RQ-1038 &bull; Manila &rarr; Clark Hub Corridor</h2>
+                    </div>
+                    <div class="eta-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span>Estimated Arrival: 45 min (13:15 PHT)</span>
+                    </div>
+                </div>
+
+                <!-- Horizontal Waypoint Progress Bar -->
+                <div class="tracker-progress-wrapper">
+                    <div class="progress-timeline">
+                        <div class="progress-track-bg">
+                            <div class="progress-track-fill" id="telemetryProgressBar"></div>
+                            <div class="progress-marker-origin" title="Origin: Port of Manila"></div>
+                            <div class="progress-marker-current" id="telemetryMarkerCurrent" title="Current Location"></div>
+                            <div class="current-pos-pill" id="telemetrySpeedPill">Current &bull; 84 km/h at NLEX Bocaue Toll Plaza</div>
+                            <div class="progress-marker-dest" title="Destination: Clark Logistics Hub"></div>
+                        </div>
+                    </div>
+                    <div class="waypoint-labels">
+                        <div>
+                            <strong>Port of Manila Gate 4</strong>
+                            <span>Departed: 07:30 PHT</span>
+                        </div>
+                        <div style="text-align: center; color: #0284C7; font-weight: 600;">
+                            <span>NLEX Bocaue KM 27+400</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong>Clark Logistics Hub Terminal 2</strong>
+                            <span>ETA: 13:15 PHT (Scheduled 13:30)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lower Section Grid: GPS Map & Detail Subcards -->
+                <div class="tracker-content-grid">
+                    <!-- Left: GPS Map Simulation -->
+                    <div class="gps-map-placeholder">
+                        <div class="map-grid-overlay"></div>
+                        <div class="map-route-line"></div>
+                        <div class="map-vehicle-blip"></div>
+                        <div class="map-overlay-tag top-left">
+                            <span style="color: #38BDF8; font-size: 14px;">●</span>
+                            <span>GPS Live &bull; 14.8012&deg; N, 120.9328&deg; E</span>
+                        </div>
+                        <div class="map-overlay-tag bottom-right">
+                            NLEX Bocaue Corridor &bull; Smooth Traffic Flow
+                        </div>
+                    </div>
+
+                    <!-- Right: Asset & Driver Details -->
+                    <div class="tracker-details-col">
+                        <!-- Asset Subcard -->
+                        <div class="detail-subcard">
+                            <div>
+                                <div class="detail-subcard-title">ASSIGNED FLEET ASSET</div>
+                                <div class="detail-subcard-main">Toyota HiAce Commuter &bull; NVA-1234</div>
+                                <div class="detail-subcard-sub">High-Roof Passenger Van &bull; Unit RV-VAN-104 &bull; 14 PAX MAX</div>
+                            </div>
+                            <div style="text-align: right; display: flex; flex-direction: column; gap: 4px;">
+                                <span style="background: #E8F5E9; color: #2E7D32; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">Fuel: 82%</span>
+                                <span style="background: #E3F2FD; color: #1976D2; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">Telematics OK</span>
+                            </div>
+                        </div>
+
+                        <!-- Driver Subcard -->
+                        <div class="detail-subcard">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">ES</div>
+                                <div>
+                                    <div class="detail-subcard-title">DUTY DRIVER</div>
+                                    <div class="detail-subcard-main">Eduardo Santos</div>
+                                    <div class="detail-subcard-sub">ID: RVR-FLT-0382 &bull; Tier-1 Clear</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="color: #F59E0B; font-weight: 800; font-size: 13px;">&#9733; 4.9</span>
+                                <div style="font-size: 11px; color: #757575;">184 Corporate Trips</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="tracker-actions-row">
+                            <button id="callDriverDeskBtn" class="btn-ghost" style="padding: 10px 14px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                Call Driver Staging Desk
+                            </button>
+                            <a href="reservation-details.html?id=RQ-1038" id="inspectManifestBtn" class="btn-primary" style="padding: 10px 14px;">
+                                Inspect Full Route Manifest &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Data Table Card -->
+            <div class="table-card">
+                <!-- Toolbar -->
+                <div class="table-toolbar">
+                    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: #212121;">Active Fleet Manifests &amp; Booking Registry</h3>
+                        <div class="tab-filters">
+                            <button id="tabAllActive" class="tab-btn active">All Active (3)</button>
+                            <button id="tabInTransit" class="tab-btn">In Transit (2)</button>
+                            <button id="tabStaged" class="tab-btn">Staged (1)</button>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" id="activeBookingsSearchInput" class="table-search-input" placeholder="Search Booking ID, vehicle, driver, or route...">
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>BOOKING ID</th>
+                            <th>VEHICLE</th>
+                            <th>DRIVER</th>
+                            <th>CORRIDOR / ROUTE</th>
+                            <th>SCHEDULE</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeBookingsTableBody">
+                        <!-- Populated via js/active-bookings.js -->
+                    </tbody>
+                </table>
+
+                <!-- Table Pagination -->
+                <div class="table-pagination">
+                    <span id="activePaginationInfo">Showing 1 to 3 of 3 active trips</span>
+                    <div class="pagination-btns">
+                        <button class="pagination-btn" disabled>Previous</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn" disabled>Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Governance Footer -->
+            <footer class="governance-footer">
+                <div class="governance-left">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D32F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Rover Enterprise Security &amp; DPA Governance &bull; All fleet telematic coordinates encrypted and retained under RA 10173 compliance standards.</span>
+                </div>
+                <div class="governance-right">
+                    SEC Reg: CS202109482-C &bull; BIR Form 2303 Corporate Master Agreement Active
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/active-bookings.js"></script>
+</body>
+</html>
