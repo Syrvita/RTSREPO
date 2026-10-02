@@ -80,8 +80,8 @@ const ROVER_DB_SEED = {
             route: "Makati CBD → Clark Logistics Hub",
             schedule: "Oct 28, 2026 • 08:00 – 18:00 PHT",
             pickupWindow: "Oct 28, 2026 • 08:00 – 18:00 PHT",
-            vehiclePref: "1x Toyota HiAce Commuter (14-Seater)",
-            vehicleType: "Toyota HiAce Commuter (14 Pax - Standard Shuttle)",
+            vehiclePref: "1x Toyota HiAce Commuter",
+            vehicleType: "Toyota HiAce Commuter (14 Seats)",
             status: "Conflict",
             auditStatus: "Schedule Overlap",
             units: 1,
@@ -99,8 +99,8 @@ const ROVER_DB_SEED = {
             route: "BGC → Bulacan Airport Site",
             schedule: "Oct 28, 2026 • 09:30 – 16:00 PHT",
             pickupWindow: "Oct 28, 2026 • 09:30 – 16:00 PHT",
-            vehiclePref: "2x Mitsubishi L300 FB (Utility Shuttle)",
-            vehicleType: "Mitsubishi L300 FB Body (16 Pax - Utility / Dual-Cargo)",
+            vehiclePref: "2x Mitsubishi L300 FB Shuttle",
+            vehicleType: "Mitsubishi L300 FB Body (16 Seats)",
             status: "Dispatched",
             auditStatus: "Dispatched",
             units: 2,
@@ -119,7 +119,7 @@ const ROVER_DB_SEED = {
             schedule: "Oct 28, 2026 • 07:30 – 13:30 PHT",
             pickupWindow: "Oct 28, 2026 • 07:30 – 13:30 PHT",
             vehiclePref: "1x Toyota HiAce Commuter",
-            vehicleType: "Toyota HiAce Commuter (14 Pax - Standard Shuttle)",
+            vehicleType: "Toyota HiAce Commuter (14 Seats)",
             status: "En Route",
             auditStatus: "En Route (Locked)",
             units: 1,
@@ -137,8 +137,8 @@ const ROVER_DB_SEED = {
             route: "Daily Commute BGC",
             schedule: "Oct 01, 2026 - Night Shift",
             pickupWindow: "Oct 01, 2026 • 17:30 – 02:00 PHT",
-            vehiclePref: "3x Nissan NV350 Urvan (15-Seater)",
-            vehicleType: "Nissan NV350 Urvan (15 Pax - Commuter Van)",
+            vehiclePref: "3x Nissan NV350 Urvan",
+            vehicleType: "Nissan NV350 Urvan (15 Seats)",
             status: "Pending",
             auditStatus: "Pending Review",
             units: 3,
@@ -156,8 +156,8 @@ const ROVER_DB_SEED = {
             route: "Airport Transfer (NAIA 3)",
             schedule: "Oct 02, 2026 - Morning",
             pickupWindow: "Oct 02, 2026 • 06:00 – 10:00 PHT",
-            vehiclePref: "2x Hyundai Grand Starex (Executive VIP)",
-            vehicleType: "Hyundai Grand Starex / Staria (10 Pax - Executive VIP)",
+            vehiclePref: "2x Hyundai Grand Starex",
+            vehicleType: "Hyundai Grand Starex / Staria (10 Seats)",
             status: "Pending",
             auditStatus: "Pending Review",
             units: 2,
@@ -175,8 +175,8 @@ const ROVER_DB_SEED = {
             route: "Company Outing (Tagaytay)",
             schedule: "Oct 15, 2026 - Full Day",
             pickupWindow: "Oct 15, 2026 • 07:00 – 19:00 PHT",
-            vehiclePref: "4x Toyota HiAce Commuter (14-Seater)",
-            vehicleType: "Toyota HiAce Commuter (14 Pax - Standard Shuttle)",
+            vehiclePref: "4x Toyota HiAce Commuter",
+            vehicleType: "Toyota HiAce Commuter (14 Seats)",
             status: "Pending",
             auditStatus: "Pending Review",
             units: 4,
@@ -186,6 +186,93 @@ const ROVER_DB_SEED = {
             start: "07:00 PHT",
             return: "19:00 PHT",
             notes: "Annual corporate offsite group trip."
+        }
+    ],
+    corporateClients: [
+        {
+            id: "APEX-001",
+            name: "Apex Logistics Global Inc.",
+            industry: "Supply Chain",
+            signatory: "Rowena Mae Castaneda",
+            signatoryRole: "Operations Director",
+            email: "r.castaneda@apexlogistics.ph",
+            phone: "+63 917 555 1029",
+            secReg: "CS201958291-B",
+            tin: "009-881-284-000",
+            address: "14th Floor, High Street South Corporate Plaza, BGC, Taguig City, NCR",
+            kycStatus: "Requires Review",
+            creditFacility: "Pending Allocation",
+            auditNotes: "",
+            score: "98/100",
+            submission: "2 Hours Ago"
+        },
+        {
+            id: "MNL-002",
+            name: "Manila Freight Co.",
+            industry: "Logistics",
+            signatory: "Juan Dela Cruz",
+            signatoryRole: "Procurement Lead",
+            email: "juan@manilafreight.com",
+            phone: "+63 918 555 2038",
+            secReg: "CS20250918231",
+            tin: "008-291-382-000",
+            address: "Port Area, Manila, NCR",
+            kycStatus: "Verified Tier-1",
+            creditFacility: "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)",
+            auditNotes: "Verified via BIR Manila RDO 033.",
+            score: "95/100",
+            submission: "4 Hours Ago"
+        },
+        {
+            id: "PAC-003",
+            name: "Pacific E-Commerce Solutions",
+            industry: "E-Commerce",
+            signatory: "Maria Santos",
+            signatoryRole: "CEO",
+            email: "msantos@pacificecom.ph",
+            phone: "+63 919 555 3847",
+            secReg: "CS20249182741",
+            tin: "009-482-192-000",
+            address: "Ortigas Center, Pasig City",
+            kycStatus: "Verified Tier-1",
+            creditFacility: "Tier-2 Corporate (Net 15 • PHP 250,000)",
+            auditNotes: "Pre-cleared quarterly review.",
+            score: "92/100",
+            submission: "1 Day Ago"
+        },
+        {
+            id: "GLB-004",
+            name: "Global Tech Distributors",
+            industry: "Retail",
+            signatory: "Mark Anthony Reyes",
+            signatoryRole: "Logistics Head",
+            email: "m.reyes@globaltech.com",
+            phone: "+63 920 555 4958",
+            secReg: "CS20231948172",
+            tin: "010-384-918-000",
+            address: "Makati CBD, Makati City",
+            kycStatus: "Verified Tier-1",
+            creditFacility: "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)",
+            auditNotes: "Automated SEC cross-reference match.",
+            score: "96/100",
+            submission: "2 Days Ago"
+        },
+        {
+            id: "ISL-005",
+            name: "Islands Cargo Transport",
+            industry: "Shipping",
+            signatory: "Ana Lim",
+            signatoryRole: "Operations Manager",
+            email: "ana.lim@islandscargo.ph",
+            phone: "+63 921 555 5869",
+            secReg: "CS20229481723",
+            tin: "007-192-847-000",
+            address: "Cebu IT Park, Cebu City",
+            kycStatus: "Verified Tier-1",
+            creditFacility: "Prepaid / Escrow Only",
+            auditNotes: "Prepaid facility active.",
+            score: "91/100",
+            submission: "3 Days Ago"
         }
     ]
 };
@@ -206,6 +293,10 @@ window.ROVER_DB = {
             }
             if (!Array.isArray(data.drivers) || data.drivers.length < 15) {
                 data.drivers = ROVER_DB_SEED.drivers;
+                this.save(data);
+            }
+            if (!Array.isArray(data.corporateClients) || data.corporateClients.length < 5) {
+                data.corporateClients = ROVER_DB_SEED.corporateClients;
                 this.save(data);
             }
             // Ensure PB-008 seed reservations are present

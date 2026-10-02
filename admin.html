@@ -113,38 +113,69 @@
                                 <th>Representative & Role</th>
                                 <th>Contact Verification</th>
                                 <th>Submission</th>
+                                <th>Status &amp; Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="active-row">
+                            <tr class="active-row" data-entity-id="APEX-001">
                                 <td><strong>Apex Logistics Global Inc.</strong><br>Supply Chain</td>
                                 <td>Rowena Mae Castaneda<br>Operations Director</td>
                                 <td>r.castaneda@apexlogistics.ph<br>+63 917 555 1029</td>
                                 <td>2 Hours Ago</td>
+                                <td id="apexStatusCell">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-pill status-red" id="apexKycPill">Requires Review</span>
+                                        <button class="btn-audit-dossier" data-action="audit" data-id="APEX-001" style="padding: 4px 10px; background: #D32F2F; color: white; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">Audit Dossier &rarr;</button>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <tr data-entity-id="MNL-002">
                                 <td><strong>Manila Freight Co.</strong><br>Logistics</td>
                                 <td>Juan Dela Cruz<br>Procurement Lead</td>
                                 <td>juan@manilafreight.com<br>+63 918 555 2038</td>
                                 <td>4 Hours Ago</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-pill status-green">Verified Tier-1</span>
+                                        <button class="btn-audit-dossier" data-action="audit" data-id="MNL-002" style="padding: 4px 10px; background: #ECEFF1; color: #37474F; border: 1px solid #CFD8DC; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">View Dossier</button>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <tr data-entity-id="PAC-003">
                                 <td><strong>Pacific E-Commerce Solutions</strong><br>E-Commerce</td>
                                 <td>Maria Santos<br>CEO</td>
                                 <td>msantos@pacificecom.ph<br>+63 919 555 3847</td>
                                 <td>1 Day Ago</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-pill status-green">Verified Tier-1</span>
+                                        <button class="btn-audit-dossier" data-action="audit" data-id="PAC-003" style="padding: 4px 10px; background: #ECEFF1; color: #37474F; border: 1px solid #CFD8DC; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">View Dossier</button>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <tr data-entity-id="GLB-004">
                                 <td><strong>Global Tech Distributors</strong><br>Retail</td>
                                 <td>Mark Anthony Reyes<br>Logistics Head</td>
                                 <td>m.reyes@globaltech.com<br>+63 920 555 4958</td>
                                 <td>2 Days Ago</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-pill status-green">Verified Tier-1</span>
+                                        <button class="btn-audit-dossier" data-action="audit" data-id="GLB-004" style="padding: 4px 10px; background: #ECEFF1; color: #37474F; border: 1px solid #CFD8DC; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">View Dossier</button>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <tr data-entity-id="ISL-005">
                                 <td><strong>Islands Cargo Transport</strong><br>Shipping</td>
                                 <td>Ana Lim<br>Operations Manager</td>
                                 <td>ana.lim@islandscargo.ph<br>+63 921 555 5869</td>
                                 <td>3 Days Ago</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="status-pill status-green">Verified Tier-1</span>
+                                        <button class="btn-audit-dossier" data-action="audit" data-id="ISL-005" style="padding: 4px 10px; background: #ECEFF1; color: #37474F; border: 1px solid #CFD8DC; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">View Dossier</button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -187,8 +218,8 @@
                     </div>
 
                     <div class="dossier-actions">
-                        <button class="btn-ghost-reject">Reject Application</button>
-                        <button class="btn-primary-approve">Approve Account</button>
+                        <button class="btn-ghost-reject" id="rejectAccountBtn">Reject Application</button>
+                        <button class="btn-primary-approve" id="approveAccountBtn">Approve Account</button>
                     </div>
                 </aside>
             </div>
@@ -200,6 +231,95 @@
             </div>
             </div>
         </main>
+    </div>
+
+    <!-- Legal Dossier Audit Modal (PB-002) -->
+    <div id="legalDossierModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+        <div class="dossier-modal-window" style="width: 100%; max-width: 920px; background: #FFFFFF; border-radius: 10px; border: 1px solid #ECEFF1; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 40px rgba(0,0,0,0.25); overflow: hidden;">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid #ECEFF1; background: #FAFAFA;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                        <h2 id="dossierModalTitle" style="margin: 0; font-size: 18px; font-weight: 700; color: #212121;">Legal Dossier Audit: Apex Logistics Global Inc.</h2>
+                        <span style="background: #FFEBEE; color: #D32F2F; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #FFCDD2; letter-spacing: 0.5px;">FORM PB-002</span>
+                    </div>
+                    <p style="margin: 0; font-size: 12px; color: #757575;">Cross-check uploaded regulatory certifications against national tax records and assign credit facilities.</p>
+                </div>
+                <button id="closeDossierModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 0 4px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Body (2-Column Split: 1.15fr left, 1fr right) -->
+            <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; padding: 20px 24px; overflow-y: auto; flex: 1;">
+                <!-- Left: Document Viewer Canvas -->
+                <div style="display: flex; flex-direction: column;">
+                    <!-- Tab Bar -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #E0E0E0; padding-bottom: 6px;">
+                        <div style="display: flex; gap: 8px;" id="dossierTabBar">
+                            <button id="tabBir2303" class="dossier-tab active" data-tab="bir2303" style="padding: 6px 12px; border-radius: 4px 4px 0 0; border: 1px solid #D32F2F; border-bottom: none; background: #FFEBEE; color: #D32F2F; font-size: 12px; font-weight: 700; cursor: pointer;">BIR Form 2303</button>
+                            <button id="tabSec" class="dossier-tab" data-tab="sec" style="padding: 6px 12px; border-radius: 4px 4px 0 0; border: 1px solid #E0E0E0; border-bottom: none; background: #F5F5F5; color: #616161; font-size: 12px; font-weight: 600; cursor: pointer;">SEC Certificate</button>
+                            <button id="tabId" class="dossier-tab" data-tab="id" style="padding: 6px 12px; border-radius: 4px 4px 0 0; border: 1px solid #E0E0E0; border-bottom: none; background: #F5F5F5; color: #616161; font-size: 12px; font-weight: 600; cursor: pointer;">Signatory Valid ID</button>
+                        </div>
+                        <span id="docFileSizeLabel" style="font-size: 11px; color: #757575; font-weight: 600;">PDF &bull; 1.4 MB</span>
+                    </div>
+
+                    <!-- Dynamic Sheet Viewer -->
+                    <div id="docViewerCanvas" style="min-height: 380px; background: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 6px; padding: 16px; overflow-y: auto; font-size: 12px; line-height: 1.5; color: #212121; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Statutory Checklist & Allocation -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div>
+                        <div style="font-size: 12px; font-weight: 700; color: #37474F; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Statutory Verification Checklist</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 12px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #1E293B; cursor: pointer;">
+                                <input type="checkbox" id="chkSec" checked style="accent-color: #2E7D32;">
+                                <span>SEC Certificate <strong>CS201958291-B</strong> (Verified SEC Express)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #1E293B; cursor: pointer;">
+                                <input type="checkbox" id="chkBir" checked style="accent-color: #2E7D32;">
+                                <span>BIR 2303 TIN <strong>009-881-284-000</strong> (Active RDO 047)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #1E293B; cursor: pointer;">
+                                <input type="checkbox" id="chkSignatory" checked style="accent-color: #2E7D32;">
+                                <span>Signatory: <strong>Rowena Mae Castaneda</strong> (Secretary Cert Matched)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #1E293B; cursor: pointer;">
+                                <input type="checkbox" id="chkAml" checked style="accent-color: #2E7D32;">
+                                <span>AML / Sanctions Screening: <strong style="color: #2E7D32;">Score 98/100 (Clean)</strong></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="creditFacilitySelect" style="display: block; font-size: 12px; font-weight: 700; color: #37474F; margin-bottom: 6px;">ASSIGN CREDIT FACILITY &amp; TERMS</label>
+                        <select id="creditFacilitySelect" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-weight: 600; background: #FFFFFF; outline: none; cursor: pointer;">
+                            <option value="Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)" selected>Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)</option>
+                            <option value="Tier-2 Corporate (Net 15 • PHP 250,000)">Tier-2 Corporate (Net 15 • PHP 250,000)</option>
+                            <option value="Prepaid / Escrow Only">Prepaid / Escrow Only</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="complianceAuditNotes" style="display: block; font-size: 12px; font-weight: 700; color: #37474F; margin-bottom: 6px;">COMPLIANCE AUDIT NOTES</label>
+                        <textarea id="complianceAuditNotes" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Enter audit observations or special SLA requirements...">BIR 2303 &amp; SEC verification confirmed via BIR East Makati RDO 047. Approved for Tier-1 Corporate credit dispatch.</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid #ECEFF1; background: #FAFAFA;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.5px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span>STATUTORY VERIFICATION AUDIT TRAIL PRESERVED &bull; AMLA COMPLIANT</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button id="rejectDossierBtn" style="padding: 8px 16px; border: 1px solid #B0BEC5; background: transparent; color: #546E7A; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Reject Dossier</button>
+                    <button id="authorizeDossierBtn" style="padding: 8px 18px; border: none; background: #2E7D32; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Authorize Credit &amp; Verify Account &rarr;</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/db.js"></script>

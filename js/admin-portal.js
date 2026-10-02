@@ -9,17 +9,283 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentUser = ROVER_AUTH.requireRole("Admin");
     if (!currentUser) return;
 
-    // 2. KYC Onboarding Dossier Inspection (admin.html)
+    // 2. KYC Onboarding & Legal Dossier Audit Controller (admin.html - PB-002)
     const kycTable = document.querySelector(".admin-portal-view .data-table");
-    if (kycTable && document.querySelector(".dossier-panel")) {
+    const legalDossierModal = document.getElementById("legalDossierModal");
+
+    // Realistic Philippine Regulatory Document Templates (PB-002)
+    const DOSSIER_TEMPLATES = {
+        bir2303: `
+            <div style="border: 2px solid #0D47A1; padding: 16px; background: #FFFFFF; font-family: 'Courier New', Courier, monospace; color: #1A237E; line-height: 1.4;">
+                <div style="text-align: center; border-bottom: 2px solid #0D47A1; padding-bottom: 12px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #555;">Republic of the Philippines &bull; Department of Finance</div>
+                    <div style="font-size: 16px; font-weight: 900; letter-spacing: 0.5px; color: #0D47A1; margin: 4px 0;">BUREAU OF INTERNAL REVENUE</div>
+                    <div style="font-size: 13px; font-weight: 700; background: #0D47A1; color: white; display: inline-block; padding: 2px 12px; border-radius: 2px; margin-top: 4px;">BIR FORM NO. 2303 &bull; CERTIFICATE OF REGISTRATION</div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-bottom: 12px;">
+                    <div><strong>OCN:</strong> 9RC0000889218-47B</div>
+                    <div style="text-align: right;"><strong>RDO CODE:</strong> 047 - East Makati</div>
+                </div>
+
+                <div style="background: #F1F5F9; border: 1px dashed #0D47A1; padding: 10px; margin-bottom: 12px; font-size: 11.5px;">
+                    <div style="margin-bottom: 4px;"><strong>TAXPAYER NAME:</strong> APEX LOGISTICS GLOBAL INC.</div>
+                    <div style="margin-bottom: 4px;"><strong>TIN:</strong> <span style="font-size: 13px; font-weight: 800; color: #D32F2F;">009-881-284-000</span> (VAT REGISTERED)</div>
+                    <div style="margin-bottom: 4px;"><strong>TRADE NAME:</strong> APEX LOGISTICS FLEET SERVICES</div>
+                    <div><strong>REGISTERED ADDRESS:</strong> 14th Floor, High Street South Corporate Plaza, BGC, Taguig City 1634</div>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 700; font-size: 11px; border-bottom: 1px solid #0D47A1; padding-bottom: 2px; margin-bottom: 6px;">TAX TYPE OBLIGATIONS:</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px;">
+                        <div>✓ Corporate Income Tax (1702Q/1702)</div>
+                        <div>✓ Value Added Tax (2550M/2550Q)</div>
+                        <div>✓ Withholding Tax - Expanded (0619E/1601EQ)</div>
+                        <div>✓ Withholding Tax - Compensation (1601C)</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #CBD5E1; padding-top: 8px; font-size: 10.5px; color: #475569;">
+                    <div>
+                        <div><strong>DATE ISSUED:</strong> October 14, 2019</div>
+                        <div><strong>REGISTRATION STATUS:</strong> TAX COMPLIANT &bull; ACTIVE</div>
+                    </div>
+                    <div style="text-align: right; border: 1px solid #0D47A1; padding: 4px 8px; font-weight: 700; color: #0D47A1;">
+                        BIR OFFICIAL SEAL &bull; VALIDATED
+                    </div>
+                </div>
+            </div>
+        `,
+        sec: `
+            <div style="border: 2px solid #881337; padding: 16px; background: #FFFFFF; font-family: 'Times New Roman', Times, serif; color: #4C0519; line-height: 1.4;">
+                <div style="text-align: center; border-bottom: 2px solid #881337; padding-bottom: 12px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Republic of the Philippines</div>
+                    <div style="font-size: 16px; font-weight: 900; color: #881337; margin: 4px 0;">SECURITIES AND EXCHANGE COMMISSION</div>
+                    <div style="font-size: 11px;">The SEC Headquarters, 7907 Makati Avenue, Bel-Air, Makati City</div>
+                    <div style="font-size: 13px; font-weight: 700; color: #9F1239; margin-top: 6px; letter-spacing: 0.5px;">CERTIFICATE OF INCORPORATION</div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 12px; font-size: 12px;">
+                    <div>COMPANY REGISTRATION NO. <strong style="font-size: 14px; color: #D32F2F;">CS201958291-B</strong></div>
+                </div>
+
+                <p style="font-size: 11.5px; text-align: justify; text-indent: 2em; margin-bottom: 10px;">
+                    THIS IS TO CERTIFY that the Articles of Incorporation and By-Laws of <strong>APEX LOGISTICS GLOBAL INC.</strong> were duly approved by the Commission on the 8th day of October, 2019 in accordance with the Revised Corporation Code of the Philippines (Republic Act No. 11232).
+                </p>
+
+                <div style="background: #FFF1F2; border: 1px solid #FECDD3; padding: 8px 12px; font-size: 11px; margin-bottom: 12px;">
+                    <div><strong>PRIMARY PURPOSE:</strong> Land transport, enterprise fleet operations, corporate employee transit solutions, and supply chain contract logistics.</div>
+                    <div style="margin-top: 4px;"><strong>AUTHORIZED CAPITAL:</strong> PHP 50,000,000.00 (Common Stock)</div>
+                    <div style="margin-top: 4px;"><strong>PRINCIPAL OFFICE:</strong> Taguig City, Metro Manila, Philippines</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #E2E8F0; padding-top: 8px; font-size: 10.5px;">
+                    <div>
+                        <div>DOCUMENT VERIFICATION CODE: <strong>SEC-2019-ALGI-8842</strong></div>
+                        <div style="color: #2E7D32; font-weight: 700;">✓ In Good Standing &bull; Annual Report Filings Up to Date</div>
+                    </div>
+                    <div style="text-align: center; border: 1px solid #881337; padding: 4px 8px; font-weight: 700; color: #881337;">
+                        SEC SEAL OF REGISTRATION
+                    </div>
+                </div>
+            </div>
+        `,
+        id: `
+            <div style="border: 2px solid #15803D; padding: 16px; background: #FFFFFF; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #14532D; line-height: 1.4;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #15803D; padding-bottom: 10px; margin-bottom: 12px;">
+                    <div>
+                        <div style="font-size: 10px; text-transform: uppercase; color: #475569;">Republic of the Philippines &bull; National Identity Registry</div>
+                        <div style="font-size: 14px; font-weight: 800; color: #15803D;">UNIFIED MULTI-PURPOSE ID (UMID)</div>
+                    </div>
+                    <div style="background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
+                        GOV-VALIDATED ID
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 90px 1fr; gap: 14px; margin-bottom: 12px;">
+                    <div style="width: 90px; height: 110px; background: #E2E8F0; border: 1px solid #CBD5E1; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #64748B;">
+                        <span style="font-size: 32px;">👤</span>
+                        <span>PHOTO (RC)</span>
+                    </div>
+                    <div style="font-size: 11.5px; display: flex; flex-direction: column; gap: 4px;">
+                        <div><strong>CRN:</strong> <span style="font-family: monospace; font-size: 12px; color: #166534;">0111-8930219-4</span></div>
+                        <div><strong>NAME:</strong> <span style="font-weight: 700; color: #111827;">CASTANEDA, ROWENA MAE DELOS SANTOS</span></div>
+                        <div><strong>DATE OF BIRTH:</strong> March 14, 1988</div>
+                        <div><strong>NATIONALITY:</strong> Filipino</div>
+                        <div><strong>CORPORATE TITLE:</strong> Operations Director &amp; Corporate Signatory</div>
+                        <div><strong>ADDRESS:</strong> Unit 2402, Two Serendra, BGC, Taguig City</div>
+                    </div>
+                </div>
+
+                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 8px; border-radius: 4px; font-size: 11px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span><strong>SECRETARY'S CERTIFICATE:</strong> Matched</span>
+                        <span style="color: #15803D; font-weight: 700;">PhilSys Level 2 Verified ✓</span>
+                    </div>
+                    <div style="color: #475569; font-size: 10.5px; margin-top: 2px;">Authorized by Board Resolution No. 2024-11-ALGI to execute corporate mobility and credit agreements.</div>
+                </div>
+            </div>
+        `
+    };
+
+    let activeEntityId = "APEX-001";
+    let activeTabKey = "bir2303";
+
+    function setDossierTab(tabKey) {
+        activeTabKey = tabKey;
+        const canvas = document.getElementById("docViewerCanvas");
+        const sizeLabel = document.getElementById("docFileSizeLabel");
+        const tabs = document.querySelectorAll(".dossier-tab");
+
+        tabs.forEach(tab => {
+            const isMatch = tab.getAttribute("data-tab") === tabKey;
+            if (isMatch) {
+                tab.style.background = "#FFEBEE";
+                tab.style.color = "#D32F2F";
+                tab.style.borderColor = "#D32F2F";
+                tab.classList.add("active");
+            } else {
+                tab.style.background = "#F5F5F5";
+                tab.style.color = "#616161";
+                tab.style.borderColor = "#E0E0E0";
+                tab.classList.remove("active");
+            }
+        });
+
+        if (canvas) {
+            canvas.innerHTML = DOSSIER_TEMPLATES[tabKey] || "<p>Document not available.</p>";
+        }
+
+        if (sizeLabel) {
+            if (tabKey === "bir2303") sizeLabel.innerText = "PDF • 1.4 MB";
+            else if (tabKey === "sec") sizeLabel.innerText = "PDF • 2.4 MB";
+            else if (tabKey === "id") sizeLabel.innerText = "PDF • 1.8 MB";
+        }
+    }
+
+    function openLegalDossier(entityId) {
+        if (!legalDossierModal) return;
+        activeEntityId = entityId || "APEX-001";
+
+        // Retrieve corporate client details from db
+        const db = ROVER_DB.get();
+        const clients = db.corporateClients || [];
+        const client = clients.find(c => c.id === activeEntityId) || clients[0] || {
+            name: "Apex Logistics Global Inc.",
+            secReg: "CS201958291-B",
+            tin: "009-881-284-000"
+        };
+
+        const titleEl = document.getElementById("dossierModalTitle");
+        if (titleEl) {
+            titleEl.innerText = `Legal Dossier Audit: ${client.name}`;
+        }
+
+        // Set default tab to BIR Form 2303
+        setDossierTab("bir2303");
+
+        // Display modal
+        legalDossierModal.style.display = "flex";
+    }
+
+    function closeLegalDossier() {
+        if (legalDossierModal) {
+            legalDossierModal.style.display = "none";
+        }
+    }
+
+    // Modal lifecycle bindings
+    if (legalDossierModal) {
+        // Tab buttons
+        const tabBtns = legalDossierModal.querySelectorAll(".dossier-tab");
+        tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tabKey = btn.getAttribute("data-tab");
+                if (tabKey) setDossierTab(tabKey);
+            });
+        });
+
+        // Close button
+        const closeBtn = document.getElementById("closeDossierModalBtn");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeLegalDossier);
+        }
+
+        // Backdrop click
+        legalDossierModal.addEventListener("click", (e) => {
+            if (e.target === legalDossierModal) {
+                closeLegalDossier();
+            }
+        });
+
+        // Authorize button
+        const authorizeBtn = document.getElementById("authorizeDossierBtn");
+        if (authorizeBtn) {
+            authorizeBtn.addEventListener("click", () => {
+                const creditSelect = document.getElementById("creditFacilitySelect");
+                const notesInput = document.getElementById("complianceAuditNotes");
+                const facility = creditSelect ? creditSelect.value : "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)";
+                const auditNotes = notesInput ? notesInput.value.trim() : "Approved via Form PB-002 Legal Dossier Audit.";
+
+                const db = ROVER_DB.get();
+                if (!Array.isArray(db.corporateClients)) {
+                    db.corporateClients = ROVER_DB_SEED.corporateClients;
+                }
+
+                let targetClient = db.corporateClients.find(c => c.id === activeEntityId || c.name.includes("Apex"));
+                if (targetClient) {
+                    targetClient.kycStatus = "Verified Tier-1";
+                    targetClient.creditFacility = facility;
+                    targetClient.auditNotes = auditNotes;
+                    targetClient.auditedAt = new Date().toISOString();
+                    targetClient.auditedBy = currentUser.name || "Admin • Ops Manila";
+                }
+                ROVER_DB.save(db);
+
+                // Mutate target row in UI table
+                const apexCell = document.getElementById("apexStatusCell");
+                if (apexCell) {
+                    apexCell.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="status-pill status-green">Verified Tier-1</span>
+                            <span style="color: #2E7D32; font-weight: 700; font-size: 11px;">✓ Verified</span>
+                        </div>
+                    `;
+                }
+
+                // Update side dossier panel button
+                const approveBtn = document.getElementById("approveAccountBtn");
+                if (approveBtn) {
+                    approveBtn.innerText = "✓ Verified Tier-1";
+                    approveBtn.style.backgroundColor = "#2E7D32";
+                    approveBtn.style.cursor = "default";
+                    approveBtn.disabled = true;
+                }
+
+                closeLegalDossier();
+            });
+        }
+
+        // Reject button
+        const rejectBtn = document.getElementById("rejectDossierBtn");
+        if (rejectBtn) {
+            rejectBtn.addEventListener("click", () => {
+                closeLegalDossier();
+                alert("Revision requested. Compliance notice dispatched to Rowena Mae Castaneda.");
+            });
+        }
+    }
+
+    // Bind all table buttons and side dossier actions
+    if (kycTable) {
         const rows = kycTable.querySelectorAll("tbody tr");
         const dossierTitle = document.querySelector(".dossier-panel h3");
         const dossierValues = document.querySelectorAll(".dossier-value");
 
         const kycData = {
             "Apex Logistics Global Inc.": {
-                reg: "CS20261948572",
-                tax: "004-839-293-000",
+                reg: "CS201958291-B",
+                tax: "009-881-284-000",
                 hq: "BGC, Taguig City, NCR"
             },
             "Manila Freight Co.": {
@@ -46,7 +312,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         rows.forEach(row => {
             row.style.cursor = "pointer";
-            row.addEventListener("click", () => {
+            row.addEventListener("click", (e) => {
+                // If clicked button inside row, let button handler execute
+                if (e.target.closest(".btn-audit-dossier") || e.target.closest("[data-action='audit']")) {
+                    return;
+                }
                 rows.forEach(r => r.classList.remove("active-row"));
                 row.classList.add("active-row");
 
@@ -62,29 +332,31 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        const approveBtn = document.querySelector(".btn-primary-approve");
-        if (approveBtn) {
-            approveBtn.addEventListener("click", () => {
-                const originalText = approveBtn.innerText;
-                approveBtn.innerText = "Approved ✓";
-                approveBtn.style.backgroundColor = "#2E7D32";
-                setTimeout(() => {
-                    approveBtn.innerText = originalText;
-                    approveBtn.style.backgroundColor = "";
-                }, 1200);
+        // Audit buttons
+        const auditBtns = document.querySelectorAll(".btn-audit-dossier, [data-action='audit']");
+        auditBtns.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const entityId = btn.getAttribute("data-id") || "APEX-001";
+                openLegalDossier(entityId);
+            });
+        });
+
+        // Side panel Approve button opens the modal for review & authorization
+        const approveAccountBtn = document.getElementById("approveAccountBtn");
+        if (approveAccountBtn) {
+            approveAccountBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                openLegalDossier(activeEntityId || "APEX-001");
             });
         }
 
-        const rejectBtn = document.querySelector(".btn-ghost-reject");
-        if (rejectBtn) {
-            rejectBtn.addEventListener("click", () => {
-                const originalText = rejectBtn.innerText;
-                rejectBtn.innerText = "Rejected ✕";
-                rejectBtn.style.color = "#D32F2F";
-                setTimeout(() => {
-                    rejectBtn.innerText = originalText;
-                    rejectBtn.style.color = "";
-                }, 1200);
+        // Side panel Reject button
+        const rejectAccountBtn = document.getElementById("rejectAccountBtn");
+        if (rejectAccountBtn) {
+            rejectAccountBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("Revision requested. Compliance notice dispatched to company representative.");
             });
         }
     }

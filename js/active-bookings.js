@@ -15,11 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaultActiveTrips = [
         {
             id: "RQ-1038",
-            vehicle: "Toyota HiAce Commuter (1 Unit)",
-            vehicleTag: "RV-VAN-112 • High Roof",
+            vehicle: "Toyota HiAce Commuter (14 Seats)",
+            vehicleTag: "RV-VAN-112 • High Roof (Plate: NVA-1234)",
             driver: "Eduardo Santos",
-            driverTag: "ID: RVR-FLT-0382 • Tier-1 Clear",
-            corridor: "Port of Manila → SBMA Terminal 1",
+            driverTag: "+63 917 555 0192 • Tier-1 Clear",
+            corridor: "Metro Manila Hub → Clark Logistics Hub",
             corridorSub: "Via NLEX & SCTEX Corridor",
             schedule: "Oct 28, 2026 • 07:30 – 13:30 PHT",
             status: "In Transit (Live)",
@@ -29,42 +29,28 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: "RQ-1039",
-            vehicle: "2x Mitsubishi L300 FB (Utility Shuttle)",
-            vehicleTag: "RV-L30-301, RV-L30-302",
+            vehicle: "2x Mitsubishi L300 FB Shuttle",
+            vehicleTag: "RV-L30-301, RV-L30-302 (16 Seats)",
             driver: "Vic Sotto, Joey de Leon",
-            driverTag: "ID: RVR-FLT-0530, 0555",
+            driverTag: "ID: RVR-FLT-0530, 0555 • Staged",
             corridor: "BGC Corporate → Bulacan Airport Site",
             corridorSub: "Via Skyway Stage 3 Corridor",
             schedule: "Oct 28, 2026 • 09:30 – 16:00 PHT",
-            status: "In Transit (Live)",
-            category: "in-transit",
-            passengers: 8,
-            actionType: "track"
+            status: "Confirmed & Staged",
+            category: "staged",
+            passengers: 16,
+            actionType: "manifest"
         },
         {
             id: "RQ-8821",
-            vehicle: "Nissan NV350 Urvan (3 Units)",
-            vehicleTag: "RV-URV-101, RV-URV-102, RV-URV-103",
+            vehicle: "3x Nissan NV350 Urvan",
+            vehicleTag: "RV-URV-101, RV-URV-102, RV-URV-103 (15 Seats)",
             driver: "Marco Polo & Standby Crew",
-            driverTag: "ID: RVR-FLT-0211 • Staged Hub Bay 4",
+            driverTag: "ID: RVR-FLT-0211 • Manila Hub Bay 4",
             corridor: "Ortigas Center → BGC Corporate Center",
             corridorSub: "C5 Logistics Corridor Shift Shuttle",
             schedule: "Oct 01, 2026 • 17:30 – 02:00 PHT",
             status: "Confirmed & Staged",
-            category: "staged",
-            passengers: 26,
-            actionType: "manifest"
-        },
-        {
-            id: "RQ-1042",
-            vehicle: "Toyota HiAce Commuter (1 Unit)",
-            vehicleTag: "RV-VAN-104 (PB-008 Overlap Blocked)",
-            driver: "Marco Polo",
-            driverTag: "ID: RVR-FLT-0211 • Manila Hub",
-            corridor: "Makati CBD → Clark Logistics Hub",
-            corridorSub: "NLEX Express Corridor",
-            schedule: "Oct 28, 2026 • 08:00 – 18:00 PHT",
-            status: "Boarding Call Staged",
             category: "staged",
             passengers: 14,
             actionType: "manifest"
@@ -76,11 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("activeBookingsSearchInput");
     const paginationInfo = document.getElementById("activePaginationInfo");
 
-    // 3. Render Data Table
+    // 3. Render Data Table & Synchronize Telemetry
     function renderActiveTable() {
         if (!tbody) return;
 
-        // Check if database has updated state for RQ-1042 or RQ-1038
+        // Check if database has updated state for reservations
         const db = ROVER_DB.get();
         const reservations = db.reservations || [];
 
@@ -100,6 +86,28 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return trip;
         }).filter(Boolean);
+
+        // Calculate and update metrics
+        const inTransitCount = tripData.filter(t => t.category === "in-transit").length;
+        const stagedCount = tripData.filter(t => t.category === "staged").length;
+        const totalPax = tripData.reduce((sum, t) => sum + (t.passengers || 0), 0);
+
+        const elInTransit = document.getElementById("metricLiveInTransit");
+        const elStaged = document.getElementById("metricConfirmedStaged");
+        const elPax = document.getElementById("metricActivePassengers");
+
+        if (elInTransit) elInTransit.innerText = `${inTransitCount} Trip${inTransitCount === 1 ? '' : 's'}`;
+        if (elStaged) elStaged.innerText = `${stagedCount} Trip${stagedCount === 1 ? '' : 's'}`;
+        if (elPax) elPax.innerText = `${totalPax} Pax`;
+
+        // Update tab count labels
+        const tabAllEl = document.getElementById("tabAllActive");
+        const tabTransitEl = document.getElementById("tabInTransit");
+        const tabStagedEl = document.getElementById("tabStaged");
+
+        if (tabAllEl) tabAllEl.innerText = `All Active (${tripData.length})`;
+        if (tabTransitEl) tabTransitEl.innerText = `In Transit (${inTransitCount})`;
+        if (tabStagedEl) tabStagedEl.innerText = `Staged (${stagedCount})`;
 
         const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
 

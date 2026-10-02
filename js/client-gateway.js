@@ -230,13 +230,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorDiv = document.getElementById("reservationModalError");
     const modalTitle = document.getElementById("reservationModalTitle");
 
-    // Philippine Fleet Capacity Mapping
+    // Philippine Fleet Capacity Mapping (Authorized Commercial Fleet Roster)
     const FLEET_CAPACITIES = {
-        "Toyota HiAce Commuter (14 Pax - Standard Shuttle)": 14,
-        "Nissan NV350 Urvan (15 Pax - Commuter Van)": 15,
-        "Hyundai Grand Starex / Staria (10 Pax - Executive VIP)": 10,
-        "Mitsubishi L300 FB Body (16 Pax - Utility / Dual-Cargo)": 16,
-        "Toyota Coaster Minibus (24 Pax - High Capacity)": 24
+        "Toyota HiAce Commuter (14 Seats)": 14,
+        "Toyota HiAce GL Grandia (12 Seats)": 12,
+        "Nissan NV350 Urvan (15 Seats)": 15,
+        "Hyundai Grand Starex / Staria (10 Seats)": 10,
+        "Mitsubishi L300 FB Body (16 Seats)": 16,
+        "Isuzu Traviz Commercial Shuttle (16 Seats)": 16
     };
 
     function getVehicleCapacity(type) {
@@ -244,9 +245,9 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const [key, cap] of Object.entries(FLEET_CAPACITIES)) {
             if (type.includes(key) || key.includes(type)) return cap;
         }
-        if (type.includes("Coaster")) return 24;
-        if (type.includes("L300")) return 16;
+        if (type.includes("Traviz") || type.includes("L300")) return 16;
         if (type.includes("Urvan")) return 15;
+        if (type.includes("Grandia")) return 12;
         if (type.includes("Starex") || type.includes("Staria")) return 10;
         return 14;
     }
@@ -307,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (pickupLoc) pickupLoc.value = res.pickup || "";
         if (destLoc) destLoc.value = res.destination || "";
-        if (vehicleType) vehicleType.value = res.vehicleType || "Toyota HiAce Commuter (14 Pax - Standard Shuttle)";
+        if (vehicleType) vehicleType.value = res.vehicleType || "Toyota HiAce Commuter (14 Seats)";
         if (units) units.value = res.units || 1;
         if (pax) pax.value = res.estimatedPax || (res.units ? res.units * getVehicleCapacity(res.vehicleType) : 14);
         if (costCenter) costCenter.value = res.costCenter || "";

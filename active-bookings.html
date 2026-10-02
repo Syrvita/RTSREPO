@@ -109,9 +109,9 @@
                 <div class="metric-card">
                     <div class="metric-card-content">
                         <span class="metric-card-label">LIVE IN-TRANSIT</span>
-                        <div class="metric-card-val" id="metricLiveInTransit">2 Units</div>
+                        <div class="metric-card-val" id="metricLiveInTransit">1 Trip</div>
                         <div class="metric-card-subtext">
-                            <span style="color: #1976D2; font-weight: 700;">● GPS Active</span> &bull; NLEX &amp; SLEX Corridors
+                            <span style="color: #2E7D32; font-weight: 700;">🟢 En Route Clark</span> &bull; NLEX Corridor
                         </div>
                     </div>
                     <div class="metric-card-icon-box icon-box-blue">
@@ -123,9 +123,9 @@
                 <div class="metric-card">
                     <div class="metric-card-content">
                         <span class="metric-card-label">CONFIRMED &amp; STAGED</span>
-                        <div class="metric-card-val" id="metricConfirmedStaged">1 Unit</div>
+                        <div class="metric-card-val" id="metricConfirmedStaged">2 Trips</div>
                         <div class="metric-card-subtext">
-                            <span style="color: #2E7D32; font-weight: 700;">✓ Manila Hub Bay 4</span> &bull; Boarding 17:30 PHT
+                            <span style="color: #2E7D32; font-weight: 700;">✓ Manila Hub Bay 4</span> &bull; Shift Staged
                         </div>
                     </div>
                     <div class="metric-card-icon-box icon-box-green">
@@ -137,9 +137,9 @@
                 <div class="metric-card">
                     <div class="metric-card-content">
                         <span class="metric-card-label">ACTIVE PASSENGERS</span>
-                        <div class="metric-card-val" id="metricActivePassengers">26 Pax</div>
+                        <div class="metric-card-val" id="metricActivePassengers">42 Pax</div>
                         <div class="metric-card-subtext">
-                            <span style="color: #616161; font-weight: 600;">Executive Shuttle</span> &bull; Airport Transfer
+                            <span style="color: #616161; font-weight: 600;">Corporate Commute</span> &bull; Apex Logistics Team
                         </div>
                     </div>
                     <div class="metric-card-icon-box icon-box-red">
@@ -158,7 +158,7 @@
                     </div>
                     <div class="eta-badge">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>Estimated Arrival: 45 min (13:15 PHT)</span>
+                        <span>Estimated Arrival: 10:45 AM PHT (32 mins remaining)</span>
                     </div>
                 </div>
 
@@ -166,24 +166,24 @@
                 <div class="tracker-progress-wrapper">
                     <div class="progress-timeline">
                         <div class="progress-track-bg">
-                            <div class="progress-track-fill" id="telemetryProgressBar"></div>
-                            <div class="progress-marker-origin" title="Origin: Port of Manila"></div>
+                            <div class="progress-track-fill" id="telemetryProgressBar" style="width: 68%;"></div>
+                            <div class="progress-marker-origin" title="Origin: Metro Manila Hub"></div>
                             <div class="progress-marker-current" id="telemetryMarkerCurrent" title="Current Location"></div>
                             <div class="current-pos-pill" id="telemetrySpeedPill">Current &bull; 84 km/h at NLEX Bocaue Toll Plaza</div>
-                            <div class="progress-marker-dest" title="Destination: Clark Logistics Hub"></div>
+                            <div class="progress-marker-dest" title="Destination: Clark Logistics Hub Terminal 2"></div>
                         </div>
                     </div>
                     <div class="waypoint-labels">
                         <div>
-                            <strong>Port of Manila Gate 4</strong>
+                            <strong>Metro Manila Hub</strong>
                             <span>Departed: 07:30 PHT</span>
                         </div>
                         <div style="text-align: center; color: #0284C7; font-weight: 600;">
-                            <span>NLEX Bocaue KM 27+400</span>
+                            <span>NLEX Bocaue Toll Plaza</span>
                         </div>
                         <div style="text-align: right;">
                             <strong>Clark Logistics Hub Terminal 2</strong>
-                            <span>ETA: 13:15 PHT (Scheduled 13:30)</span>
+                            <span>ETA: 10:45 AM PHT</span>
                         </div>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
                                 <div>
                                     <div class="detail-subcard-title">DUTY DRIVER</div>
                                     <div class="detail-subcard-main">Eduardo Santos</div>
-                                    <div class="detail-subcard-sub">ID: RVR-FLT-0382 &bull; Tier-1 Clear</div>
+                                    <div class="detail-subcard-sub">+63 917 555 0192 &bull; Tier-1 Clear</div>
                                 </div>
                             </div>
                             <div style="text-align: right;">
@@ -255,8 +255,8 @@
                         <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: #212121;">Active Fleet Manifests &amp; Booking Registry</h3>
                         <div class="tab-filters">
                             <button id="tabAllActive" class="tab-btn active">All Active (3)</button>
-                            <button id="tabInTransit" class="tab-btn">In Transit (2)</button>
-                            <button id="tabStaged" class="tab-btn">Staged (1)</button>
+                            <button id="tabInTransit" class="tab-btn">In Transit (1)</button>
+                            <button id="tabStaged" class="tab-btn">Staged (2)</button>
                         </div>
                     </div>
                     <div>
@@ -269,11 +269,11 @@
                     <thead>
                         <tr>
                             <th>BOOKING ID</th>
-                            <th>VEHICLE</th>
-                            <th>DRIVER</th>
-                            <th>CORRIDOR / ROUTE</th>
-                            <th>SCHEDULE</th>
-                            <th>STATUS</th>
+                            <th>VEHICLE &amp; ALLOCATION</th>
+                            <th>ASSIGNED DRIVER</th>
+                            <th>ROUTE CORRIDOR</th>
+                            <th>SCHEDULE &amp; TIME</th>
+                            <th>DISPATCH STATUS</th>
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
