@@ -163,6 +163,65 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function applyClientKycStatusInUI(kycStatus, entityId = "APEX-001") {
+        const apexCell = document.getElementById("apexStatusCell");
+        const approveBtn = document.getElementById("approveAccountBtn");
+
+        if (kycStatus === "Verified Tier-1") {
+            if (apexCell) {
+                apexCell.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-pill status-green">Verified Tier-1</span>
+                        <span style="color: #2E7D32; font-weight: 700; font-size: 11px;">✓ Verified</span>
+                    </div>
+                `;
+            }
+            if (approveBtn) {
+                approveBtn.innerText = "✓ Verified Tier-1";
+                approveBtn.style.backgroundColor = "#2E7D32";
+                approveBtn.style.cursor = "default";
+                approveBtn.disabled = true;
+            }
+        } else if (kycStatus === "Action Required") {
+            if (apexCell) {
+                apexCell.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-pill status-amber" style="background: #FFF8E1; color: #B45309; border: 1px solid #FCD34D;">Conditional Resubmit</span>
+                        <button class="btn-audit-dossier" data-action="audit" data-id="${entityId}" style="padding: 4px 10px; background: #FFFBEB; color: #B45309; border: 1px solid #FCD34D; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">Audit Dossier &rarr;</button>
+                    </div>
+                `;
+                const newBtn = apexCell.querySelector(".btn-audit-dossier");
+                if (newBtn) {
+                    newBtn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        openLegalDossier(entityId);
+                    });
+                }
+            }
+            if (approveBtn) {
+                approveBtn.innerText = "Action Required";
+                approveBtn.style.backgroundColor = "#B45309";
+                approveBtn.style.cursor = "pointer";
+                approveBtn.disabled = false;
+            }
+        } else if (kycStatus === "Rejected") {
+            if (apexCell) {
+                apexCell.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-pill status-red" style="background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2;">Rejected</span>
+                        <span style="color: #C62828; font-weight: 700; font-size: 11px;">✕ Blocked</span>
+                    </div>
+                `;
+            }
+            if (approveBtn) {
+                approveBtn.innerText = "✕ Rejected";
+                approveBtn.style.backgroundColor = "#C62828";
+                approveBtn.style.cursor = "default";
+                approveBtn.disabled = true;
+            }
+        }
+    }
+
     function openLegalDossier(entityId) {
         if (!legalDossierModal) return;
         activeEntityId = entityId || "APEX-001";
@@ -179,6 +238,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const titleEl = document.getElementById("dossierModalTitle");
         if (titleEl) {
             titleEl.innerText = `Legal Dossier Audit: ${client.name}`;
+        }
+
+        const decisionSelect = document.getElementById("verificationDecisionSelect");
+        if (decisionSelect) {
+            if (client.kycStatus === "Verified Tier-1") decisionSelect.value = "Approved";
+            else if (client.kycStatus === "Action Required") decisionSelect.value = "Conditional";
+            else if (client.kycStatus === "Rejected") decisionSelect.value = "Rejected";
+            else decisionSelect.value = "Approved";
+        }
+
+        const notesInput = document.getElementById("complianceAuditNotes");
+        if (notesInput && client.auditNotes) {
+            notesInput.value = client.auditNotes;
         }
 
         // Set default tab to BIR Form 2303
@@ -218,14 +290,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Authorize button
+        // Authorize / Decision button
         const authorizeBtn = document.getElementById("authorizeDossierBtn");
         if (authorizeBtn) {
             authorizeBtn.addEventListener("click", () => {
-                const creditSelect = document.getElementById("creditFacilitySelect");
+                const decisionSelect = document.getElementById("verificationDecisionSelect");
                 const notesInput = document.getElementById("complianceAuditNotes");
-                const facility = creditSelect ? creditSelect.value : "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)";
-                const auditNotes = notesInput ? notesInput.value.trim() : "Approved via Form PB-002 Legal Dossier Audit.";
+                const decision = decisionSelect ? decisionSelect.value : "Approved";
+                const enteredNotes = notesInput ? notesInput.value.trim() : "";
 
                 const db = ROVER_DB.get();
                 if (!Array.isArray(db.corporateClients)) {
@@ -233,34 +305,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 let targetClient = db.corporateClients.find(c => c.id === activeEntityId || c.name.includes("Apex"));
+                let kycStatus = "Verified Tier-1";
+                let bookingEligibility = "Full Access";
+                let defaultNote = "Approved via Form PB-002 Legal Dossier Audit.";
+
+                if (decision === "Approved") {
+                    kycStatus = "Verified Tier-1";
+                    bookingEligibility = "Full Access";
+                    defaultNote = "Approved via Form PB-002 Legal Dossier Audit.";
+                } else if (decision === "Conditional") {
+                    kycStatus = "Action Required";
+                    bookingEligibility = "Restricted";
+                    defaultNote = "Conditional: Pending document resubmission.";
+                } else if (decision === "Rejected") {
+                    kycStatus = "Rejected";
+                    bookingEligibility = "Blocked";
+                    defaultNote = "Deficient regulatory credentials";
+                }
+
+                const finalNotes = enteredNotes || defaultNote;
+
                 if (targetClient) {
-                    targetClient.kycStatus = "Verified Tier-1";
-                    targetClient.creditFacility = facility;
-                    targetClient.auditNotes = auditNotes;
+                    targetClient.kycStatus = kycStatus;
+                    targetClient.bookingEligibility = bookingEligibility;
+                    targetClient.auditNotes = finalNotes;
+                    targetClient.verifiedAt = new Date().toISOString();
                     targetClient.auditedAt = new Date().toISOString();
                     targetClient.auditedBy = currentUser.name || "Admin • Ops Manila";
                 }
                 ROVER_DB.save(db);
 
-                // Mutate target row in UI table
-                const apexCell = document.getElementById("apexStatusCell");
-                if (apexCell) {
-                    apexCell.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span class="status-pill status-green">Verified Tier-1</span>
-                            <span style="color: #2E7D32; font-weight: 700; font-size: 11px;">✓ Verified</span>
-                        </div>
-                    `;
-                }
-
-                // Update side dossier panel button
-                const approveBtn = document.getElementById("approveAccountBtn");
-                if (approveBtn) {
-                    approveBtn.innerText = "✓ Verified Tier-1";
-                    approveBtn.style.backgroundColor = "#2E7D32";
-                    approveBtn.style.cursor = "default";
-                    approveBtn.disabled = true;
-                }
+                // Update UI Table row & Side dossier panel
+                applyClientKycStatusInUI(kycStatus, activeEntityId);
 
                 closeLegalDossier();
             });
@@ -270,8 +346,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const rejectBtn = document.getElementById("rejectDossierBtn");
         if (rejectBtn) {
             rejectBtn.addEventListener("click", () => {
-                closeLegalDossier();
-                alert("Revision requested. Compliance notice dispatched to Rowena Mae Castaneda.");
+                const decisionSelect = document.getElementById("verificationDecisionSelect");
+                if (decisionSelect) decisionSelect.value = "Rejected";
+                const notesInput = document.getElementById("complianceAuditNotes");
+                if (notesInput) notesInput.value = "Deficient regulatory credentials";
+                const authorizeBtn = document.getElementById("authorizeDossierBtn");
+                if (authorizeBtn) {
+                    authorizeBtn.click();
+                }
             });
         }
     }
@@ -356,8 +438,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (rejectAccountBtn) {
             rejectAccountBtn.addEventListener("click", (e) => {
                 e.preventDefault();
-                alert("Revision requested. Compliance notice dispatched to company representative.");
+                openLegalDossier(activeEntityId || "APEX-001");
+                const decisionSelect = document.getElementById("verificationDecisionSelect");
+                if (decisionSelect) decisionSelect.value = "Rejected";
             });
+        }
+
+        // Check persisted KYC status on load
+        const initialDb = ROVER_DB.get();
+        const apexClient = (initialDb.corporateClients || []).find(c => c.id === "APEX-001" || c.name.includes("Apex"));
+        if (apexClient && apexClient.kycStatus && apexClient.kycStatus !== "Requires Review") {
+            applyClientKycStatusInUI(apexClient.kycStatus, apexClient.id || "APEX-001");
         }
     }
 

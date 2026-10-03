@@ -53,6 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
         ROVER_DB.save(db);
     }
 
+    // 2b. Configure dynamic back link based on referrer or query param
+    const backLink = document.getElementById("backToRequestsLink");
+    if (backLink) {
+        const returnTo = urlParams.get("from");
+        if (returnTo === "active-bookings" || (document.referrer && document.referrer.includes("active-bookings.html"))) {
+            backLink.href = "active-bookings.html";
+            backLink.innerHTML = "&larr; Back to Active Bookings";
+        } else if (returnTo === "client" || (document.referrer && document.referrer.includes("client.html"))) {
+            backLink.href = "client.html";
+            backLink.innerHTML = "&larr; Back to Dashboard";
+        }
+    }
+
     // 3. Render Manifest State
     renderManifest(currentReservation);
 
@@ -110,12 +123,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (statusBadgeEl) {
             if (isCancelled) {
                 statusBadgeEl.className = "status-pill status-cancelled";
+                statusBadgeEl.style.background = "#FFEBEE";
+                statusBadgeEl.style.color = "#C62828";
+                statusBadgeEl.style.border = "1px solid #FFCDD2";
                 statusBadgeEl.innerHTML = "✕ Cancelled";
             } else if (isConfirmed) {
                 statusBadgeEl.className = "status-pill status-confirmed";
+                statusBadgeEl.style.background = "#E8F5E9";
+                statusBadgeEl.style.color = "#2E7D32";
+                statusBadgeEl.style.border = "1px solid #C8E6C9";
                 statusBadgeEl.innerHTML = "✓ Confirmed";
             } else {
                 statusBadgeEl.className = "status-pill status-pending";
+                statusBadgeEl.style.background = "#FFF3E0";
+                statusBadgeEl.style.color = "#E65100";
+                statusBadgeEl.style.border = "1px solid #FFE0B2";
                 statusBadgeEl.innerHTML = "• Pending Review";
             }
         }
@@ -222,10 +244,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Mutate Database
             const database = ROVER_DB.get();
             const target = (database.reservations || []).find(r => r.id === currentReservation.id);
+            const feeWarningDisclosure = "15% standby surcharge disclosure acknowledged per MSA Section 4.2";
             if (target) {
                 target.status = "Cancelled";
                 target.cancellationReason = selectedReason;
                 target.cancellationNotes = enteredNotes;
+                target.feeWarningDisclosure = feeWarningDisclosure;
                 target.cancelledAt = new Date().toISOString();
                 currentReservation = target;
                 ROVER_DB.save(database);
@@ -233,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentReservation.status = "Cancelled";
                 currentReservation.cancellationReason = selectedReason;
                 currentReservation.cancellationNotes = enteredNotes;
+                currentReservation.feeWarningDisclosure = feeWarningDisclosure;
                 currentReservation.cancelledAt = new Date().toISOString();
                 database.reservations = database.reservations || [];
                 database.reservations.unshift(currentReservation);

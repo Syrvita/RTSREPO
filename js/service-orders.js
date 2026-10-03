@@ -100,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check existing database state on load
     const db = ROVER_DB.get();
-    const rq1042 = db.reservations ? db.reservations.find(r => r.id === "#RQ-1042") : null;
-    if (rq1042 && rq1042.status === "Assigned") {
+    const rq1042 = db.reservations ? db.reservations.find(r => r.id === "#RQ-1042" || r.id === "RQ-1042") : null;
+    if (rq1042 && (rq1042.status === "Assigned" || rq1042.auditStatus === "Assigned (Clear)")) {
         applyResolvedStateInDOM(rq1042.assignedVehicle || "RV-VAN-112");
     }
 
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 1. Mutate ROVER_DB in localStorage
             const freshDb = ROVER_DB.get();
-            const target = freshDb.reservations.find(r => r.id === "#RQ-1042");
+            const target = (freshDb.reservations || []).find(r => r.id === "#RQ-1042" || r.id === "RQ-1042");
             if (target) {
                 target.status = "Assigned";
                 target.auditStatus = "Assigned (Clear)";

@@ -89,26 +89,36 @@ document.addEventListener("DOMContentLoaded", () => {
             const tr = document.createElement("tr");
             tr.style.borderBottom = "1px solid #ECEFF1";
 
-            const isPending = r.status === "Pending" || r.status === "Pending Review";
-            const isConfirmed = r.status === "Confirmed";
             const isCancelled = r.status === "Cancelled";
+            const isConflict = r.status === "Pending Assignment / Conflict Block" || r.status === "Conflict" || r.auditStatus === "Schedule Overlap";
+            const isInTransit = r.status === "In Transit (Live)" || r.status === "In Transit" || r.status === "En Route";
+            const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged";
+            const isAssigned = r.status === "Assigned" || (r.auditStatus && r.auditStatus.includes("Assigned"));
+            const isPending = r.status === "Pending" || r.status === "Pending Review";
+            const isConfirmed = r.status === "Confirmed" || r.status === "Approved";
 
             const statusBadge = isCancelled ?
                 `<span class="status-pill status-cancelled" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10006; Cancelled</span>` :
+                isConflict ?
+                `<span class="status-pill status-conflict" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Pending Assignment / Conflict Block</span>` :
+                isInTransit ?
+                `<span class="status-pill status-in-transit" style="background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> In Transit (Live)</span>` :
+                isDispatched ?
+                `<span class="status-pill status-dispatched" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Dispatched</span>` :
+                isAssigned ?
+                `<span class="status-pill status-assigned" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Assigned (Clear)</span>` :
                 isPending ? 
                 `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Pending Review</span>` :
                 isConfirmed ? 
                 `<span class="status-pill status-confirmed" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Confirmed</span>` :
                 `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Completed</span>`;
 
-            const actionText = isPending ? "Modify Request" : isConfirmed ? "View Details" : "Download Manifest";
-
             // Strict 7-Column Layout mapping 1:1 with Table Headers
             const cleanId = (r.id || "").replace(/^#/, "");
             const paramId = encodeURIComponent(cleanId);
             const safeDisplayId = escapeHTML(r.id);
-            const safeVehicleType = escapeHTML(r.vehicleType || "Toyota HiAce Commuter");
-            const safePickup = escapeHTML(r.pickup || "Metro Manila Hub");
+            const safeVehicleType = escapeHTML(r.vehicleType || "Toyota HiAce Commuter (14 Seats)");
+            const safePickup = escapeHTML(r.pickup || r.origin || "Metro Manila Hub");
             const safeDestination = escapeHTML(r.destination || "Destination Terminal");
             const safeSchedule = escapeHTML(r.schedule || r.start || "");
             const safeReturn = r.return ? escapeHTML(r.return) : "";
@@ -157,6 +167,56 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             tbody.appendChild(tr);
         });
+
+        // 3. Render Dashboard Table if present on client.html
+        const dashTbody = document.getElementById("clientDashboardTableBody");
+        if (dashTbody) {
+            dashTbody.innerHTML = "";
+            const recentFour = reservations.slice(0, 4);
+            recentFour.forEach(r => {
+                const tr = document.createElement("tr");
+                const isCancelled = r.status === "Cancelled";
+                const isConflict = r.status === "Pending Assignment / Conflict Block" || r.status === "Conflict" || r.auditStatus === "Schedule Overlap";
+                const isInTransit = r.status === "In Transit (Live)" || r.status === "In Transit" || r.status === "En Route";
+                const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged";
+                const isAssigned = r.status === "Assigned" || (r.auditStatus && r.auditStatus.includes("Assigned"));
+                const isPending = r.status === "Pending" || r.status === "Pending Review";
+                const isConfirmed = r.status === "Confirmed" || r.status === "Approved";
+
+                const statusBadge = isCancelled ?
+                    `<span class="status-pill status-cancelled" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">&#10006; Cancelled</span>` :
+                    isConflict ?
+                    `<span class="status-pill status-conflict" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">Pending Assignment / Conflict Block</span>` :
+                    isInTransit ?
+                    `<span class="status-pill status-in-transit" style="background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● In Transit (Live)</span>` :
+                    isDispatched ?
+                    `<span class="status-pill status-dispatched" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Dispatched</span>` :
+                    isAssigned ?
+                    `<span class="status-pill status-assigned" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Assigned (Clear)</span>` :
+                    isPending ? 
+                    `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● Pending Review</span>` :
+                    isConfirmed ? 
+                    `<span class="status-pill status-confirmed" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Confirmed</span>` :
+                    `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">Completed</span>`;
+
+                const cleanId = (r.id || "").replace(/^#/, "");
+                const paramId = encodeURIComponent(cleanId);
+                const safeDisplayId = escapeHTML(r.id);
+                const safeVehicleType = escapeHTML(r.vehicleType || "Toyota HiAce Commuter (14 Seats)");
+                const routeDesc = escapeHTML(r.route || (r.pickup ? `${r.pickup} → ${r.destination}` : "Manila Route"));
+                const dateDesc = escapeHTML(r.schedule || r.start || "Scheduled Shift");
+                const shiftDesc = escapeHTML(r.pickupWindow || r.notes || "Standard Operations Window");
+
+                tr.innerHTML = `
+                    <td style="padding: 1rem 1.5rem; border-bottom: 1px solid #EEEEEE; font-size: 0.875rem;"><strong>${safeDisplayId}</strong></td>
+                    <td style="padding: 1rem 1.5rem; border-bottom: 1px solid #EEEEEE; font-size: 0.875rem; color: #424242;">${safeVehicleType}<br><span style="font-size: 0.75rem; color: #757575;">${routeDesc}</span></td>
+                    <td style="padding: 1rem 1.5rem; border-bottom: 1px solid #EEEEEE; font-size: 0.875rem; color: #424242;">${dateDesc}<br><span style="font-size: 0.75rem; color: #757575;">${shiftDesc}</span></td>
+                    <td style="padding: 1rem 1.5rem; border-bottom: 1px solid #EEEEEE;">${statusBadge}</td>
+                    <td style="padding: 1rem 1.5rem; border-bottom: 1px solid #EEEEEE;"><a href="reservation-details.html?id=${paramId}" style="color: #1976D2; font-size: 0.875rem; font-weight: 600; text-decoration: none;">View Details</a></td>
+                `;
+                dashTbody.appendChild(tr);
+            });
+        }
 
         // Bind Action Buttons
         bindActionButtons();

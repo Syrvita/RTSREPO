@@ -82,7 +82,7 @@ const ROVER_DB_SEED = {
             pickupWindow: "Oct 28, 2026 • 08:00 – 18:00 PHT",
             vehiclePref: "1x Toyota HiAce Commuter",
             vehicleType: "Toyota HiAce Commuter (14 Seats)",
-            status: "Conflict",
+            status: "Pending Assignment / Conflict Block",
             auditStatus: "Schedule Overlap",
             units: 1,
             estimatedPax: 14,
@@ -120,8 +120,8 @@ const ROVER_DB_SEED = {
             pickupWindow: "Oct 28, 2026 • 07:30 – 13:30 PHT",
             vehiclePref: "1x Toyota HiAce Commuter",
             vehicleType: "Toyota HiAce Commuter (14 Seats)",
-            status: "En Route",
-            auditStatus: "En Route (Locked)",
+            status: "In Transit (Live)",
+            auditStatus: "In Transit (Live)",
             units: 1,
             estimatedPax: 12,
             origin: "Port of Manila Gate 4",
@@ -307,6 +307,22 @@ window.ROVER_DB = {
                 ];
                 if (!data.fleet) data.fleet = ROVER_DB_SEED.fleet;
                 if (!data.drivers) data.drivers = ROVER_DB_SEED.drivers;
+                this.save(data);
+            }
+            // Normalize active reservation statuses for cross-view consistency
+            let dbChanged = false;
+            const res1038 = data.reservations.find(r => r.id === "#RQ-1038" || r.id === "RQ-1038");
+            if (res1038 && (res1038.status === "En Route" || !res1038.status.includes("In Transit"))) {
+                res1038.status = "In Transit (Live)";
+                res1038.auditStatus = "In Transit (Live)";
+                dbChanged = true;
+            }
+            const res1042 = data.reservations.find(r => r.id === "#RQ-1042" || r.id === "RQ-1042");
+            if (res1042 && res1042.status === "Conflict") {
+                res1042.status = "Pending Assignment / Conflict Block";
+                dbChanged = true;
+            }
+            if (dbChanged) {
                 this.save(data);
             }
             return data;

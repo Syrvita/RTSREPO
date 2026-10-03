@@ -24,9 +24,9 @@
                 <a href="service-orders.html" class="nav-item">Service Orders</a>
                 <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
                 <a href="users.html" class="nav-item">User Management</a>
-                <a href="#" class="nav-item">Driver Directory</a>
+                <a href="users.html" class="nav-item">Driver Directory</a>
                 <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
-                <a href="#" class="nav-item">Expense Reports</a>
+                <a href="javascript:void(0)" class="nav-item">Expense Reports</a>
             </nav>
             <div class="sidebar-footer">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -243,7 +243,7 @@
                         <h2 id="dossierModalTitle" style="margin: 0; font-size: 18px; font-weight: 700; color: #212121;">Legal Dossier Audit: Apex Logistics Global Inc.</h2>
                         <span style="background: #FFEBEE; color: #D32F2F; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #FFCDD2; letter-spacing: 0.5px;">FORM PB-002</span>
                     </div>
-                    <p style="margin: 0; font-size: 12px; color: #757575;">Cross-check uploaded regulatory certifications against national tax records and assign credit facilities.</p>
+                    <p style="margin: 0; font-size: 12px; color: #757575;">Cross-check uploaded regulatory certifications against national tax records to verify corporate booking eligibility.</p>
                 </div>
                 <button id="closeDossierModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 0 4px; line-height: 1;" title="Close Modal">&times;</button>
             </div>
@@ -293,17 +293,17 @@
                     </div>
 
                     <div>
-                        <label for="creditFacilitySelect" style="display: block; font-size: 12px; font-weight: 700; color: #37474F; margin-bottom: 6px;">ASSIGN CREDIT FACILITY &amp; TERMS</label>
-                        <select id="creditFacilitySelect" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-weight: 600; background: #FFFFFF; outline: none; cursor: pointer;">
-                            <option value="Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)" selected>Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)</option>
-                            <option value="Tier-2 Corporate (Net 15 • PHP 250,000)">Tier-2 Corporate (Net 15 • PHP 250,000)</option>
-                            <option value="Prepaid / Escrow Only">Prepaid / Escrow Only</option>
+                        <label for="verificationDecisionSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">ACCOUNT VERIFICATION DECISION *</label>
+                        <select id="verificationDecisionSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-weight: 600; background: #FFFFFF; outline: none; cursor: pointer;">
+                            <option value="Approved" selected>Approved — Full Enterprise Booking Privileges</option>
+                            <option value="Conditional">Conditional — Pending Document Resubmission</option>
+                            <option value="Rejected">Rejected — Non-Compliant Entity Credentials</option>
                         </select>
                     </div>
 
                     <div>
                         <label for="complianceAuditNotes" style="display: block; font-size: 12px; font-weight: 700; color: #37474F; margin-bottom: 6px;">COMPLIANCE AUDIT NOTES</label>
-                        <textarea id="complianceAuditNotes" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Enter audit observations or special SLA requirements...">BIR 2303 &amp; SEC verification confirmed via BIR East Makati RDO 047. Approved for Tier-1 Corporate credit dispatch.</textarea>
+                        <textarea id="complianceAuditNotes" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Enter audit observations or special SLA requirements...">BIR 2303 &amp; SEC verification confirmed via BIR East Makati RDO 047. Approved for enterprise booking dispatch.</textarea>
                     </div>
                 </div>
             </div>
@@ -312,11 +312,11 @@
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid #ECEFF1; background: #FAFAFA;">
                 <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.5px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <span>STATUTORY VERIFICATION AUDIT TRAIL PRESERVED &bull; AMLA COMPLIANT</span>
+                    <span>Statutory audit trail recorded under RA 10173 &bull; Approval unlocks enterprise booking clearance.</span>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="rejectDossierBtn" style="padding: 8px 16px; border: 1px solid #B0BEC5; background: transparent; color: #546E7A; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Reject Dossier</button>
-                    <button id="authorizeDossierBtn" style="padding: 8px 18px; border: none; background: #2E7D32; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Authorize Credit &amp; Verify Account &rarr;</button>
+                    <button id="authorizeDossierBtn" style="padding: 8px 18px; border: none; background: #2E7D32; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Approve &amp; Activate Account &rarr;</button>
                 </div>
             </div>
         </div>
