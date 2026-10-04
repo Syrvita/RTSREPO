@@ -66,7 +66,8 @@ button, input, select, textarea {
     top: 0;
     left: 0;
     width: 260px;
-    height: 100vh;
+    height: 100%;
+    min-height: 100vh;
     background-color: var(--color-sidebar);
     color: #FFFFFF;
     display: flex;
@@ -498,3 +499,70 @@ input[type="datetime-local"].modal-input {
     min-height: 38px;
     cursor: pointer;
 }
+
+/* ==========================================================================
+   ROVER ENTERPRISE - UNIFIED VIEWPORT ZOOM CONTROLS
+   ========================================================================== */
+.rover-zoom-control {
+    display: inline-flex;
+    align-items: center;
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 2px 4px;
+    gap: 2px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: #334155;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    height: 28px;
+    box-sizing: border-box;
+    margin: 0 8px;
+    vertical-align: middle;
+}
+
+.rover-zoom-control button {
+    border: none;
+    background: transparent;
+    color: #475569;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+    padding: 0;
+    outline: none;
+}
+
+.rover-zoom-control button:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+.rover-zoom-control button:active {
+    background: #CBD5E1;
+}
+
+.rover-zoom-control span {
+    min-width: 38px;
+    text-align: center;
+    cursor: pointer;
+    color: #0F172A;
+    font-weight: 700;
+    padding: 0 4px;
+    font-size: 11px;
+    transition: color 0.15s;
+}
+
+.rover-zoom-control span:hover {
+    color: #D32F2F;
+}
+
