@@ -414,30 +414,55 @@
                     </div>
                 </div>
 
-                <!-- Two-Column Fleet & Driver Allocation -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div>
-                        <label for="adminVehicleSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Direct Philippine Fleet Asset Allocation *</label>
-                        <select id="adminVehicleSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
-                            <option value="">Select available van unit...</option>
-                            <option value="RV-VAN-112" data-name="Toyota HiAce Commuter Deluxe" data-plate="NCL-8821">Toyota HiAce Commuter Deluxe (NCL-8821 • 14 Seats • Ready)</option>
-                            <option value="RV-URV-108" data-name="Nissan NV350 Urvan Standard" data-plate="NCR-9012">Nissan NV350 Urvan Standard (NCR-9012 • 15 Seats • Ready)</option>
-                            <option value="RV-STR-204" data-name="Hyundai Grand Starex Executive" data-plate="NDB-4321">Hyundai Grand Starex Executive (NDB-4321 • 10 Seats • Ready)</option>
-                            <option value="RV-L30-005" data-name="Mitsubishi L300 FB Shuttle" data-plate="NAA-7741">Mitsubishi L300 FB Shuttle (NAA-7741 • 16 Seats • Ready)</option>
-                            <option value="RV-TRV-012" data-name="Isuzu Traviz Utility Shuttle" data-plate="NBE-3019">Isuzu Traviz Utility Shuttle (NBE-3019 • 16 Seats • Ready)</option>
-                        </select>
-                        <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Verified RFID tollway pass &amp; comprehensive insurance active.</div>
+                <!-- Multi-Vehicle & Pilot Allocation Section -->
+                <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #F3F4F6;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #1F2937; text-transform: uppercase; letter-spacing: 0.5px;">PHILIPPINE FLEET ASSETS &amp; DUTY PILOTS *</span>
+                            <span id="adminVehicleCountBadge" style="font-size: 10px; font-weight: 700; background: #FFEBEE; color: #D32F2F; padding: 2px 8px; border-radius: 10px;">1 Vehicle Assigned</span>
+                        </div>
+                        <button type="button" id="btnAddAdminVehicleRow" style="background: #FFF5F5; border: 1px solid #FFCDD2; color: #D32F2F; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s;">
+                            <span style="font-size: 14px; line-height: 1; font-weight: 800;">+</span> Add Another Vehicle
+                        </button>
                     </div>
-                    <div>
-                        <label for="adminDriverSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Assign Rostered Duty Pilot *</label>
-                        <select id="adminDriverSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
-                            <option value="">Select rostered duty driver...</option>
-                            <option value="DRV-003" data-name="Danilo Ramos" data-lic="N01-18-094821">Danilo Ramos (Lic: N01-18-094821 • Shift Cleared)</option>
-                            <option value="DRV-007" data-name="Rogelio D. Santos" data-lic="N02-14-382910">Rogelio D. Santos (Lic: N02-14-382910 • Manila Standby)</option>
-                            <option value="DRV-011" data-name="Arnel M. Bautista" data-lic="N03-19-102948">Arnel M. Bautista (Lic: N03-19-102948 • Shift Cleared)</option>
-                            <option value="DRV-014" data-name="Ferdinand Cruz" data-lic="N01-16-994820">Ferdinand Cruz (Lic: N01-16-994820 • Ready)</option>
-                        </select>
-                        <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Rest period cleared under DOLE/LTFRB regulations.</div>
+
+                    <!-- Dynamic Container for Vehicle Rows -->
+                    <div id="adminVehiclesContainer" style="display: flex; flex-direction: column; gap: 14px;">
+                        <!-- Vehicle Row 1 (Primary Unit) -->
+                        <div class="admin-vehicle-row" data-row-index="1" style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 14px; position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span class="vehicle-row-label" style="font-size: 11px; font-weight: 700; color: #374151; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="vehicle-row-number" style="width: 18px; height: 18px; border-radius: 50%; background: #D32F2F; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;">1</span>
+                                    <span class="vehicle-row-title">Primary Fleet Unit &amp; Shift Pilot</span>
+                                </span>
+                                <button type="button" class="btn-remove-admin-vehicle" style="display: none; background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 600; cursor: pointer; padding: 2px 6px;">✕ Remove Unit</button>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                                <div>
+                                    <label for="adminVehicleSelect" style="display: block; font-size: 10px; font-weight: 700; color: #4B5563; margin-bottom: 5px; text-transform: uppercase;">Direct Philippine Fleet Asset Allocation *</label>
+                                    <select id="adminVehicleSelect" class="admin-vehicle-select" required style="width: 100%; padding: 9px 11px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                                        <option value="">Select available van unit...</option>
+                                        <option value="RV-VAN-112" data-name="Toyota HiAce Commuter Deluxe" data-plate="NCL-8821">Toyota HiAce Commuter Deluxe (NCL-8821 • 14 Seats • Ready)</option>
+                                        <option value="RV-URV-108" data-name="Nissan NV350 Urvan Standard" data-plate="NCR-9012">Nissan NV350 Urvan Standard (NCR-9012 • 15 Seats • Ready)</option>
+                                        <option value="RV-STR-204" data-name="Hyundai Grand Starex Executive" data-plate="NDB-4321">Hyundai Grand Starex Executive (NDB-4321 • 10 Seats • Ready)</option>
+                                        <option value="RV-L30-005" data-name="Mitsubishi L300 FB Shuttle" data-plate="NAA-7741">Mitsubishi L300 FB Shuttle (NAA-7741 • 16 Seats • Ready)</option>
+                                        <option value="RV-TRV-012" data-name="Isuzu Traviz Utility Shuttle" data-plate="NBE-3019">Isuzu Traviz Utility Shuttle (NBE-3019 • 16 Seats • Ready)</option>
+                                    </select>
+                                    <div style="font-size: 10px; color: #6B7280; margin-top: 3px;">Verified RFID tollway pass &amp; comprehensive insurance active.</div>
+                                </div>
+                                <div>
+                                    <label for="adminDriverSelect" style="display: block; font-size: 10px; font-weight: 700; color: #4B5563; margin-bottom: 5px; text-transform: uppercase;">Assign Rostered Duty Pilot *</label>
+                                    <select id="adminDriverSelect" class="admin-driver-select" required style="width: 100%; padding: 9px 11px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                                        <option value="">Select rostered duty driver...</option>
+                                        <option value="DRV-003" data-name="Danilo Ramos" data-lic="N01-18-094821">Danilo Ramos (Lic: N01-18-094821 • Shift Cleared)</option>
+                                        <option value="DRV-007" data-name="Rogelio D. Santos" data-lic="N02-14-382910">Rogelio D. Santos (Lic: N02-14-382910 • Manila Standby)</option>
+                                        <option value="DRV-011" data-name="Arnel M. Bautista" data-lic="N03-19-102948">Arnel M. Bautista (Lic: N03-19-102948 • Shift Cleared)</option>
+                                        <option value="DRV-014" data-name="Ferdinand Cruz" data-lic="N01-16-994820">Ferdinand Cruz (Lic: N01-16-994820 • Ready)</option>
+                                    </select>
+                                    <div style="font-size: 10px; color: #6B7280; margin-top: 3px;">Rest period cleared under DOLE/LTFRB regulations.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

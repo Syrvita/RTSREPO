@@ -66,33 +66,38 @@ document.addEventListener("DOMContentLoaded", () => {
         // Vehicle info
         const vehicleEl = document.getElementById("gatePassVehicleModel");
         const plateEl = document.getElementById("gatePassPlate");
-        if (res && res.vehicleAssigned) {
+        const isMultiGate = (res && res.units > 1) || (res && res.assignedVehicles && res.assignedVehicles.length > 1) || (res && res.assignedVehicle && res.assignedVehicle.includes(","));
+        if (isMultiGate) {
+            const vList = res.assignedVehicles ? res.assignedVehicles.map(v => v.vehicleName).join(", ") : (res.vehicleAssigned || "Multi-Unit Fleet");
+            const pList = res.assignedVehicles ? res.assignedVehicles.map(v => v.plate || v.unitId).join(", ") : (res.assignedVehicle || "Multi-Unit");
+            if (vehicleEl) vehicleEl.textContent = `${res.units || 2}x Convoy Units: ${vList}`;
+            if (plateEl) plateEl.textContent = pList;
+
+            const dList = res.assignedVehicles ? res.assignedVehicles.map(v => v.driverName).join(", ") : (res.driverAssigned || res.assignedDriver || "Assigned Pilots");
+            const lList = res.assignedVehicles ? res.assignedVehicles.map(v => v.driverLic || "Cleared").join(", ") : "Multi-Pilot Cleared";
+            if (driverEl) driverEl.textContent = dList;
+            if (licEl) licEl.textContent = lList;
+        } else if (res && res.vehicleAssigned) {
             if (vehicleEl) vehicleEl.textContent = res.vehicleAssigned.split("(")[0].trim() || "Toyota HiAce Commuter Deluxe";
             if (plateEl) {
                 const match = res.vehicleAssigned.match(/\(([^)]+)\)/);
                 plateEl.textContent = match ? match[1] : "NCL-8821";
             }
+            if (res.driverAssigned) {
+                if (driverEl) driverEl.textContent = res.driverAssigned.split("(")[0].trim() || "Danilo Ramos";
+                if (licEl) {
+                    const match = res.driverAssigned.match(/Lic:\s*([A-Za-z0-9-]+)/);
+                    licEl.textContent = match ? match[1] : "N01-18-094821";
+                }
+            }
         } else if (activeGatePassTargetId === "RQ-8819") {
             if (vehicleEl) vehicleEl.textContent = "Nissan NV350 Urvan Standard";
             if (plateEl) plateEl.textContent = "NCR-9012";
-        } else {
-            if (vehicleEl) vehicleEl.textContent = "Toyota HiAce Commuter Deluxe";
-            if (plateEl) plateEl.textContent = "NCL-8821";
-        }
-
-        // Driver info
-        const driverEl = document.getElementById("gatePassDriverName");
-        const licEl = document.getElementById("gatePassDriverLic");
-        if (res && res.driverAssigned) {
-            if (driverEl) driverEl.textContent = res.driverAssigned.split("(")[0].trim() || "Danilo Ramos";
-            if (licEl) {
-                const match = res.driverAssigned.match(/Lic:\s*([A-Za-z0-9-]+)/);
-                licEl.textContent = match ? match[1] : "N01-18-094821";
-            }
-        } else if (activeGatePassTargetId === "RQ-8819") {
             if (driverEl) driverEl.textContent = "Rogelio D. Santos";
             if (licEl) licEl.textContent = "N02-14-382910";
         } else {
+            if (vehicleEl) vehicleEl.textContent = "Toyota HiAce Commuter Deluxe";
+            if (plateEl) plateEl.textContent = "NCL-8821";
             if (driverEl) driverEl.textContent = "Danilo Ramos";
             if (licEl) licEl.textContent = "N01-18-094821";
         }
@@ -217,6 +222,105 @@ document.addEventListener("DOMContentLoaded", () => {
         adminManualDispatchModal.style.display = "none";
     }
 
+    const btnAddAdminVehicleRow = document.getElementById("btnAddAdminVehicleRow");
+    const adminVehiclesContainer = document.getElementById("adminVehiclesContainer");
+    const adminVehicleCountBadge = document.getElementById("adminVehicleCountBadge");
+
+    function updateAdminVehicleRowIndices() {
+        if (!adminVehiclesContainer) return;
+        const rows = adminVehiclesContainer.querySelectorAll(".admin-vehicle-row");
+        const count = rows.length;
+
+        rows.forEach((row, index) => {
+            const idx = index + 1;
+            row.dataset.rowIndex = idx;
+
+            const numBadge = row.querySelector(".vehicle-row-number");
+            if (numBadge) numBadge.textContent = idx;
+
+            const titleEl = row.querySelector(".vehicle-row-title");
+            if (titleEl) {
+                titleEl.textContent = idx === 1 ? "Primary Fleet Unit & Shift Pilot" : `Convoy Unit #${idx} & Shift Pilot`;
+            }
+
+            const removeBtn = row.querySelector(".btn-remove-admin-vehicle");
+            if (removeBtn) {
+                removeBtn.style.display = count > 1 ? "inline-block" : "none";
+            }
+        });
+
+        if (adminVehicleCountBadge) {
+            adminVehicleCountBadge.textContent = count === 1 
+                ? "1 Vehicle Assigned" 
+                : `${count} Vehicles Assigned (Convoy)`;
+        }
+    }
+
+    function createAdminVehicleRow(index) {
+        const row = document.createElement("div");
+        row.className = "admin-vehicle-row";
+        row.dataset.rowIndex = index;
+        row.style.cssText = "background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 14px; position: relative;";
+
+        row.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span class="vehicle-row-label" style="font-size: 11px; font-weight: 700; color: #374151; display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="vehicle-row-number" style="width: 18px; height: 18px; border-radius: 50%; background: #D32F2F; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;">${index}</span>
+                    <span class="vehicle-row-title">Convoy Unit #${index} &amp; Shift Pilot</span>
+                </span>
+                <button type="button" class="btn-remove-admin-vehicle" style="background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 600; cursor: pointer; padding: 2px 6px;">✕ Remove Unit</button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div>
+                    <label style="display: block; font-size: 10px; font-weight: 700; color: #4B5563; margin-bottom: 5px; text-transform: uppercase;">Direct Philippine Fleet Asset Allocation *</label>
+                    <select class="admin-vehicle-select" required style="width: 100%; padding: 9px 11px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                        <option value="">Select available van unit...</option>
+                        <option value="RV-URV-108" data-name="Nissan NV350 Urvan Standard" data-plate="NCR-9012">Nissan NV350 Urvan Standard (NCR-9012 • 15 Seats • Ready)</option>
+                        <option value="RV-VAN-112" data-name="Toyota HiAce Commuter Deluxe" data-plate="NCL-8821">Toyota HiAce Commuter Deluxe (NCL-8821 • 14 Seats • Ready)</option>
+                        <option value="RV-STR-204" data-name="Hyundai Grand Starex Executive" data-plate="NDB-4321">Hyundai Grand Starex Executive (NDB-4321 • 10 Seats • Ready)</option>
+                        <option value="RV-L30-005" data-name="Mitsubishi L300 FB Shuttle" data-plate="NAA-7741">Mitsubishi L300 FB Shuttle (NAA-7741 • 16 Seats • Ready)</option>
+                        <option value="RV-TRV-012" data-name="Isuzu Traviz Utility Shuttle" data-plate="NBE-3019">Isuzu Traviz Utility Shuttle (NBE-3019 • 16 Seats • Ready)</option>
+                    </select>
+                    <div style="font-size: 10px; color: #6B7280; margin-top: 3px;">Verified RFID tollway pass &amp; comprehensive insurance active.</div>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 10px; font-weight: 700; color: #4B5563; margin-bottom: 5px; text-transform: uppercase;">Assign Rostered Duty Pilot *</label>
+                    <select class="admin-driver-select" required style="width: 100%; padding: 9px 11px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                        <option value="">Select rostered duty driver...</option>
+                        <option value="DRV-007" data-name="Rogelio D. Santos" data-lic="N02-14-382910">Rogelio D. Santos (Lic: N02-14-382910 • Manila Standby)</option>
+                        <option value="DRV-003" data-name="Danilo Ramos" data-lic="N01-18-094821">Danilo Ramos (Lic: N01-18-094821 • Shift Cleared)</option>
+                        <option value="DRV-011" data-name="Arnel M. Bautista" data-lic="N03-19-102948">Arnel M. Bautista (Lic: N03-19-102948 • Shift Cleared)</option>
+                        <option value="DRV-014" data-name="Ferdinand Cruz" data-lic="N01-16-994820">Ferdinand Cruz (Lic: N01-16-994820 • Ready)</option>
+                    </select>
+                    <div style="font-size: 10px; color: #6B7280; margin-top: 3px;">Rest period cleared under DOLE/LTFRB regulations.</div>
+                </div>
+            </div>
+        `;
+
+        return row;
+    }
+
+    if (btnAddAdminVehicleRow && adminVehiclesContainer) {
+        btnAddAdminVehicleRow.addEventListener("click", () => {
+            const currentRows = adminVehiclesContainer.querySelectorAll(".admin-vehicle-row");
+            const nextIndex = currentRows.length + 1;
+            const newRow = createAdminVehicleRow(nextIndex);
+            adminVehiclesContainer.appendChild(newRow);
+            updateAdminVehicleRowIndices();
+        });
+
+        adminVehiclesContainer.addEventListener("click", (e) => {
+            const removeBtn = e.target.closest(".btn-remove-admin-vehicle");
+            if (removeBtn) {
+                const row = removeBtn.closest(".admin-vehicle-row");
+                if (row) {
+                    row.remove();
+                    updateAdminVehicleRowIndices();
+                }
+            }
+        });
+    }
+
     if (openAdminManualDispatchBtn) {
         openAdminManualDispatchBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -263,28 +367,75 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
 
             const targetVal = adminTargetBooking ? adminTargetBooking.value : "";
-            const vehicleVal = adminVehicleSelect ? adminVehicleSelect.value : "";
-            const driverVal = adminDriverSelect ? adminDriverSelect.value : "";
+            if (!targetVal) {
+                alert("Validation Error: Please select a target booking.");
+                return;
+            }
 
-            if (!targetVal || !vehicleVal || !driverVal) {
-                alert("Validation Error: Please select a target booking, a Philippine fleet vehicle, and a rostered pilot.");
+            // Extract all allocated vehicle + pilot rows
+            const vehicleRows = adminManualDispatchModal.querySelectorAll(".admin-vehicle-row");
+            const allocations = [];
+            let hasValidationError = false;
+
+            vehicleRows.forEach((row, idx) => {
+                const vSelect = row.querySelector(".admin-vehicle-select");
+                const dSelect = row.querySelector(".admin-driver-select");
+                const vVal = vSelect ? vSelect.value : "";
+                const dVal = dSelect ? dSelect.value : "";
+
+                if (!vVal || !dVal) {
+                    hasValidationError = true;
+                    return;
+                }
+
+                const optV = vSelect.options[vSelect.selectedIndex];
+                const optD = dSelect.options[dSelect.selectedIndex];
+
+                const vName = optV.getAttribute("data-name") || optV.text.split("(")[0].trim();
+                const vPlate = optV.getAttribute("data-plate") || (optV.text.match(/\(([A-Z]{3}-\d{4})/)?.[1] || "NCL-8821");
+                const dName = optD.getAttribute("data-name") || optD.text.split("(")[0].trim();
+                const dLic = optD.getAttribute("data-lic") || (optD.text.match(/Lic:\s*([A-Za-z0-9-]+)/)?.[1] || "N01-18-094821");
+
+                allocations.push({
+                    unitId: vVal,
+                    vehicleName: vName,
+                    plate: vPlate,
+                    driverId: dVal,
+                    driverName: dName,
+                    driverLic: dLic
+                });
+            });
+
+            if (allocations.length === 0 || hasValidationError) {
+                alert("Validation Error: Please ensure every allocated vehicle slot has an assigned vehicle asset and rostered pilot.");
+                return;
+            }
+
+            // Check duplicate vehicles
+            const assignedUnits = allocations.map(a => a.unitId);
+            const duplicateUnit = assignedUnits.find((u, i) => assignedUnits.indexOf(u) !== i);
+            if (duplicateUnit) {
+                alert(`Allocation Conflict: Fleet asset [${duplicateUnit}] is assigned multiple times in this dispatch. Please select distinct vehicles.`);
                 return;
             }
 
             const optBooking = adminTargetBooking.options[adminTargetBooking.selectedIndex];
-            const optVehicle = adminVehicleSelect.options[adminVehicleSelect.selectedIndex];
-            const optDriver = adminDriverSelect.options[adminDriverSelect.selectedIndex];
-
             const clientName = optBooking.getAttribute("data-client") || "Executive Corporate Delegation";
             const routeName = optBooking.getAttribute("data-route") || "Express Diplomatic / Corporate Corridor";
             const pickupWindow = optBooking.getAttribute("data-time") || "Oct 30, 2026 • Immediate Direct Release";
             const paxCount = optBooking.getAttribute("data-pax") || "14";
 
-            const vehicleName = optVehicle.getAttribute("data-name") || "Toyota HiAce Commuter Deluxe";
-            const vehiclePlate = optVehicle.getAttribute("data-plate") || "NCL-8821";
+            const isMulti = allocations.length > 1;
+            const primaryAlloc = allocations[0];
+            const assignedVehicleStr = allocations.map(a => a.unitId).join(", ");
+            const vehicleAssignedStr = isMulti
+                ? `${allocations.length}x Fleet Assets: ` + allocations.map(a => `${a.vehicleName} (${a.plate})`).join(" + ")
+                : `${primaryAlloc.vehicleName} (${primaryAlloc.plate})`;
 
-            const driverName = optDriver.getAttribute("data-name") || "Danilo Ramos";
-            const driverLic = optDriver.getAttribute("data-lic") || "N01-18-094821";
+            const driverAssignedStr = isMulti
+                ? allocations.map(a => `${a.driverName} (Lic: ${a.driverLic})`).join(", ")
+                : `${primaryAlloc.driverName} (Lic: ${primaryAlloc.driverLic})`;
+            const assignedDriverStr = allocations.map(a => a.driverName).join(", ");
 
             const isInstantGate = adminInstantGateRelease ? adminInstantGateRelease.checked : true;
             const directivesNotes = adminDispatchNotes ? adminDispatchNotes.value : "Direct executive clearance granted. Proceed immediately via Skyway Stage 3 / NLEX corridor.";
@@ -307,11 +458,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 route: routeName,
                 pickupWindow: pickupWindow,
                 schedule: pickupWindow,
-                vehicleAssigned: `${vehicleName} (${vehiclePlate})`,
-                assignedVehicle: vehicleVal,
-                vehicleType: vehicleName,
-                driverAssigned: `${driverName} (Lic: ${driverLic})`,
-                assignedDriver: driverName,
+                vehicleAssigned: vehicleAssignedStr,
+                assignedVehicle: assignedVehicleStr,
+                vehicleType: primaryAlloc.vehicleName,
+                driverAssigned: driverAssignedStr,
+                assignedDriver: assignedDriverStr,
+                units: allocations.length,
+                assignedVehicles: allocations,
                 status: isInstantGate ? "Confirmed & Dispatched" : "Staged (Pending Admin Approval)",
                 auditStatus: isInstantGate ? "Confirmed & Dispatched" : "Staged",
                 gatePassId: isInstantGate ? gatePassId : null,
@@ -328,13 +481,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 db.reservations.unshift(newRecord);
             }
 
-            // Update vehicle status in fleet
+            // Update all vehicle status in fleet
             if (db.fleet) {
-                const fleetUnit = db.fleet.find(u => u.id === vehicleVal || u.plate === vehiclePlate);
-                if (fleetUnit) {
-                    fleetUnit.status = isInstantGate ? "Dispatched / Active Trip" : "Staged for Dispatch";
-                    fleetUnit.currentTrip = `#${cleanId}`;
-                }
+                allocations.forEach(a => {
+                    const fleetUnit = db.fleet.find(u => u.id === a.unitId || u.plate === a.plate);
+                    if (fleetUnit) {
+                        fleetUnit.status = isInstantGate ? "Dispatched / Active Trip" : "Staged for Dispatch";
+                        fleetUnit.currentTrip = `#${cleanId}`;
+                    }
+                });
             }
 
             ROVER_DB.save(db);
@@ -352,7 +507,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (adminSummaryRoute) adminSummaryRoute.textContent = "Select a booking above";
             if (adminSummaryPax) adminSummaryPax.textContent = "—";
 
-            alert(`Executive Direct Dispatch executed for #${cleanId}. Official Gate Pass ${gatePassId} issued.`);
+            const unitText = isMulti ? `${allocations.length} vehicles` : "1 vehicle";
+            alert(`Executive Direct Dispatch executed for #${cleanId} (${unitText}). Official Gate Pass ${gatePassId} issued.`);
         });
     }
 
@@ -704,15 +860,28 @@ document.addEventListener("DOMContentLoaded", () => {
         if (scheduleEl) scheduleEl.textContent = r.schedule || r.pickupWindow || "Oct 28, 2026 • 21:00 – 02:00 PHT";
         if (durationEl) durationEl.textContent = "Est. Transit Duration: 2 hrs 15 mins (Express Route Buffer 100% Cleared)";
 
-        const vehicleText = r.vehicleAssigned ? r.vehicleAssigned.split("(")[0].trim() : (r.vehicleType || "Toyota HiAce Commuter Deluxe");
-        const plateText = r.assignedVehicle || (r.vehicleAssigned && r.vehicleAssigned.includes("RV-") ? r.vehicleAssigned.match(/\(([^)]+)\)/)?.[1] : "NCL-8821");
-        if (vehicleModelEl) vehicleModelEl.textContent = vehicleText;
-        if (vehiclePlateEl) vehiclePlateEl.innerHTML = `Plate: <strong>${escapeHTML(plateText || "NCL-8821")}</strong> &bull; Capacity: ${r.estimatedPax || 14} Seats &bull; Manila Hub`;
+        const isMultiUnit = (r.units && r.units > 1) || (r.assignedVehicles && r.assignedVehicles.length > 1) || (r.assignedVehicle && r.assignedVehicle.includes(","));
+        if (isMultiUnit) {
+            const vList = r.assignedVehicles ? r.assignedVehicles.map(a => `${a.vehicleName} (${a.unitId})`).join(", ") : (r.vehicleAssigned || "Multi-Unit Fleet");
+            const plateList = r.assignedVehicles ? r.assignedVehicles.map(a => a.plate || a.unitId).join(", ") : (r.assignedVehicle || "Multiple Units");
+            if (vehicleModelEl) vehicleModelEl.textContent = `${r.units || (r.assignedVehicles ? r.assignedVehicles.length : 2)}x Fleet Assets: ${vList}`;
+            if (vehiclePlateEl) vehiclePlateEl.innerHTML = `Plates: <strong>${escapeHTML(plateList)}</strong> &bull; Multi-Unit Convoy &bull; Manila Hub`;
 
-        const driverText = r.driverAssigned ? r.driverAssigned.split("(")[0].trim() : (r.assignedDriver || "Danilo Ramos");
-        if (driverNameEl) driverNameEl.textContent = driverText;
-        if (driverLicEl) driverLicEl.innerHTML = `License: <strong>N01-18-094821</strong> (Professional RC 1,2,3)`;
-        if (driverDutyEl) driverDutyEl.textContent = "✓ Shift Cleared • 8.5 hrs rest period audit compliant";
+            const dList = r.assignedVehicles ? r.assignedVehicles.map(a => a.driverName).join(", ") : (r.driverAssigned || r.assignedDriver || "Assigned Pilots");
+            if (driverNameEl) driverNameEl.textContent = dList;
+            if (driverLicEl) driverLicEl.innerHTML = `Licenses: <strong>Rostered Pilot Roster Cleared</strong> (Professional RC 1,2,3)`;
+            if (driverDutyEl) driverDutyEl.textContent = "✓ Shift Cleared • Turnaround rest limits verified for all assigned pilots";
+        } else {
+            const vehicleText = r.vehicleAssigned ? r.vehicleAssigned.split("(")[0].trim() : (r.vehicleType || "Toyota HiAce Commuter Deluxe");
+            const plateText = r.assignedVehicle || (r.vehicleAssigned && r.vehicleAssigned.includes("RV-") ? r.vehicleAssigned.match(/\(([^)]+)\)/)?.[1] : "NCL-8821");
+            if (vehicleModelEl) vehicleModelEl.textContent = vehicleText;
+            if (vehiclePlateEl) vehiclePlateEl.innerHTML = `Plate: <strong>${escapeHTML(plateText || "NCL-8821")}</strong> &bull; Capacity: ${r.estimatedPax || 14} Seats &bull; Manila Hub`;
+
+            const driverText = r.driverAssigned ? r.driverAssigned.split("(")[0].trim() : (r.assignedDriver || "Danilo Ramos");
+            if (driverNameEl) driverNameEl.textContent = driverText;
+            if (driverLicEl) driverLicEl.innerHTML = `License: <strong>N01-18-094821</strong> (Professional RC 1,2,3)`;
+            if (driverDutyEl) driverDutyEl.textContent = "✓ Shift Cleared • 8.5 hrs rest period audit compliant";
+        }
 
         if (stagedByEl) stagedByEl.innerHTML = `Staged by: <strong>${escapeHTML(r.stagedBy || "Sigmund Malacas (Operations Manager)")}</strong>`;
         const gatePassNum = r.gatePassId || `GP-2026-${cleanId.replace(/^RQ-/, "")}`;

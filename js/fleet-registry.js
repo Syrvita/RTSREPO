@@ -356,7 +356,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const hasAssigned = r.assignedVehicle && (r.assignedVehicle === unitId || r.assignedVehicle.includes(unitId));
             const hasTextAssigned = r.vehicleAssigned && (r.vehicleAssigned.includes(unitId) || (unit.plate && r.vehicleAssigned.includes(unit.plate)));
             const hasCurrentTrip = unit.currentTrip && (r.id === unit.currentTrip || (r.id && r.id.replace(/^#/, "") === unit.currentTrip.replace(/^#/, "")));
-            return hasAssigned || hasTextAssigned || hasCurrentTrip;
+            const hasAllocList = r.assignedVehicles && r.assignedVehicles.some(a => a.unitId === unitId || (unit.plate && a.plate === unit.plate));
+            return hasAssigned || hasTextAssigned || hasCurrentTrip || hasAllocList;
         });
 
         if (tripFeed) {
