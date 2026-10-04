@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update Client Metrics
         const totalBookings = reservations.length;
         const pendingCount = reservations.filter(r => r.status === "Pending" || r.status === "Pending Review").length;
-        const confirmedCount = reservations.filter(r => r.status === "Confirmed").length;
+        const confirmedCount = reservations.filter(r => r.status === "Confirmed" || r.status === "Confirmed & Dispatched" || r.status === "Confirmed & Staged" || r.status === "Dispatched").length;
 
         const metricTotal = document.getElementById("metricTotalBookings");
         const metricPending = document.getElementById("metricPendingReviews") || document.getElementById("metricPendingReview");
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const matchesFilter = 
                 fVal === "ALL" || fVal === "" ? true :
                 fVal.includes("PENDING") ? rStat.includes("PENDING") :
-                fVal.includes("CONFIRM") ? rStat.includes("CONFIRM") :
+                fVal.includes("CONFIRM") ? (rStat.includes("CONFIRM") || rStat.includes("DISPATCH")) :
                 fVal.includes("COMPLETE") ? rStat.includes("COMPLETE") :
                 fVal.includes("CANCEL") ? rStat.includes("CANCEL") :
                 rStat === fVal;
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isCancelled = r.status === "Cancelled";
             const isConflict = r.status === "Pending Assignment / Conflict Block" || r.status === "Conflict" || r.auditStatus === "Schedule Overlap";
             const isInTransit = r.status === "In Transit (Live)" || r.status === "In Transit" || r.status === "En Route";
-            const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged";
+            const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged" || r.status === "Confirmed & Dispatched";
             const isAssigned = r.status === "Assigned" || (r.auditStatus && r.auditStatus.includes("Assigned"));
             const isPending = r.status === "Pending" || r.status === "Pending Review";
             const isConfirmed = r.status === "Confirmed" || r.status === "Approved";

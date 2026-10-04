@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVER | Dispatch Confirmation &amp; Gate Clearance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/service-orders.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Dark Sidebar: Admin Portal Tier -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ROVER</h2>
+                <div class="subtext">ADMIN PORTAL &bull; FLEET SYSTEMS</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item">Dashboard</a>
+                <a href="admin.html" class="nav-item">KYC Verification</a>
+                <a href="admin-service-orders.html" class="nav-item active">Dispatch Confirmation</a>
+                <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
+                <a href="users.html" class="nav-item">User Management</a>
+                <a href="users.html" class="nav-item">Driver Directory</a>
+                <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
+                <a href="javascript:void(0)" class="nav-item">Expense Reports</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div class="avatar" id="userAvatarInitials" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">OP</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span id="userFullName" style="font-size: 0.875rem; font-weight: 600; color: #FFFFFF; line-height: 1.2;">Admin &bull; Ops Manila</span>
+                        <span id="userRoleText" style="font-size: 0.7rem; color: #9E9E9E; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;">SYSTEM ADMINISTRATOR</span>
+                    </div>
+                </div>
+                <button id="adminLogoutBtn" class="logout-btn" title="Log Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content service-orders-view">
+            <!-- Top Navigation Bar (64px Locked) -->
+            <header class="top-nav" style="height: 64px; background: #FFFFFF; border-bottom: 1px solid #ECEFF1; padding: 0 32px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="search-bar">
+                    <input type="text" id="adminOrderSearchInput" placeholder="Search booking ID, client entity, driver, or gate pass..." style="width: 400px; padding: 8px 14px; border: 1px solid #E0E0E0; border-radius: 6px; font-size: 13px; outline: none; background: #FFFFFF; font-family: inherit;">
+                </div>
+                <div class="top-nav-right" style="display: flex; align-items: center; gap: 1.25rem;">
+                    <span class="badge" style="background: #E8F5E9; border-radius: 16px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2E7D32; display: flex; align-items: center; gap: 6px; border: 1px solid #C8E6C9;">
+                        <span class="status-dot" style="background: #2E7D32; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> SEC &amp; DPA VALIDATED &bull; ADMINISTRATIVE ENCLAVE
+                    </span>
+                    <span class="timestamp" style="font-size: 12px; color: #64748B; font-weight: 500;">2026-10-28 09:42:15 PHT</span>
+                    <div style="position: relative; cursor: pointer; color: #757575; display: flex; align-items: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span style="position: absolute; top: -3px; right: -3px; background: #D32F2F; width: 7px; height: 7px; border-radius: 50%; border: 2px solid #FFFFFF;"></span>
+                    </div>
+                    <div class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #D32F2F; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">OP</div>
+                </div>
+            </header>
+
+            <div class="dashboard-container" style="padding: 28px 32px;">
+                <!-- Workspace Breadcrumbs & Header -->
+                <div class="breadcrumbs" style="color: #757575; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">
+                    ROVER ENTERPRISE / ADMIN PORTAL / DISPATCH CONFIRMATION / FORM PB-017
+                </div>
+
+                <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                            <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #111827;">Executive Booking Confirmation &amp; Gate Clearance</h1>
+                            <span style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">Pending Sign-Off</span>
+                        </div>
+                        <p class="subtext" style="margin: 0; font-size: 13px; color: #64748B;">Review manager-staged dispatch rosters, issue official corridor gate passes, and execute direct manual fleet dispatches.</p>
+                    </div>
+                    <div class="header-actions" style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+                        <button class="btn-ghost" style="padding: 10px 18px; border-radius: 6px; width: fit-content; border: 1px solid #E2E8F0; background: white; cursor: pointer; font-weight: 600; font-size: 13px; color: #475569;">Export Manifest Registry (CSV)</button>
+                        <button id="openAdminManualDispatchBtn" class="btn-primary" style="padding: 10px 20px; background: #D32F2F; color: white; border: none; border-radius: 6px; width: fit-content; cursor: pointer; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.2);">
+                            + Executive Manual Dispatch
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Metrics Summary Grid (4 Columns) -->
+                <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+                    <!-- Card 1 -->
+                    <div class="dashboard-metric-card" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="metric-label" style="font-size: 11px; font-weight: 700; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">AWAITING GATE PASS</div>
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #FFF8E1; color: #E65100; display: flex; align-items: center; justify-content: center; font-size: 14px;">⏱</div>
+                        </div>
+                        <div class="metric-num" id="metricAwaitingGate" style="font-size: 26px; font-weight: 800; color: #111827; margin: 8px 0 4px 0;">2 Staged</div>
+                        <div class="metric-meta" style="font-size: 12px; color: #E65100; font-weight: 600;">Staged by Operations Manager</div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="dashboard-metric-card" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="metric-label" style="font-size: 11px; font-weight: 700; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">CONFIRMED &amp; DISPATCHED</div>
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #E8F5E9; color: #2E7D32; display: flex; align-items: center; justify-content: center; font-size: 14px;">✓</div>
+                        </div>
+                        <div class="metric-num" id="metricConfirmedDispatched" style="font-size: 26px; font-weight: 800; color: #111827; margin: 8px 0 4px 0;">14 Shuttles</div>
+                        <div class="metric-meta" style="font-size: 12px; color: #2E7D32; font-weight: 600;">Active Gate Passes Released</div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="dashboard-metric-card" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="metric-label" style="font-size: 11px; font-weight: 700; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">ACTIVE ROSTER UNITS</div>
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #E3F2FD; color: #1976D2; display: flex; align-items: center; justify-content: center; font-size: 14px;">🚐</div>
+                        </div>
+                        <div class="metric-num" style="font-size: 26px; font-weight: 800; color: #111827; margin: 8px 0 4px 0;">28 <span style="font-size: 14px; color: #64748B; font-weight: 500;">/ 31 Units</span></div>
+                        <div class="metric-meta" style="font-size: 12px; color: #1976D2; font-weight: 600;">3 Under Scheduled PMS</div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="dashboard-metric-card" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="metric-label" style="font-size: 11px; font-weight: 700; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">DISPATCH SLA COMPLIANCE</div>
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #F3E5F5; color: #7B1FA2; display: flex; align-items: center; justify-content: center; font-size: 14px;">⚡</div>
+                        </div>
+                        <div class="metric-num" style="font-size: 26px; font-weight: 800; color: #111827; margin: 8px 0 4px 0;">99.4%</div>
+                        <div class="metric-meta" style="font-size: 12px; color: #7B1FA2; font-weight: 600;">Zero Unscheduled Route Delays</div>
+                    </div>
+                </div>
+
+                <!-- Executive Dispatch Queue Table Card -->
+                <div class="data-table-container" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div class="table-toolbar" style="padding: 16px 20px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <h2 style="font-size: 1rem; color: #111827; margin: 0; font-weight: 700;">Executive Dispatch Queue &amp; Gate Clearance</h2>
+                        </div>
+                        <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase;">Filter:</span>
+                            <button id="adminFilterAllBtn" class="filter-btn active" style="padding: 5px 12px; border-radius: 4px; border: 1px solid #D1D5DB; background: #111827; color: white; font-size: 12px; font-weight: 600; cursor: pointer;">All Bookings</button>
+                            <button id="adminFilterStagedBtn" class="filter-btn" style="padding: 5px 12px; border-radius: 4px; border: 1px solid #E2E8F0; background: white; color: #475569; font-size: 12px; font-weight: 600; cursor: pointer;">Pending Confirmation (Staged)</button>
+                            <button id="adminFilterDispatchedBtn" class="filter-btn" style="padding: 5px 12px; border-radius: 4px; border: 1px solid #E2E8F0; background: white; color: #475569; font-size: 12px; font-weight: 600; cursor: pointer;">Active Dispatches</button>
+                            <button id="adminFilterOverrideBtn" class="filter-btn" style="padding: 5px 12px; border-radius: 4px; border: 1px solid #E2E8F0; background: white; color: #475569; font-size: 12px; font-weight: 600; cursor: pointer;">Direct Overrides</button>
+                        </div>
+                    </div>
+
+                    <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="background: #FAFAFA; border-bottom: 1px solid #ECEFF1;">
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">BOOKING ID</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">CLIENT ENTITY</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">ASSIGNED ASSET &amp; DRIVER</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">ROUTE &amp; CORRIDOR</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">DISPATCH WINDOW</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">MANAGER STAGING STATE</th>
+                                <th style="padding: 14px 20px; font-size: 11px; font-weight: 700; color: #78909C; text-transform: uppercase;">EXECUTIVE ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminDispatchTableBody">
+                            <!-- Row 1: Manager Staged - Awaiting Gate Pass (#RQ-8821) -->
+                            <tr id="row-RQ-8821" style="border-bottom: 1px solid #ECEFF1;" data-status="staged">
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-8821" style="color: #D32F2F; text-decoration: none;">#RQ-8821</a></td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-weight: 700; color: #111827;">Apex Logistics Global Inc.</div>
+                                    <div style="font-size: 11px; color: #64748B;">Corporate Tier-1</div>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-size: 13px; font-weight: 600; color: #111827;">Toyota HiAce Commuter Deluxe <span style="font-size: 11px; color: #64748B;">(RV-VAN-112)</span></div>
+                                    <div style="font-size: 11px; color: #15803D;">Driver: Danilo Ramos (Lic: N01-18-094821)</div>
+                                </td>
+                                <td style="padding: 14px 20px; font-weight: 500; color: #111827;">Metro Manila Hub &rarr; BGC Corporate Center</td>
+                                <td style="padding: 14px 20px; font-size: 12px; color: #475569;">Oct 28, 2026 &bull; 21:00 &ndash; 02:00 PHT</td>
+                                <td style="padding: 14px 20px;">
+                                    <span class="pill-audit pill-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                        <span class="dot-staged" style="width: 6px; height: 6px; border-radius: 50%; background: #E65100; display: inline-block;"></span> Staged by Operations (Sigmund Malacas)
+                                    </span>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <button type="button" class="btn-authorize-gate" data-id="RQ-8821" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
+                                        Authorize &amp; Issue Gate Pass &rarr;
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2: Manager Staged - Awaiting Gate Pass (#RQ-8819) -->
+                            <tr id="row-RQ-8819" style="border-bottom: 1px solid #ECEFF1;" data-status="staged">
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-8819" style="color: #D32F2F; text-decoration: none;">#RQ-8819</a></td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-weight: 700; color: #111827;">San Miguel Aerocity Core</div>
+                                    <div style="font-size: 11px; color: #64748B;">Industrial Enterprise</div>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-size: 13px; font-weight: 600; color: #111827;">Nissan NV350 Urvan <span style="font-size: 11px; color: #64748B;">(RV-URV-108)</span></div>
+                                    <div style="font-size: 11px; color: #15803D;">Driver: Rogelio D. Santos (Lic: N02-14-382910)</div>
+                                </td>
+                                <td style="padding: 14px 20px; font-weight: 500; color: #111827;">Metro Manila Hub &rarr; NAIA Terminal 3</td>
+                                <td style="padding: 14px 20px; font-size: 12px; color: #475569;">Oct 29, 2026 &bull; 06:00 &ndash; 14:00 PHT</td>
+                                <td style="padding: 14px 20px;">
+                                    <span class="pill-audit pill-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                        <span class="dot-staged" style="width: 6px; height: 6px; border-radius: 50%; background: #E65100; display: inline-block;"></span> Staged by Operations (Sigmund Malacas)
+                                    </span>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <button type="button" class="btn-authorize-gate" data-id="RQ-8819" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
+                                        Authorize &amp; Issue Gate Pass &rarr;
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3: Active Dispatched - Gate Pass Active (#RQ-1038) -->
+                            <tr id="row-RQ-1038" style="border-bottom: 1px solid #ECEFF1;" data-status="dispatched">
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-1038" style="color: #D32F2F; text-decoration: none;">#RQ-1038</a></td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-weight: 700; color: #111827;">Subic FreePort Trans</div>
+                                    <div style="font-size: 11px; color: #64748B;">Logistics Transit</div>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <div style="font-size: 13px; font-weight: 600; color: #111827;">Toyota HiAce Commuter <span style="font-size: 11px; color: #64748B;">(RV-VAN-104)</span></div>
+                                    <div style="font-size: 11px; color: #15803D;">Driver: Eduardo Santos (Lic: N01-18-028471)</div>
+                                </td>
+                                <td style="padding: 14px 20px; font-weight: 500; color: #111827;">Manila &rarr; SBMA Terminal 1</td>
+                                <td style="padding: 14px 20px; font-size: 12px; color: #475569;">Oct 28, 2026 &bull; 07:30 &ndash; 13:30 PHT</td>
+                                <td style="padding: 14px 20px;">
+                                    <span class="pill-audit pill-confirmed" style="background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                        <span class="dot-dispatched" style="width: 6px; height: 6px; border-radius: 50%; background: #2E7D32; display: inline-block;"></span> &#10004; Confirmed &amp; Released (GP-2026-1038)
+                                    </span>
+                                </td>
+                                <td style="padding: 14px 20px;">
+                                    <a href="javascript:void(0)" class="action-link" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="padding: 14px 20px; font-size: 12px; color: #64748B; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center; background: #FAFAFA;">
+                        <span>Showing executive dispatch pipeline &bull; Final Departure Clearance Enclave</span>
+                        <span>Authority: RA 10173 &amp; LTFRB Fleet Protocol</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL 1: GATE PASS AUTHORIZATION MODAL (#gatePassModal) -->
+    <div id="gatePassModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-window" style="background: #FFFFFF; width: 820px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+            <!-- Header -->
+            <div style="padding: 20px 28px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Executive Gate Pass Authorization: <span id="gatePassBookingId" style="color: #D32F2F;">#RQ-8821</span></h2>
+                        <span style="background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #C8E6C9; letter-spacing: 0.5px;">LTO &amp; TOLLWAY COMPLIANT</span>
+                    </div>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Inspect staging compliance and authorize official fleet departure gate release.</p>
+                </div>
+                <button type="button" id="closeGatePassModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Body (2-Column Split: 1.1fr left, 1fr right) -->
+            <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; padding: 24px 28px; overflow-y: auto; background: #FAFAFA; flex: 1;">
+                <!-- Left Column: Pre-Departure Compliance Verification -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Vehicle Asset Card -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">VEHICLE ASSET VERIFICATION</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="gatePassVehicleModel">Toyota HiAce Commuter Deluxe</div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 4px;">
+                            Plate: <strong id="gatePassPlate" style="color: #111827;">NCL-8821</strong> &bull; Capacity: 14 Seats
+                        </div>
+                        <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+                            <span style="background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid #C8E6C9;">Autosweep &amp; Easytrip Active</span>
+                            <span style="background: #E0F2FE; color: #0284C7; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid #BAE6FD;">Fuel Gauge: 85%+ Cleared</span>
+                        </div>
+                    </div>
+
+                    <!-- Shift Pilot Verification -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">LICENSED SHIFT PILOT AUDIT</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="gatePassDriverName">Danilo Ramos</div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 4px;">
+                            License: <strong id="gatePassDriverLic" style="color: #111827;">N01-18-094821</strong> (Professional RC 1,2,3)
+                        </div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #15803D; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                            <span>✓</span> 8.5 hrs rest period compliant &bull; Zero alcohol / Fit to Drive
+                        </div>
+                    </div>
+
+                    <!-- Mandatory Pre-Flight Checklist -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;">MANDATORY PRE-FLIGHT CHECKLIST</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: #1F2937;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: #2E7D32;">
+                                <span>LTO Registration &amp; Vehicle Insurance Valid (TPL + Comprehensive)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: #2E7D32;">
+                                <span>Approved Passenger Manifest Headcount Match</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: #2E7D32;">
+                                <span>Emergency Safety Kit &amp; First Aid Inspected</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: #2E7D32;">
+                                <span>RA 10173 Passenger Privacy Manifest Sealed</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Gate Pass Parameters & Executive Sign-Off -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div>
+                        <label for="gatePassExitPoint" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Designated Gate Exit Point *</label>
+                        <select id="gatePassExitPoint" required style="width: 100%; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                            <option value="Balintawak Cloverleaf Toll Plaza">Balintawak Cloverleaf Toll Plaza (North Corridor)</option>
+                            <option value="NLEX Bocaue Barrier">NLEX Bocaue Barrier (Central Luzon Corridor)</option>
+                            <option value="Skyway Stage 3 Buendia Ramp" selected>Skyway Stage 3 Buendia Ramp (Metro Bypass Corridor)</option>
+                            <option value="SLEX Calamba">SLEX Calamba (Southern Luzon Corridor)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="gatePassDirectives" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Gate Release Notes / Corridor Directives</label>
+                        <textarea id="gatePassDirectives" rows="3" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12px; font-family: inherit; resize: vertical; color: #111827;">Authorized for express transit. Gate clearance validated by System Administrator. RFID expedited lane clear.</textarea>
+                    </div>
+
+                    <!-- Pass Metadata Box -->
+                    <div style="background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; padding: 14px 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase;">OFFICIAL GATE PASS NUMBER</span>
+                            <span id="generatedGatePassId" style="font-size: 14px; font-weight: 800; color: #D32F2F; letter-spacing: 0.5px;">GP-2026-8821</span>
+                        </div>
+                        <div style="font-size: 12px; color: #334155; line-height: 1.5;">
+                            <div>Authorized By: <strong>Admin &bull; Ops Manila</strong></div>
+                            <div>Authority Level: <strong>Executive Fleet Sign-off (Level 3)</strong></div>
+                            <div>Timestamp: <strong>Live Gateway Emission</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 16px 28px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748B;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span>Admin gate pass release permanently binds asset dispatch and notifies driver mobile terminal.</span>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" id="rejectGatePassBtn" style="padding: 9px 18px; border: 1px solid #CBD5E1; background: transparent; color: #475569; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Revoke / Send Back to Operations</button>
+                    <button type="button" id="confirmGatePassBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25);">
+                        Authorize Gate Pass &amp; Release Shuttle &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: EXECUTIVE MANUAL DISPATCH MODAL (#adminManualDispatchModal) -->
+    <div id="adminManualDispatchModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-window" style="background: #FFFFFF; width: 800px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+            <!-- Header -->
+            <div style="padding: 20px 28px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Executive Manual Dispatch &amp; Direct Gate Release</h2>
+                        <span style="background: #FFEBEE; color: #C62828; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">ADMIN OVERRIDE</span>
+                    </div>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Bypass manager staging to directly allocate Philippine fleet assets and immediately release departure clearance.</p>
+                </div>
+                <button type="button" id="closeAdminManualModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Form Body -->
+            <form id="adminManualDispatchForm" style="padding: 24px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; background: #FAFAFA; margin: 0;">
+                <div>
+                    <label for="adminTargetBooking" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Booking Target Selection *</label>
+                    <select id="adminTargetBooking" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                        <option value="">Select pending unassigned booking...</option>
+                        <option value="RQ-8814" data-client="Subic FreePort Trans" data-route="Metro Manila Hub → Tagaytay Highlands" data-time="Oct 30, 2026 • 08:00 – 18:00 PHT" data-pax="16">#RQ-8814 • Subic FreePort Trans (Manila → Tagaytay Highlands)</option>
+                        <option value="RQ-1042" data-client="Apex Logistics Global Inc." data-route="Makati CBD → Clark Logistics Hub" data-time="Oct 28, 2026 • 08:00 – 18:00 PHT" data-pax="14">#RQ-1042 • Apex Logistics Global Inc. (Makati CBD → Clark Logistics Hub)</option>
+                        <option value="ADHOC-OVERRIDE" data-client="Executive Corporate Delegation" data-route="Express Diplomatic / Corporate Corridor" data-time="Immediate Direct Release" data-pax="12">[Ad-Hoc Urgent Corporate Dispatch]</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Client & Route Summary Card -->
+                <div id="adminRouteSummary" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 12px;">
+                    <div>
+                        <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Client Entity</span>
+                        <span id="adminSummaryClient" style="font-weight: 700; color: #111827;">—</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Designated Corridor</span>
+                        <span id="adminSummaryRoute" style="font-weight: 600; color: #D32F2F;">Select a booking above</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Passenger Count</span>
+                        <span id="adminSummaryPax" style="font-weight: 700; color: #111827;">—</span>
+                    </div>
+                </div>
+
+                <!-- Two-Column Fleet & Driver Allocation -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label for="adminVehicleSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Direct Philippine Fleet Asset Allocation *</label>
+                        <select id="adminVehicleSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                            <option value="">Select available van unit...</option>
+                            <option value="RV-VAN-112" data-name="Toyota HiAce Commuter Deluxe" data-plate="NCL-8821">Toyota HiAce Commuter Deluxe (NCL-8821 • 14 Seats • Ready)</option>
+                            <option value="RV-URV-108" data-name="Nissan NV350 Urvan Standard" data-plate="NCR-9012">Nissan NV350 Urvan Standard (NCR-9012 • 15 Seats • Ready)</option>
+                            <option value="RV-STR-204" data-name="Hyundai Grand Starex Executive" data-plate="NDB-4321">Hyundai Grand Starex Executive (NDB-4321 • 10 Seats • Ready)</option>
+                            <option value="RV-L30-005" data-name="Mitsubishi L300 FB Shuttle" data-plate="NAA-7741">Mitsubishi L300 FB Shuttle (NAA-7741 • 16 Seats • Ready)</option>
+                            <option value="RV-TRV-012" data-name="Isuzu Traviz Utility Shuttle" data-plate="NBE-3019">Isuzu Traviz Utility Shuttle (NBE-3019 • 16 Seats • Ready)</option>
+                        </select>
+                        <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Verified RFID tollway pass &amp; comprehensive insurance active.</div>
+                    </div>
+                    <div>
+                        <label for="adminDriverSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Assign Rostered Duty Pilot *</label>
+                        <select id="adminDriverSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                            <option value="">Select rostered duty driver...</option>
+                            <option value="DRV-003" data-name="Danilo Ramos" data-lic="N01-18-094821">Danilo Ramos (Lic: N01-18-094821 • Shift Cleared)</option>
+                            <option value="DRV-007" data-name="Rogelio D. Santos" data-lic="N02-14-382910">Rogelio D. Santos (Lic: N02-14-382910 • Manila Standby)</option>
+                            <option value="DRV-011" data-name="Arnel M. Bautista" data-lic="N03-19-102948">Arnel M. Bautista (Lic: N03-19-102948 • Shift Cleared)</option>
+                            <option value="DRV-014" data-name="Ferdinand Cruz" data-lic="N01-16-994820">Ferdinand Cruz (Lic: N01-16-994820 • Ready)</option>
+                        </select>
+                        <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Rest period cleared under DOLE/LTFRB regulations.</div>
+                    </div>
+                </div>
+
+                <!-- Instant Gate Release Toggle -->
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 6px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px;">
+                    <input type="checkbox" id="adminInstantGateRelease" checked style="accent-color: #2E7D32; margin-top: 2px; cursor: pointer;">
+                    <label for="adminInstantGateRelease" style="font-size: 12px; color: #1F2937; cursor: pointer; line-height: 1.4;">
+                        <strong>Instant Gate Release:</strong> Automatically generate official Gate Pass (GP-2026-XXXX) and bypass manager staging for immediate deployment.
+                    </label>
+                </div>
+
+                <div>
+                    <label for="adminDispatchNotes" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Executive Directives &amp; Toll Instructions</label>
+                    <textarea id="adminDispatchNotes" rows="2" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; color: #111827; font-family: inherit;" placeholder="Specify express corridor instructions, convoy protocol, or security gate directives...">Direct executive clearance granted. Proceed immediately via Skyway Stage 3 / NLEX corridor.</textarea>
+                </div>
+            </form>
+
+            <!-- Footer -->
+            <div style="padding: 16px 28px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #6B7280;">
+                    <span style="color: #E65100;">⚠️</span>
+                    <span>Executive override logs an immutable audit event under Admin credentials.</span>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" id="cancelAdminManualBtn" style="padding: 9px 18px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #374151; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="button" id="submitAdminManualBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25);">
+                        Authorize Direct Dispatch &amp; Issue Gate Pass &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/admin-service-orders.js"></script>
+</body>
+</html>

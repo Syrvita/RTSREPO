@@ -77,15 +77,43 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (match.status === "Cancelled") {
                     return null; // Don't show cancelled trips in active dispatches
                 }
-                if (match.assignedVehicle) {
-                    trip.vehicleTag = `${match.assignedVehicle} • Clear Buffer`;
+                if (match.status === "Confirmed & Dispatched" || match.status === "Dispatched") {
+                    trip.status = "Confirmed & Staged";
+                    trip.category = "staged";
                 }
-                if (match.assignedDriver) {
-                    trip.driver = match.assignedDriver;
+                if (match.assignedVehicle || match.vehicleAssigned) {
+                    trip.vehicleTag = `${match.vehicleAssigned || match.assignedVehicle} • Clear Buffer`;
+                }
+                if (match.assignedDriver || match.driverAssigned) {
+                    trip.driver = match.driverAssigned || match.assignedDriver;
                 }
             }
             return trip;
         }).filter(Boolean);
+
+        // Include any additional active dispatches created in ROVER_DB
+        reservations.forEach(r => {
+            const cleanId = (r.id || "").replace(/^#/, "");
+            const isAlreadyIncluded = tripData.some(t => t.id === cleanId);
+            const isActive = r.status === "Confirmed & Dispatched" || r.status === "Confirmed & Staged" || r.status === "In Transit (Live)" || r.status === "Dispatched";
+            if (!isAlreadyIncluded && isActive) {
+                const isInTransit = (r.status || "").includes("In Transit");
+                tripData.push({
+                    id: cleanId,
+                    vehicle: r.vehicleType || r.vehicleAssigned || "Toyota HiAce Commuter (14 Seats)",
+                    vehicleTag: `${r.vehicleAssigned || "RV-VAN-112"} • Active Dispatch`,
+                    driver: r.driverAssigned || r.assignedDriver || "Danilo Ramos",
+                    driverTag: `Rostered Pilot • Gate Pass: ${r.gatePassId || "Cleared"}`,
+                    corridor: r.route || "Metro Manila Corporate Corridor",
+                    corridorSub: "Express Logistics Dispatch",
+                    schedule: r.schedule || r.pickupWindow || "Live Service Window",
+                    status: isInTransit ? "In Transit (Live)" : "Confirmed & Staged",
+                    category: isInTransit ? "in-transit" : "staged",
+                    passengers: r.estimatedPax || r.pax || 14,
+                    actionType: isInTransit ? "track" : "manifest"
+                });
+            }
+        });
 
         // Calculate and update metrics
         const inTransitCount = tripData.filter(t => t.category === "in-transit").length;
