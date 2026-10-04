@@ -63,9 +63,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const gatePassNum = res && res.gatePassId ? res.gatePassId : `GP-2026-${cleanNum}`;
         if (genPassId) genPassId.textContent = gatePassNum;
 
-        // Vehicle info
+        // Vehicle & Driver info
         const vehicleEl = document.getElementById("gatePassVehicleModel");
         const plateEl = document.getElementById("gatePassPlate");
+        const driverEl = document.getElementById("gatePassDriverName");
+        const licEl = document.getElementById("gatePassDriverLic");
+
         const isMultiGate = (res && res.units > 1) || (res && res.assignedVehicles && res.assignedVehicles.length > 1) || (res && res.assignedVehicle && res.assignedVehicle.includes(","));
         if (isMultiGate) {
             const vList = res.assignedVehicles ? res.assignedVehicles.map(v => v.vehicleName).join(", ") : (res.vehicleAssigned || "Multi-Unit Fleet");
@@ -95,6 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (plateEl) plateEl.textContent = "NCR-9012";
             if (driverEl) driverEl.textContent = "Rogelio D. Santos";
             if (licEl) licEl.textContent = "N02-14-382910";
+        } else if (activeGatePassTargetId === "RQ-1038") {
+            if (vehicleEl) vehicleEl.textContent = "Toyota HiAce Commuter (RV-VAN-104)";
+            if (plateEl) plateEl.textContent = "NCQ-5104";
+            if (driverEl) driverEl.textContent = "Eduardo Santos";
+            if (licEl) licEl.textContent = "N01-18-028471";
         } else {
             if (vehicleEl) vehicleEl.textContent = "Toyota HiAce Commuter Deluxe";
             if (plateEl) plateEl.textContent = "NCL-8821";
@@ -104,8 +112,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Directives
         const directivesEl = document.getElementById("gatePassDirectives");
-        if (directivesEl && res && res.notes) {
-            directivesEl.value = `Authorized for express transit. Gate clearance validated by System Administrator. Corridor instructions: ${res.notes}`;
+        if (directivesEl) {
+            directivesEl.value = (res && (res.directives || res.notes))
+                ? `Authorized for express transit. Gate clearance validated by System Administrator. Corridor instructions: ${res.directives || res.notes}`
+                : "Authorized for express transit. Gate clearance validated by System Administrator. RFID expedited lane clear.";
+        }
+
+        // Adaptive Title & Controls
+        const isAlreadyReleased = (res && (res.status === "Confirmed & Dispatched" || res.status === "In Transit (Live)" || res.status === "Dispatched" || !!res.gatePassId)) || activeGatePassTargetId === "RQ-1038";
+        const headingTextEl = document.getElementById("gatePassModalHeadingText");
+        const subtitleEl = document.getElementById("gatePassModalSubtitle");
+        const statusPillEl = document.getElementById("gatePassModalStatusPill");
+
+        if (isAlreadyReleased) {
+            if (headingTextEl) headingTextEl.textContent = "Official Released Gate Pass:";
+            if (subtitleEl) subtitleEl.textContent = "Official enterprise departure clearance validated and active on LTFRB/tollway corridors.";
+            if (statusPillEl) {
+                statusPillEl.textContent = `✓ ACTIVE GATE PASS (${gatePassNum})`;
+                statusPillEl.style.background = "#E8F5E9";
+                statusPillEl.style.color = "#2E7D32";
+                statusPillEl.style.borderColor = "#C8E6C9";
+            }
+            if (confirmGatePassBtn) {
+                confirmGatePassBtn.innerHTML = "🖨️ Print Official Gate Pass";
+                confirmGatePassBtn.dataset.mode = "print";
+            }
+            if (rejectGatePassBtn) {
+                rejectGatePassBtn.textContent = "Revoke Gate Pass";
+            }
+        } else {
+            if (headingTextEl) headingTextEl.textContent = "Executive Gate Pass Authorization:";
+            if (subtitleEl) subtitleEl.textContent = "Inspect staging compliance and authorize official fleet departure gate release.";
+            if (statusPillEl) {
+                statusPillEl.textContent = "AWAITING GATE CLEARANCE";
+                statusPillEl.style.background = "#FFF8E1";
+                statusPillEl.style.color = "#E65100";
+                statusPillEl.style.borderColor = "#FFE082";
+            }
+            if (confirmGatePassBtn) {
+                confirmGatePassBtn.innerHTML = "Authorize Gate Pass &amp; Release Shuttle &rarr;";
+                confirmGatePassBtn.dataset.mode = "authorize";
+            }
+            if (rejectGatePassBtn) {
+                rejectGatePassBtn.textContent = "Revoke / Send Back to Operations";
+            }
         }
 
         gatePassModal.style.display = "flex";
@@ -117,6 +167,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (closeGatePassModalBtn) {
         closeGatePassModalBtn.addEventListener("click", closeGatePassModal);
+    }
+
+    if (gatePassModal) {
+        gatePassModal.addEventListener("click", (e) => {
+            if (e.target === gatePassModal) closeGatePassModal();
+        });
     }
 
     if (rejectGatePassBtn) {
@@ -137,6 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (confirmGatePassBtn) {
         confirmGatePassBtn.addEventListener("click", () => {
+            if (confirmGatePassBtn.dataset.mode === "print") {
+                window.print();
+                return;
+            }
+
             const exitPoint = document.getElementById("gatePassExitPoint")?.value || "Skyway Stage 3 Buendia Ramp";
             const directives = document.getElementById("gatePassDirectives")?.value || "Authorized for express transit. Gate clearance validated by System Administrator.";
             const cleanNum = activeGatePassTargetId.replace(/^RQ-/, "");
@@ -202,12 +263,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // 4. Close Modal & Alert
             closeGatePassModal();
             alert(`Official Gate Pass ${gatePassId} authorized and issued. Asset dispatched under executive clearance.`);
-        });
-    }
-
-    if (gatePassModal) {
-        gatePassModal.addEventListener("click", (e) => {
-            if (e.target === gatePassModal) closeGatePassModal();
         });
     }
 
@@ -891,15 +946,36 @@ document.addEventListener("DOMContentLoaded", () => {
         tripDetailsModal.style.display = "flex";
     }
 
-    // Delegated event listener for .btn-view-trip-details
+    // Delegated event listeners for table action buttons
     document.addEventListener("click", (e) => {
-        const target = e.target.closest(".btn-view-trip-details");
-        if (target) {
+        const tripTarget = e.target.closest(".btn-view-trip-details");
+        if (tripTarget) {
             e.preventDefault();
-            const bookingId = target.getAttribute("data-booking-id");
+            const bookingId = tripTarget.getAttribute("data-booking-id");
             if (bookingId) {
                 openTripDetailsModal(bookingId);
             }
+            return;
+        }
+
+        const gateViewTarget = e.target.closest(".btn-view-gate-pass");
+        if (gateViewTarget) {
+            e.preventDefault();
+            const bookingId = gateViewTarget.getAttribute("data-id") || gateViewTarget.getAttribute("data-booking-id");
+            if (bookingId) {
+                openGatePassModal(bookingId);
+            }
+            return;
+        }
+
+        const gateAuthTarget = e.target.closest(".btn-authorize-gate");
+        if (gateAuthTarget) {
+            e.preventDefault();
+            const bookingId = gateAuthTarget.getAttribute("data-id") || gateAuthTarget.getAttribute("data-booking-id");
+            if (bookingId) {
+                openGatePassModal(bookingId);
+            }
+            return;
         }
     });
 
