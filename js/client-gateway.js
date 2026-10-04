@@ -93,9 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const isConflict = r.status === "Pending Assignment / Conflict Block" || r.status === "Conflict" || r.auditStatus === "Schedule Overlap";
             const isInTransit = r.status === "In Transit (Live)" || r.status === "In Transit" || r.status === "En Route";
             const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged" || r.status === "Confirmed & Dispatched";
+            const isStaged = r.status === "Staged (Pending Admin Approval)" || r.status === "Staged" || (r.auditStatus && r.auditStatus.includes("Awaiting Gate Pass"));
             const isAssigned = r.status === "Assigned" || (r.auditStatus && r.auditStatus.includes("Assigned"));
             const isPending = r.status === "Pending" || r.status === "Pending Review";
             const isConfirmed = r.status === "Confirmed" || r.status === "Approved";
+            const isCompleted = r.status === "Completed" || r.status === "Closed";
 
             const statusBadge = isCancelled ?
                 `<span class="status-pill status-cancelled" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10006; Cancelled</span>` :
@@ -105,13 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 `<span class="status-pill status-in-transit" style="background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> In Transit (Live)</span>` :
                 isDispatched ?
                 `<span class="status-pill status-dispatched" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Dispatched</span>` :
+                isStaged ?
+                `<span class="status-pill status-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Staged (Pending Admin Approval)</span>` :
                 isAssigned ?
                 `<span class="status-pill status-assigned" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Assigned (Clear)</span>` :
-                isPending ? 
-                `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Pending Review</span>` :
                 isConfirmed ? 
                 `<span class="status-pill status-confirmed" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Confirmed</span>` :
-                `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Completed</span>`;
+                isCompleted ?
+                `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">Completed</span>` :
+                `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 8px;">&#9679;</span> Pending Review</span>`;
 
             // Strict 7-Column Layout mapping 1:1 with Table Headers
             const cleanId = (r.id || "").replace(/^#/, "");
@@ -178,10 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isCancelled = r.status === "Cancelled";
                 const isConflict = r.status === "Pending Assignment / Conflict Block" || r.status === "Conflict" || r.auditStatus === "Schedule Overlap";
                 const isInTransit = r.status === "In Transit (Live)" || r.status === "In Transit" || r.status === "En Route";
-                const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged";
+                const isDispatched = r.status === "Dispatched" || r.status === "Confirmed & Staged" || r.status === "Confirmed & Dispatched";
+                const isStaged = r.status === "Staged (Pending Admin Approval)" || r.status === "Staged" || (r.auditStatus && r.auditStatus.includes("Awaiting Gate Pass"));
                 const isAssigned = r.status === "Assigned" || (r.auditStatus && r.auditStatus.includes("Assigned"));
                 const isPending = r.status === "Pending" || r.status === "Pending Review";
                 const isConfirmed = r.status === "Confirmed" || r.status === "Approved";
+                const isCompleted = r.status === "Completed" || r.status === "Closed";
 
                 const statusBadge = isCancelled ?
                     `<span class="status-pill status-cancelled" style="background: #FFEBEE; color: #C62828; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">&#10006; Cancelled</span>` :
@@ -191,13 +197,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     `<span class="status-pill status-in-transit" style="background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● In Transit (Live)</span>` :
                     isDispatched ?
                     `<span class="status-pill status-dispatched" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Dispatched</span>` :
+                    isStaged ?
+                    `<span class="status-pill status-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● Staged (Pending Admin Approval)</span>` :
                     isAssigned ?
                     `<span class="status-pill status-assigned" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Assigned (Clear)</span>` :
-                    isPending ? 
-                    `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● Pending Review</span>` :
                     isConfirmed ? 
                     `<span class="status-pill status-confirmed" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Confirmed</span>` :
-                    `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">Completed</span>`;
+                    isCompleted ?
+                    `<span class="status-pill status-completed" style="background: #F5F5F5; color: #616161; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">Completed</span>` :
+                    `<span class="status-pill status-pending" style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">● Pending Review</span>`;
 
                 const cleanId = (r.id || "").replace(/^#/, "");
                 const paramId = encodeURIComponent(cleanId);
@@ -394,6 +402,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (openBtn) openBtn.addEventListener("click", openModal);
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
     if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+    if (modal) {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
 
     // Modal Cancel/Delete Reservation Button
     if (deleteBtn) {

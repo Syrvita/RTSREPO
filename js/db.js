@@ -139,14 +139,17 @@ const ROVER_DB_SEED = {
             pickupWindow: "Oct 01, 2026 • 17:30 – 02:00 PHT",
             vehiclePref: "3x Nissan NV350 Urvan",
             vehicleType: "Nissan NV350 Urvan (15 Seats)",
-            status: "Pending",
-            auditStatus: "Pending Review",
+            status: "Staged (Pending Admin Approval)",
+            auditStatus: "Awaiting Gate Pass",
             units: 3,
             estimatedPax: 42,
             origin: "Ortigas Center, Pasig",
             destination: "BGC Corporate Center, Taguig",
             start: "17:30 PHT",
             return: "02:00 PHT",
+            assignedVehicle: "RV-VAN-112",
+            vehicleAssigned: "Toyota HiAce Commuter Deluxe (RV-VAN-112)",
+            driverAssigned: "Danilo Ramos (Lic: N01-18-094821)",
             notes: "Night shift logistics shuttle for Apex operations team."
         },
         {
@@ -318,8 +321,23 @@ window.ROVER_DB = {
                 dbChanged = true;
             }
             const res1042 = data.reservations.find(r => r.id === "#RQ-1042" || r.id === "RQ-1042");
-            if (res1042 && res1042.status === "Conflict") {
+            if (res1042 && (res1042.status === "Conflict" || res1042.status === "Pending")) {
                 res1042.status = "Pending Assignment / Conflict Block";
+                dbChanged = true;
+            }
+            const res1039 = data.reservations.find(r => r.id === "#RQ-1039" || r.id === "RQ-1039");
+            if (res1039 && res1039.status !== "Dispatched") {
+                res1039.status = "Dispatched";
+                res1039.auditStatus = "Dispatched";
+                dbChanged = true;
+            }
+            const res8821 = data.reservations.find(r => r.id === "#RQ-8821" || r.id === "RQ-8821");
+            if (res8821 && (res8821.status === "Pending" || !res8821.status.includes("Staged"))) {
+                res8821.status = "Staged (Pending Admin Approval)";
+                res8821.auditStatus = "Awaiting Gate Pass";
+                if (!res8821.assignedVehicle) res8821.assignedVehicle = "RV-VAN-112";
+                if (!res8821.vehicleAssigned) res8821.vehicleAssigned = "Toyota HiAce Commuter Deluxe (RV-VAN-112)";
+                if (!res8821.driverAssigned) res8821.driverAssigned = "Danilo Ramos (Lic: N01-18-094821)";
                 dbChanged = true;
             }
             if (dbChanged) {

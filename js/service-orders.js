@@ -44,6 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnResolveRQ1042) {
         btnResolveRQ1042.addEventListener("click", openConflictModal);
     }
+    const auditStatusRQ1042 = document.getElementById("auditStatusRQ1042");
+    if (auditStatusRQ1042) {
+        auditStatusRQ1042.style.cursor = "pointer";
+        auditStatusRQ1042.addEventListener("click", openConflictModal);
+    }
+    document.querySelectorAll(".pill-overlap, .btn-resolve-conflict").forEach(el => {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", openConflictModal);
+    });
 
     if (closeConflictModalBtn) {
         closeConflictModalBtn.addEventListener("click", closeConflictModal);
@@ -206,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initManualDispatchModal() {
-  const manualDispatchBtn = Array.from(document.querySelectorAll("button")).find(el => el.textContent.includes("Manual Dispatch")) || document.getElementById("btnManualDispatchTrigger");
+  const manualDispatchBtn = document.getElementById("openManualDispatchBtn") || document.getElementById("btnManualDispatchTrigger") || Array.from(document.querySelectorAll("button")).find(el => el.textContent.includes("Manual Dispatch"));
   const modal = document.getElementById("manualDispatchModal");
   const closeBtn = document.getElementById("closeManualDispatchModalBtn");
   const cancelBtn = document.getElementById("cancelManualDispatchBtn");

@@ -283,6 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
             closeBtn.addEventListener("click", closeLegalDossier);
         }
 
+        // Cancel button
+        const cancelDossierBtn = document.getElementById("cancelDossierBtn");
+        if (cancelDossierBtn) {
+            cancelDossierBtn.addEventListener("click", closeLegalDossier);
+        }
+
         // Backdrop click
         legalDossierModal.addEventListener("click", (e) => {
             if (e.target === legalDossierModal) {
@@ -511,8 +517,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td><span style="background: ${roleBg}; color: ${roleColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">${escapeHTML(u.role)}</span></td>
                     <td>${statusHtml}</td>
                     <td>
-                        <a href="#" class="btn-edit-user" data-id="${escapeHTML(u.id)}" style="color: #1976D2; text-decoration: none; margin-right: 1rem; font-size: 0.875rem; font-weight: 500;">Edit</a>
-                        <a href="#" class="btn-toggle-status" data-id="${escapeHTML(u.id)}" style="color: ${isSuspended ? '#388E3C' : '#D32F2F'}; text-decoration: none; font-size: 0.875rem; font-weight: 500;">${isSuspended ? 'Activate' : 'Deactivate'}</a>
+                        <a href="javascript:void(0)" class="btn-edit-user" data-id="${escapeHTML(u.id)}" style="color: #1976D2; text-decoration: none; margin-right: 1rem; font-size: 0.875rem; font-weight: 500;">Edit</a>
+                        <a href="javascript:void(0)" class="btn-toggle-status" data-id="${escapeHTML(u.id)}" style="color: ${isSuspended ? '#388E3C' : '#D32F2F'}; text-decoration: none; font-size: 0.875rem; font-weight: 500;">${isSuspended ? 'Activate' : 'Deactivate'}</a>
                     </td>
                 `;
                 userTableBody.appendChild(tr);
@@ -584,6 +590,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cancelBtn) cancelBtn.addEventListener("click", () => {
             if (modal) modal.style.display = "none";
         });
+        const closeProvisionBtn = document.getElementById("closeProvisionModalBtn");
+        if (closeProvisionBtn) {
+            closeProvisionBtn.addEventListener("click", () => {
+                if (modal) modal.style.display = "none";
+            });
+        }
+        if (modal) {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) modal.style.display = "none";
+            });
+        }
 
         if (saveBtn) {
             saveBtn.addEventListener("click", () => {

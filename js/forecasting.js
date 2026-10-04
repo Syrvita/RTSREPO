@@ -21,10 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="service-orders.html" class="nav-item">Dispatch Queue</a>
                 <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
                 <a href="forecasting.html" class="nav-item active">Demand Forecasting</a>
-                <a href="#" class="nav-item">SLA Analytics</a>
-                <a href="#" class="nav-item">Maintenance Logs</a>
+                <a href="javascript:void(0)" class="nav-item">SLA Analytics</a>
+                <a href="javascript:void(0)" class="nav-item">Maintenance Logs</a>
             `;
         }
+        document.querySelectorAll("#projectionsTableBody a").forEach(a => {
+            a.setAttribute("href", "service-orders.html");
+        });
     }
     if (!window.ROVER_AUTH) {
         const sessionData = sessionStorage.getItem("activeSession");

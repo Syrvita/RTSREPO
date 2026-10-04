@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             corridor: "BGC Corporate → Bulacan Airport Site",
             corridorSub: "Via Skyway Stage 3 Corridor",
             schedule: "Oct 28, 2026 • 09:30 – 16:00 PHT",
-            status: "Confirmed & Staged",
+            status: "Dispatched",
             category: "staged",
             passengers: 16,
             actionType: "manifest"
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return null; // Don't show cancelled trips in active dispatches
                 }
                 if (match.status === "Confirmed & Dispatched" || match.status === "Dispatched") {
-                    trip.status = "Confirmed & Staged";
+                    trip.status = "Dispatched";
                     trip.category = "staged";
                 }
                 if (match.assignedVehicle || match.vehicleAssigned) {
@@ -174,10 +174,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const tr = document.createElement("tr");
 
             const isInTransit = item.status.includes("In Transit");
-            const isStaged = item.status.includes("Confirmed & Staged");
+            const isDispatched = item.status === "Dispatched" || item.status.includes("Dispatched");
+            const isStaged = item.status.includes("Staged");
 
             const statusPill = isInTransit ?
                 `<span class="status-pill pill-in-transit"><span class="pulse-dot"></span> In Transit (Live)</span>` :
+                isDispatched ?
+                `<span class="status-pill pill-dispatched" style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#10004; Dispatched</span>` :
                 isStaged ?
                 `<span class="status-pill pill-staged">&#10004; Confirmed &amp; Staged</span>` :
                 `<span class="status-pill pill-boarding">&#9201; Boarding Call Staged</span>`;
