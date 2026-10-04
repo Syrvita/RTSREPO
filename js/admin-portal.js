@@ -167,30 +167,43 @@ document.addEventListener("DOMContentLoaded", () => {
         const apexCell = document.getElementById("apexStatusCell");
         const approveBtn = document.getElementById("approveAccountBtn");
 
-        if (kycStatus === "Verified Tier-1") {
-            if (apexCell) {
+        if (kycStatus === "Approved" || kycStatus === "Verified Tier-1") {
+            const targetRow = document.querySelector(`tr[data-entity-id="${entityId}"]`);
+            if (targetRow) {
+                const cell = targetRow.cells[targetRow.cells.length - 1];
+                if (cell) {
+                    cell.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">● Approved</span>
+                            <span style="color: #2E7D32; font-weight: 700; font-size: 12px;">✓ Approved</span>
+                        </div>
+                    `;
+                }
+            } else if (apexCell) {
                 apexCell.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="status-pill status-green">Verified Tier-1</span>
-                        <span style="color: #2E7D32; font-weight: 700; font-size: 11px;">✓ Verified</span>
+                        <span style="background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">● Approved</span>
+                        <span style="color: #2E7D32; font-weight: 700; font-size: 12px;">✓ Approved</span>
                     </div>
                 `;
             }
             if (approveBtn) {
-                approveBtn.innerText = "✓ Verified Tier-1";
+                approveBtn.innerText = "✓ Approved";
                 approveBtn.style.backgroundColor = "#2E7D32";
                 approveBtn.style.cursor = "default";
                 approveBtn.disabled = true;
             }
         } else if (kycStatus === "Action Required") {
-            if (apexCell) {
-                apexCell.innerHTML = `
+            const targetRow = document.querySelector(`tr[data-entity-id="${entityId}"]`);
+            const targetCell = targetRow ? targetRow.cells[targetRow.cells.length - 1] : apexCell;
+            if (targetCell) {
+                targetCell.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="status-pill status-amber" style="background: #FFF8E1; color: #B45309; border: 1px solid #FCD34D;">Conditional Resubmit</span>
                         <button class="btn-audit-dossier" data-action="audit" data-id="${entityId}" style="padding: 4px 10px; background: #FFFBEB; color: #B45309; border: 1px solid #FCD34D; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">Audit Dossier &rarr;</button>
                     </div>
                 `;
-                const newBtn = apexCell.querySelector(".btn-audit-dossier");
+                const newBtn = targetCell.querySelector(".btn-audit-dossier");
                 if (newBtn) {
                     newBtn.addEventListener("click", (e) => {
                         e.stopPropagation();
@@ -205,8 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 approveBtn.disabled = false;
             }
         } else if (kycStatus === "Rejected") {
-            if (apexCell) {
-                apexCell.innerHTML = `
+            const targetRow = document.querySelector(`tr[data-entity-id="${entityId}"]`);
+            const targetCell = targetRow ? targetRow.cells[targetRow.cells.length - 1] : apexCell;
+            if (targetCell) {
+                targetCell.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="status-pill status-red" style="background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2;">Rejected</span>
                         <span style="color: #C62828; font-weight: 700; font-size: 11px;">✕ Blocked</span>
@@ -242,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const decisionSelect = document.getElementById("verificationDecisionSelect");
         if (decisionSelect) {
-            if (client.kycStatus === "Verified Tier-1") decisionSelect.value = "Approved";
+            if (client.kycStatus === "Approved" || client.kycStatus === "Verified Tier-1") decisionSelect.value = "Approved";
             else if (client.kycStatus === "Action Required") decisionSelect.value = "Conditional";
             else if (client.kycStatus === "Rejected") decisionSelect.value = "Rejected";
             else decisionSelect.value = "Approved";
@@ -311,12 +326,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 let targetClient = db.corporateClients.find(c => c.id === activeEntityId || c.name.includes("Apex"));
-                let kycStatus = "Verified Tier-1";
+                let kycStatus = "Approved";
                 let bookingEligibility = "Full Access";
                 let defaultNote = "Approved via Form PB-002 Legal Dossier Audit.";
 
                 if (decision === "Approved") {
-                    kycStatus = "Verified Tier-1";
+                    kycStatus = "Approved";
                     bookingEligibility = "Full Access";
                     defaultNote = "Approved via Form PB-002 Legal Dossier Audit.";
                 } else if (decision === "Conditional") {
@@ -338,6 +353,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     targetClient.verifiedAt = new Date().toISOString();
                     targetClient.auditedAt = new Date().toISOString();
                     targetClient.auditedBy = currentUser.name || "Admin • Ops Manila";
+
+                    // Also sync with matching client user in users list if present
+                    if (Array.isArray(db.users)) {
+                        const clientUser = db.users.find(u => u.clientEntityId === targetClient.id || u.name === targetClient.name || (targetClient.email && u.email === targetClient.email));
+                        if (clientUser) {
+                            clientUser.kycStatus = kycStatus;
+                            clientUser.bookingEligibility = bookingEligibility;
+                        }
+                    }
                 }
                 ROVER_DB.save(db);
 
@@ -452,9 +476,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Check persisted KYC status on load
         const initialDb = ROVER_DB.get();
-        const apexClient = (initialDb.corporateClients || []).find(c => c.id === "APEX-001" || c.name.includes("Apex"));
-        if (apexClient && apexClient.kycStatus && apexClient.kycStatus !== "Requires Review") {
-            applyClientKycStatusInUI(apexClient.kycStatus, apexClient.id || "APEX-001");
+        if (Array.isArray(initialDb.corporateClients)) {
+            initialDb.corporateClients.forEach(c => {
+                if (c.kycStatus && c.kycStatus !== "Requires Review") {
+                    applyClientKycStatusInUI(c.kycStatus, c.id || "APEX-001");
+                }
+            });
         }
     }
 

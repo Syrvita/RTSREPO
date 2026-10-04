@@ -205,6 +205,7 @@ const ROVER_DB_SEED = {
             address: "14th Floor, High Street South Corporate Plaza, BGC, Taguig City, NCR",
             kycStatus: "Requires Review",
             creditFacility: "Pending Allocation",
+            bookingEligibility: "Pending",
             auditNotes: "",
             score: "98/100",
             submission: "2 Hours Ago"
@@ -220,8 +221,9 @@ const ROVER_DB_SEED = {
             secReg: "CS20250918231",
             tin: "008-291-382-000",
             address: "Port Area, Manila, NCR",
-            kycStatus: "Verified Tier-1",
-            creditFacility: "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)",
+            kycStatus: "Approved",
+            creditFacility: "Full Enterprise Access",
+            bookingEligibility: "Full Access",
             auditNotes: "Verified via BIR Manila RDO 033.",
             score: "95/100",
             submission: "4 Hours Ago"
@@ -237,8 +239,9 @@ const ROVER_DB_SEED = {
             secReg: "CS20249182741",
             tin: "009-482-192-000",
             address: "Ortigas Center, Pasig City",
-            kycStatus: "Verified Tier-1",
-            creditFacility: "Tier-2 Corporate (Net 15 • PHP 250,000)",
+            kycStatus: "Approved",
+            creditFacility: "Full Enterprise Access",
+            bookingEligibility: "Full Access",
             auditNotes: "Pre-cleared quarterly review.",
             score: "92/100",
             submission: "1 Day Ago"
@@ -254,8 +257,9 @@ const ROVER_DB_SEED = {
             secReg: "CS20231948172",
             tin: "010-384-918-000",
             address: "Makati CBD, Makati City",
-            kycStatus: "Verified Tier-1",
-            creditFacility: "Tier-1 Corporate (Net 30 • PHP 500,000 Credit Facility)",
+            kycStatus: "Approved",
+            creditFacility: "Full Enterprise Access",
+            bookingEligibility: "Full Access",
             auditNotes: "Automated SEC cross-reference match.",
             score: "96/100",
             submission: "2 Days Ago"
@@ -271,8 +275,9 @@ const ROVER_DB_SEED = {
             secReg: "CS20229481723",
             tin: "007-192-847-000",
             address: "Cebu IT Park, Cebu City",
-            kycStatus: "Verified Tier-1",
-            creditFacility: "Prepaid / Escrow Only",
+            kycStatus: "Approved",
+            creditFacility: "Full Enterprise Access",
+            bookingEligibility: "Full Access",
             auditNotes: "Prepaid facility active.",
             score: "91/100",
             submission: "3 Days Ago"
@@ -339,6 +344,17 @@ window.ROVER_DB = {
                 if (!res8821.vehicleAssigned) res8821.vehicleAssigned = "Toyota HiAce Commuter Deluxe (RV-VAN-112)";
                 if (!res8821.driverAssigned) res8821.driverAssigned = "Danilo Ramos (Lic: N01-18-094821)";
                 dbChanged = true;
+            }
+            // Migrate legacy KYC status "Verified Tier-1" to "Approved"
+            if (Array.isArray(data.corporateClients)) {
+                data.corporateClients.forEach(c => {
+                    if (c.kycStatus === "Verified Tier-1") {
+                        c.kycStatus = "Approved";
+                        c.creditFacility = "Full Enterprise Access";
+                        c.bookingEligibility = "Full Access";
+                        dbChanged = true;
+                    }
+                });
             }
             if (dbChanged) {
                 this.save(data);
@@ -508,3 +524,45 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Dynamic Multi-Display Viewport Scaling Engine
+function applyDynamicDesktopScaling() {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    const width = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 1440);
+    const height = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 900);
+
+    // Apply scaling on desktop displays (>= 1024px)
+    if (width >= 1024) {
+        const baseDesignWidth = 1440;
+        let widthScale = width / baseDesignWidth;
+        let scale = widthScale;
+
+        // Account for vertical height constraints (e.g. 1366x768 or high-DPI desktop viewports)
+        if (height < 820) {
+            let heightScale = height / 820;
+            scale = Math.min(widthScale, heightScale);
+        }
+
+        // Clamp scale between 0.78 and 1.20
+        scale = Math.max(0.78, Math.min(1.20, scale));
+
+        if (document.body) {
+            document.body.style.zoom = scale;
+        }
+    } else {
+        // Reset scale on mobile/tablet viewports to preserve native touch layouts
+        if (document.body) {
+            document.body.style.zoom = "1";
+        }
+    }
+}
+
+if (typeof window !== "undefined") {
+    window.applyDynamicDesktopScaling = applyDynamicDesktopScaling;
+    window.addEventListener("resize", applyDynamicDesktopScaling);
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", applyDynamicDesktopScaling);
+    } else {
+        applyDynamicDesktopScaling();
+    }
+}
