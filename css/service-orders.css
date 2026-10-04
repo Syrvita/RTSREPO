@@ -203,6 +203,12 @@
     border: 1px solid #C8E6C9;
 }
 
+.service-orders-view .pill-staged {
+    background: #FFF8E1;
+    color: #E65100;
+    border: 1px solid #FFE082;
+}
+
 .service-orders-view .dot-overlap {
     width: 6px;
     height: 6px;
@@ -225,6 +231,14 @@
     height: 6px;
     border-radius: 50%;
     background: #0284C7;
+    display: inline-block;
+}
+
+.service-orders-view .dot-staged {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #E65100;
     display: inline-block;
 }
 

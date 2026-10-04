@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROVER | Service Orders</title>
+    <title>ROVER | Fleet Dispatch Staging &amp; Routing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -69,8 +69,8 @@
                 <!-- Header Section -->
                 <div class="dashboard-header">
                     <div>
-                        <h1>Booking Confirmation &amp; Dispatch</h1>
-                        <p class="subtext">Review client requests, validate vehicle concurrency, and execute conflict resolution.</p>
+                        <h1>Fleet Dispatch Staging &amp; Routing</h1>
+                        <p class="subtext">Allocate commercial fleet assets, assign rostered drivers, and stage dispatches for final Administrator confirmation.</p>
                     </div>
                     <div class="header-actions" style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
                         <button class="btn-ghost" style="padding: 10px 20px; border-radius: 4px; width: fit-content; border: 1px solid #EAEAEA; background: white; cursor: pointer; font-weight: 600; font-size: 0.875rem;">Audit Log Archive</button>
@@ -122,7 +122,7 @@
                             <button id="filterAllBtn" class="filter-btn active">All Requests (3)</button>
                             <button id="filterPendingBtn" class="filter-btn">Pending Conflicts (1)</button>
                             <button id="filterAssignedBtn" class="filter-btn">Assigned (2)</button>
-                            <button class="btn-primary" style="background: #D32F2F; color: white; border: none; padding: 6px 16px; border-radius: 4px; width: fit-content; font-size: 0.875rem; font-weight: 600; cursor: pointer; margin-left: 8px;">+ Manual Dispatch</button>
+                            <button id="btnManualDispatchTrigger" class="btn-primary" style="background: #D32F2F; color: white; border: none; padding: 6px 16px; border-radius: 4px; width: fit-content; font-size: 0.875rem; font-weight: 600; cursor: pointer; margin-left: 8px;">+ Manual Dispatch</button>
                         </div>
                     </div>
                     <table class="data-table">
@@ -361,6 +361,87 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Manual Fleet Dispatch Staging Modal -->
+    <div id="manualDispatchModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+      <div class="modal-window" style="background: #FFFFFF; width: 780px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+        <div style="padding: 20px 28px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Manual Fleet Dispatch Staging</h2>
+              <span style="background: #FFF8E1; color: #E65100; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">MANAGER WORKSPACE</span>
+            </div>
+            <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Assign vehicle assets and active duty drivers. Staged dispatches require Administrator confirmation before gate pass release.</p>
+          </div>
+          <button type="button" id="closeManualDispatchModalBtn" style="background: none; border: none; font-size: 22px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;">&times;</button>
+        </div>
+        <form id="manualDispatchForm" style="padding: 24px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; background: #FAFAFA; margin: 0;">
+          <div>
+            <label for="dispatchTargetBooking" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Target Client Reservation *</label>
+            <select id="dispatchTargetBooking" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+              <option value="">Select unassigned booking request...</option>
+              <option value="RQ-8821" data-client="Apex Logistics Global Inc." data-route="Metro Manila Hub → BGC Corporate Center" data-time="Oct 28, 2026 • 21:00 – 02:00 PHT" data-pax="14">#RQ-8821 • Apex Logistics Global Inc. (Manila → BGC Corporate Center)</option>
+              <option value="RQ-8819" data-client="San Miguel Aerocity Core" data-route="Metro Manila Hub → NAIA Terminal 3" data-time="Oct 29, 2026 • 06:00 – 14:00 PHT" data-pax="10">#RQ-8819 • San Miguel Aerocity Core (Manila → NAIA Terminal 3)</option>
+              <option value="RQ-8814" data-client="Subic FreePort Trans" data-route="Metro Manila Hub → Tagaytay Highlands" data-time="Oct 30, 2026 • 08:00 – 18:00 PHT" data-pax="16">#RQ-8814 • Subic FreePort Trans (Manila → Tagaytay Highlands)</option>
+              <option value="MANUAL-ADHOC" data-client="Direct Operations Dispatch" data-route="Custom Ad-Hoc Route" data-time="Immediate Staging" data-pax="14">[Manual Ad-Hoc Internal Route Allocation]</option>
+            </select>
+          </div>
+          <div id="dispatchRouteSummary" style="background: #FFFFFF; border: 1px solid #ECEFF1; border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px;">
+            <div>
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Client Organization</span>
+              <span id="summaryClientName" style="font-weight: 700; color: #111827;">—</span>
+            </div>
+            <div>
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Scheduled Window</span>
+              <span id="summaryPickupWindow" style="font-weight: 600; color: #111827;">—</span>
+            </div>
+            <div style="grid-column: span 2;">
+              <span style="font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; display: block;">Designated Route Corridor</span>
+              <span id="summaryRoute" style="font-weight: 600; color: #D32F2F;">Select a reservation above</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label for="dispatchVehicleSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Assign Philippine Fleet Asset *</label>
+              <select id="dispatchVehicleSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                <option value="">Select available van unit...</option>
+                <option value="RV-VAN-112">Toyota HiAce Commuter Deluxe (NCL-8821 • 14 Seats • Ready)</option>
+                <option value="RV-URV-108">Nissan NV350 Urvan Standard (NCR-9012 • 15 Seats • Ready)</option>
+                <option value="RV-STR-204">Hyundai Grand Starex Executive (NDB-4321 • 10 Seats • Ready)</option>
+                <option value="RV-L30-005">Mitsubishi L300 FB Shuttle (NAA-7741 • 16 Seats • Ready)</option>
+                <option value="RV-TRV-012">Isuzu Traviz Utility Shuttle (NBE-3019 • 16 Seats • Ready)</option>
+              </select>
+              <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Only idle Philippine-registered units with active RFID are listed.</div>
+            </div>
+            <div>
+              <label for="dispatchDriverSelect" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Assign Licensed Shift Pilot *</label>
+              <select id="dispatchDriverSelect" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #111827;">
+                <option value="">Select rostered duty driver...</option>
+                <option value="DRV-003">Danilo Ramos (Lic: N01-18-094821 • Rest Period Validated)</option>
+                <option value="DRV-007">Rogelio D. Santos (Lic: N02-14-382910 • Manila Standby)</option>
+                <option value="DRV-011">Arnel M. Bautista (Lic: N03-19-102948 • Rest Period Validated)</option>
+                <option value="DRV-014">Ferdinand Cruz (Lic: N01-16-994820 • Shift Cleared)</option>
+              </select>
+              <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Enforces mandatory turnaround rest limits prior to assignment.</div>
+            </div>
+          </div>
+          <div>
+            <label for="dispatchStagingNotes" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Manager Corridor & Gate Staging Directives</label>
+            <textarea id="dispatchStagingNotes" rows="2" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 12px; color: #111827;" placeholder="Specify toll corridor checkpoints (e.g., NLEX Bocaue, Balintawak Cloverleaf, Skyway Stage 3)...">NLEX Bocaue RFID gate staging. Verify passenger manifest headcount prior to departure clearance.</textarea>
+          </div>
+        </form>
+        <div style="padding: 16px 28px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #6B7280;">
+            <span style="color: #E65100;">⚠️</span>
+            <span>Manager execution only stages assets. Confirmation and gate release reside with Admin.</span>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <button type="button" id="cancelManualDispatchBtn" style="padding: 9px 18px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #374151; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+            <button type="button" id="submitManualDispatchBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">Stage Dispatch for Admin Confirmation →</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="js/db.js"></script>

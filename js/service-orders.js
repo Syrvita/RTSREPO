@@ -9,23 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentUser = ROVER_AUTH.requireRole(["Manager", "Admin"]);
     if (!currentUser) return;
 
-    // Adapt sidebar if logged in as Admin
-    if (currentUser.role === "Admin") {
-        const subtext = document.getElementById("sidebarSubtext");
-        if (subtext) subtext.innerHTML = "ADMIN PORTAL &bull; FLEET SYSTEMS";
-        const nav = document.getElementById("sidebarNav");
-        if (nav) {
-            nav.innerHTML = `
-                <a href="admin.html" class="nav-item">Dashboard</a>
-                <a href="admin.html" class="nav-item">KYC Verification</a>
-                <a href="service-orders.html" class="nav-item active">Service Orders</a>
-                <a href="fleet-registry.html" class="nav-item">Fleet Registry</a>
-                <a href="users.html" class="nav-item">User Management</a>
-                <a href="#" class="nav-item">Driver Directory</a>
-                <a href="forecasting.html" class="nav-item">Demand Forecasting</a>
-                <a href="#" class="nav-item">Expense Reports</a>
-            `;
-        }
+    // Lock Manager workspace identity
+    const subtext = document.getElementById("sidebarSubtext");
+    if (subtext) subtext.innerHTML = "MANAGEMENT &bull; FLEET OPERATIONS";
+    const userFullName = document.getElementById("userFullName");
+    if (userFullName) userFullName.innerText = "Sigmund Malacas";
+    const userRoleText = document.getElementById("userRoleText");
+    if (userRoleText) userRoleText.innerText = "OPERATIONS MANAGER";
+    const userAvatarInitials = document.getElementById("userAvatarInitials");
+    if (userAvatarInitials) {
+        userAvatarInitials.innerText = "SM";
+        userAvatarInitials.style.backgroundColor = "#212121";
     }
 
     // Modal elements
@@ -160,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rows.forEach(row => {
             const text = row.innerText.toLowerCase();
             const isAssigned = row.querySelector(".pill-assigned") || row.querySelector(".pill-dispatched") || row.querySelector(".pill-locked");
-            const isPending = row.querySelector(".pill-overlap");
+            const isPending = row.querySelector(".pill-overlap") || row.querySelector(".pill-staged");
 
             let matchesFilter = true;
             if (currentFilter === "pending") {
@@ -210,3 +204,194 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+function initManualDispatchModal() {
+  const manualDispatchBtn = Array.from(document.querySelectorAll("button")).find(el => el.textContent.includes("Manual Dispatch")) || document.getElementById("btnManualDispatchTrigger");
+  const modal = document.getElementById("manualDispatchModal");
+  const closeBtn = document.getElementById("closeManualDispatchModalBtn");
+  const cancelBtn = document.getElementById("cancelManualDispatchBtn");
+  const submitBtn = document.getElementById("submitManualDispatchBtn");
+  const bookingSelect = document.getElementById("dispatchTargetBooking");
+
+  if (!modal) return;
+
+  if (manualDispatchBtn) {
+    manualDispatchBtn.id = "btnManualDispatchTrigger";
+    manualDispatchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      modal.style.display = "flex";
+    });
+  }
+
+  const closeModal = () => { modal.style.display = "none"; };
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  if (bookingSelect) {
+    bookingSelect.addEventListener("change", function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const client = selectedOption.getAttribute("data-client") || "—";
+      const route = selectedOption.getAttribute("data-route") || "Select a reservation above";
+      const time = selectedOption.getAttribute("data-time") || "—";
+
+      const clientEl = document.getElementById("summaryClientName");
+      const routeEl = document.getElementById("summaryRoute");
+      const timeEl = document.getElementById("summaryPickupWindow");
+
+      if (clientEl) clientEl.textContent = client;
+      if (routeEl) routeEl.textContent = route;
+      if (timeEl) timeEl.textContent = time;
+    });
+  }
+
+  // Hydrate any previously staged records from roverDB on load
+  try {
+    const db = typeof ROVER_DB !== "undefined" ? ROVER_DB.get() : JSON.parse(localStorage.getItem("roverDB")) || {};
+    const tableBody = document.querySelector("#dispatchTableBody") || document.querySelector("tbody") || document.getElementById("ordersTableBody");
+    if (tableBody && db.reservations) {
+      const stagedList = db.reservations.filter(r => r.status === "Staged (Pending Admin Approval)");
+      stagedList.forEach(stagedRecord => {
+        const cleanId = (stagedRecord.id || "").replace(/^#/, "");
+        if (document.getElementById(`row-${cleanId}`) || tableBody.innerHTML.includes(`#${cleanId}`)) return;
+
+        const safeId = typeof escapeHTML === 'function' ? escapeHTML(cleanId) : cleanId;
+        const safeClient = typeof escapeHTML === 'function' ? escapeHTML(stagedRecord.client || "Direct Operations Dispatch") : (stagedRecord.client || "Direct Operations Dispatch");
+        const safeRoute = typeof escapeHTML === 'function' ? escapeHTML(stagedRecord.route || "Custom Ad-Hoc Route") : (stagedRecord.route || "Custom Ad-Hoc Route");
+        const safePickup = typeof escapeHTML === 'function' ? escapeHTML(stagedRecord.pickupWindow || "Immediate Staging") : (stagedRecord.pickupWindow || "Immediate Staging");
+        const safeVehicle = typeof escapeHTML === 'function' ? escapeHTML(stagedRecord.vehicleAssigned || "Fleet Asset Staged") : (stagedRecord.vehicleAssigned || "Fleet Asset Staged");
+
+        const newRow = document.createElement("tr");
+        newRow.id = `row-${safeId}`;
+        newRow.style.borderBottom = "1px solid #ECEFF1";
+        newRow.innerHTML = `
+          <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;">#${safeId}</td>
+          <td style="padding: 14px 20px;">
+            <div style="font-weight: 700; color: #111827;">${safeClient}</div>
+            <div style="font-size: 11px; color: #6B7280;">Staged by Operations</div>
+          </td>
+          <td style="padding: 14px 20px; font-weight: 600; color: #111827;">${safeRoute}</td>
+          <td style="padding: 14px 20px; font-size: 12px; color: #4B5563;">${safePickup}</td>
+          <td style="padding: 14px 20px; font-size: 12px; color: #111827;">
+            ${safeVehicle}
+          </td>
+          <td style="padding: 14px 20px;">
+            <span class="pill-audit pill-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+              <span class="dot-staged" style="width: 6px; height: 6px; border-radius: 50%; background: #E65100; display: inline-block;"></span> Staged (Pending Admin Approval)
+            </span>
+          </td>
+          <td style="padding: 14px 20px; font-size: 12px; font-weight: 600; color: #6B7280;">
+            Awaiting Admin Gate Pass
+          </td>
+        `;
+        tableBody.insertBefore(newRow, tableBody.firstChild);
+      });
+    }
+  } catch (err) {
+    console.warn("Could not hydrate staged dispatches:", err);
+  }
+
+  if (submitBtn) {
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const bookingId = bookingSelect ? bookingSelect.value : "";
+      const vehicleSelect = document.getElementById("dispatchVehicleSelect");
+      const driverSelect = document.getElementById("dispatchDriverSelect");
+      const stagingNotesEl = document.getElementById("dispatchStagingNotes");
+      const notes = stagingNotesEl ? stagingNotesEl.value : "";
+
+      if (!bookingId || !vehicleSelect || !vehicleSelect.value || !driverSelect || !driverSelect.value) {
+        alert("Validation Error: Please select a target booking, a Philippine fleet vehicle, and an on-duty driver.");
+        return;
+      }
+
+      const vehicleText = vehicleSelect.options[vehicleSelect.selectedIndex].text.split("(")[0].trim();
+      const vehicleUnitId = vehicleSelect.value;
+      const driverName = driverSelect.options[driverSelect.selectedIndex].text.split("(")[0].trim();
+      const clientName = document.getElementById("summaryClientName").textContent;
+      const routeName = document.getElementById("summaryRoute").textContent;
+      const pickupTime = document.getElementById("summaryPickupWindow").textContent;
+
+      let roverDB = JSON.parse(localStorage.getItem("roverDB")) || {};
+      if (!roverDB.reservations) roverDB.reservations = [];
+
+      let rawId = bookingId === "MANUAL-ADHOC" ? "RQ-" + Math.floor(1000 + Math.random() * 9000) : bookingId;
+      const cleanAssignedId = rawId.replace(/^#/, "");
+
+      let existingIndex = roverDB.reservations.findIndex(r => r.id === rawId || r.id === "#" + cleanAssignedId || (r.id && r.id.replace(/^#/, "") === cleanAssignedId));
+      const stagedRecord = {
+        id: cleanAssignedId,
+        client: clientName,
+        route: routeName,
+        pickupWindow: pickupTime,
+        vehicleAssigned: vehicleText + " (" + vehicleUnitId + " Staged)",
+        driverAssigned: driverName,
+        status: "Staged (Pending Admin Approval)",
+        stagingNotes: notes,
+        stagedBy: "Sigmund Malacas (Operations Manager)",
+        stagedAt: new Date().toISOString()
+      };
+
+      if (existingIndex >= 0) {
+        roverDB.reservations[existingIndex] = Object.assign({}, roverDB.reservations[existingIndex], stagedRecord);
+      } else {
+        roverDB.reservations.unshift(stagedRecord);
+      }
+
+      if (roverDB.fleet) {
+        let v = roverDB.fleet.find(unit => unit.id === vehicleUnitId);
+        if (v) v.status = "Staged for Dispatch";
+      }
+
+      localStorage.setItem("roverDB", JSON.stringify(roverDB));
+
+      const tableBody = document.querySelector("#dispatchTableBody") || document.querySelector("tbody") || document.getElementById("ordersTableBody");
+      if (tableBody) {
+        const safeId = typeof escapeHTML === 'function' ? escapeHTML(cleanAssignedId) : cleanAssignedId;
+        const safeClient = typeof escapeHTML === 'function' ? escapeHTML(clientName) : clientName;
+        const safeRoute = typeof escapeHTML === 'function' ? escapeHTML(routeName) : routeName;
+        const safePickup = typeof escapeHTML === 'function' ? escapeHTML(pickupTime) : pickupTime;
+        const safeVehicleText = typeof escapeHTML === 'function' ? escapeHTML(vehicleText) : vehicleText;
+        const safeVehicleUnitId = typeof escapeHTML === 'function' ? escapeHTML(vehicleUnitId) : vehicleUnitId;
+
+        // Remove row if already present
+        const existingRow = document.getElementById(`row-${safeId}`);
+        if (existingRow) existingRow.remove();
+
+        const newRow = document.createElement("tr");
+        newRow.id = `row-${safeId}`;
+        newRow.style.borderBottom = "1px solid #ECEFF1";
+        newRow.innerHTML = `
+          <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;">#${safeId}</td>
+          <td style="padding: 14px 20px;">
+            <div style="font-weight: 700; color: #111827;">${safeClient}</div>
+            <div style="font-size: 11px; color: #6B7280;">Staged by Operations</div>
+          </td>
+          <td style="padding: 14px 20px; font-weight: 600; color: #111827;">${safeRoute}</td>
+          <td style="padding: 14px 20px; font-size: 12px; color: #4B5563;">${safePickup}</td>
+          <td style="padding: 14px 20px; font-size: 12px; color: #111827;">
+            <strong>${safeVehicleText}</strong> <span style="font-size: 10px; color: #E65100;">(${safeVehicleUnitId} Staged)</span>
+          </td>
+          <td style="padding: 14px 20px;">
+            <span class="pill-audit pill-staged" style="background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+              <span class="dot-staged" style="width: 6px; height: 6px; border-radius: 50%; background: #E65100; display: inline-block;"></span> Staged (Pending Admin Approval)
+            </span>
+          </td>
+          <td style="padding: 14px 20px; font-size: 12px; font-weight: 600; color: #6B7280;">
+            Awaiting Admin Gate Pass
+          </td>
+        `;
+        tableBody.insertBefore(newRow, tableBody.firstChild);
+      }
+
+      closeModal();
+      alert("Dispatch for " + stagedRecord.id + " staged successfully. Queued for final Administrator confirmation and gate release.");
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initManualDispatchModal);
