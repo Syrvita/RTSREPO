@@ -56,18 +56,18 @@ const ROVER_DB_SEED = {
         { id: "RV-TRV-402", model: "Isuzu Traviz Dual Cab Utility", type: "Commercial Shuttle", capacity: 16, plate: "NDY-4932", hub: "Clark Logistics Hub", status: "Available" }
     ],
     drivers: [
-        { id: "RVR-FLT-0382", name: "Eduardo Santos", phone: "+63 917 555 0101", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0211", name: "Marco Polo", phone: "+63 917 555 0102", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0144", name: "Ramon Magsaysay", phone: "+63 917 555 0103", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0199", name: "Danilo Reyes", phone: "+63 917 555 0104", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0233", name: "Arnel Pineda", phone: "+63 917 555 0105", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0288", name: "Noel Cabangon", phone: "+63 917 555 0106", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0312", name: "Gary Valenciano", phone: "+63 917 555 0107", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0355", name: "Ogie Alcasid", phone: "+63 917 555 0108", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0410", name: "Martin Nievera", phone: "+63 917 555 0109", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0442", name: "Ely Buendia", phone: "+63 917 555 0110", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0480", name: "Chito Miranda", phone: "+63 917 555 0111", status: "On Duty", clearance: "Tier-1 Clear" },
-        { id: "RVR-FLT-0515", name: "Bamboo Manalac", phone: "+63 917 555 0112", status: "On Duty", clearance: "Tier-1 Clear" },
+        { id: "RVR-FLT-0382", name: "Eduardo Santos", phone: "+63 917 555 0101", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0211", name: "Marco Polo", phone: "+63 917 555 0102", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0144", name: "Ramon Magsaysay", phone: "+63 917 555 0103", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0199", name: "Danilo Reyes", phone: "+63 917 555 0104", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0233", name: "Arnel Pineda", phone: "+63 917 555 0105", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0288", name: "Noel Cabangon", phone: "+63 917 555 0106", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0312", name: "Gary Valenciano", phone: "+63 917 555 0107", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0355", name: "Ogie Alcasid", phone: "+63 917 555 0108", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0410", name: "Martin Nievera", phone: "+63 917 555 0109", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0442", name: "Ely Buendia", phone: "+63 917 555 0110", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0480", name: "Chito Miranda", phone: "+63 917 555 0111", status: "On Duty", clearance: "Cleared" },
+        { id: "RVR-FLT-0515", name: "Bamboo Manalac", phone: "+63 917 555 0112", status: "On Duty", clearance: "Cleared" },
         { id: "RVR-FLT-0530", name: "Vic Sotto", phone: "+63 917 555 0113", status: "Active Trip", clearance: "En Route" },
         { id: "RVR-FLT-0555", name: "Joey de Leon", phone: "+63 917 555 0114", status: "Active Trip", clearance: "En Route" },
         { id: "RVR-FLT-0580", name: "Tito Sotto", phone: "+63 917 555 0115", status: "Active Trip", clearance: "En Route" }
@@ -204,8 +204,6 @@ const ROVER_DB_SEED = {
             tin: "009-881-284-000",
             address: "14th Floor, High Street South Corporate Plaza, BGC, Taguig City, NCR",
             kycStatus: "Requires Review",
-            creditFacility: "Pending Allocation",
-            bookingEligibility: "Pending",
             auditNotes: "",
             score: "98/100",
             submission: "2 Hours Ago"
@@ -222,8 +220,8 @@ const ROVER_DB_SEED = {
             tin: "008-291-382-000",
             address: "Port Area, Manila, NCR",
             kycStatus: "Approved",
-            creditFacility: "Full Enterprise Access",
-            bookingEligibility: "Full Access",
+            accountStatus: "Approved",
+            clientType: "Corporate Partner",
             auditNotes: "Verified via BIR Manila RDO 033.",
             score: "95/100",
             submission: "4 Hours Ago"
@@ -240,8 +238,8 @@ const ROVER_DB_SEED = {
             tin: "009-482-192-000",
             address: "Ortigas Center, Pasig City",
             kycStatus: "Approved",
-            creditFacility: "Full Enterprise Access",
-            bookingEligibility: "Full Access",
+            accountStatus: "Approved",
+            clientType: "Corporate Partner",
             auditNotes: "Pre-cleared quarterly review.",
             score: "92/100",
             submission: "1 Day Ago"
@@ -258,8 +256,8 @@ const ROVER_DB_SEED = {
             tin: "010-384-918-000",
             address: "Makati CBD, Makati City",
             kycStatus: "Approved",
-            creditFacility: "Full Enterprise Access",
-            bookingEligibility: "Full Access",
+            accountStatus: "Approved",
+            clientType: "Corporate Partner",
             auditNotes: "Automated SEC cross-reference match.",
             score: "96/100",
             submission: "2 Days Ago"
@@ -276,8 +274,8 @@ const ROVER_DB_SEED = {
             tin: "007-192-847-000",
             address: "Cebu IT Park, Cebu City",
             kycStatus: "Approved",
-            creditFacility: "Full Enterprise Access",
-            bookingEligibility: "Full Access",
+            accountStatus: "Approved",
+            clientType: "Corporate Partner",
             auditNotes: "Prepaid facility active.",
             score: "91/100",
             submission: "3 Days Ago"
@@ -345,13 +343,18 @@ window.ROVER_DB = {
                 if (!res8821.driverAssigned) res8821.driverAssigned = "Danilo Ramos (Lic: N01-18-094821)";
                 dbChanged = true;
             }
-            // Migrate legacy KYC status "Verified Tier-1" to "Approved"
+
+            // Normalize corporateClients from "Verified Tier-1" / "Tier-1" to "Approved"
             if (Array.isArray(data.corporateClients)) {
                 data.corporateClients.forEach(c => {
-                    if (c.kycStatus === "Verified Tier-1") {
+                    if (c.kycStatus === "Verified Tier-1" || c.kycStatus === "Tier-1") {
                         c.kycStatus = "Approved";
-                        c.creditFacility = "Full Enterprise Access";
-                        c.bookingEligibility = "Full Access";
+                        c.accountStatus = "Approved";
+                        c.clientType = "Corporate Partner";
+                        dbChanged = true;
+                    }
+                    if (c.creditFacility) {
+                        delete c.creditFacility;
                         dbChanged = true;
                     }
                 });

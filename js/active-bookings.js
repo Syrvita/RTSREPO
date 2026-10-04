@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
             vehicle: "Toyota HiAce Commuter (14 Seats)",
             vehicleTag: "RV-VAN-112 • High Roof (Plate: NVA-1234)",
             driver: "Eduardo Santos",
-            driverTag: "+63 917 555 0192 • Tier-1 Clear",
+            driverTag: "+63 917 555 0192 • Shift Ready",
             corridor: "Metro Manila Hub → Clark Logistics Hub",
             corridorSub: "Via NLEX & SCTEX Corridor",
             schedule: "Oct 28, 2026 • 07:30 – 13:30 PHT",
@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert(
                 "ROVER ENTERPRISE STAGING DESK\n\n" +
                 "Connecting to Manila Hub Staging Desk for Unit RV-VAN-112.\n" +
-                "Duty Driver: Eduardo Santos (Clearance: Tier-1 Verified)\n" +
+                "Duty Driver: Eduardo Santos (Clearance: Shift Ready)\n" +
                 "Direct Dispatch Link: +63 2 8888 7683 (Bay 4 Staging)"
             );
         });
