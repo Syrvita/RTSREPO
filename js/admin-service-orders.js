@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gatePassModal = document.getElementById("gatePassModal");
     const closeGatePassModalBtn = document.getElementById("closeGatePassModalBtn");
     const rejectGatePassBtn = document.getElementById("rejectGatePassBtn");
+    const printGatePassBtn = document.getElementById("printGatePassBtn");
     const confirmGatePassBtn = document.getElementById("confirmGatePassBtn");
 
     const adminManualDispatchModal = document.getElementById("adminManualDispatchModal");
@@ -134,8 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 statusPillEl.style.borderColor = "#C8E6C9";
             }
             if (confirmGatePassBtn) {
-                confirmGatePassBtn.innerHTML = "🖨️ Print Official Gate Pass";
-                confirmGatePassBtn.dataset.mode = "print";
+                confirmGatePassBtn.innerHTML = "Approve Gate Pass &rarr;";
             }
             if (rejectGatePassBtn) {
                 rejectGatePassBtn.textContent = "Revoke Gate Pass";
@@ -150,8 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 statusPillEl.style.borderColor = "#FFE082";
             }
             if (confirmGatePassBtn) {
-                confirmGatePassBtn.innerHTML = "Authorize Gate Pass &amp; Release Shuttle &rarr;";
-                confirmGatePassBtn.dataset.mode = "authorize";
+                confirmGatePassBtn.innerHTML = "Approve Gate Pass &amp; Release Shuttle &rarr;";
             }
             if (rejectGatePassBtn) {
                 rejectGatePassBtn.textContent = "Revoke / Send Back to Operations";
@@ -191,13 +190,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (printGatePassBtn) {
+        printGatePassBtn.addEventListener("click", () => {
+            window.print();
+        });
+    }
+
     if (confirmGatePassBtn) {
         confirmGatePassBtn.addEventListener("click", () => {
-            if (confirmGatePassBtn.dataset.mode === "print") {
-                window.print();
-                return;
-            }
-
             const exitPoint = document.getElementById("gatePassExitPoint")?.value || "Skyway Stage 3 Buendia Ramp";
             const directives = document.getElementById("gatePassDirectives")?.value || "Authorized for express transit. Gate clearance validated by System Administrator.";
             const cleanNum = activeGatePassTargetId.replace(/^RQ-/, "");

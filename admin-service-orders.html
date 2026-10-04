@@ -9,6 +9,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/service-orders.css">
+    <style>
+        @media print {
+            body {
+                background: #FFFFFF !important;
+            }
+            .sidebar,
+            .top-bar,
+            .content-header,
+            .metrics-row,
+            .data-table-container,
+            #closeGatePassModalBtn,
+            #rejectGatePassBtn,
+            #printGatePassBtn,
+            #confirmGatePassBtn,
+            .modal-backdrop:not(#gatePassModal) {
+                display: none !important;
+            }
+            #gatePassModal {
+                position: static !important;
+                display: block !important;
+                background: none !important;
+                padding: 0 !important;
+                inset: auto !important;
+            }
+            #gatePassModal .modal-window {
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: none !important;
+                box-shadow: none !important;
+                border: 1px solid #B0BEC5 !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="admin-layout">
@@ -361,10 +394,13 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     <span>Admin gate pass release permanently binds asset dispatch and notifies driver mobile terminal.</span>
                 </div>
-                <div style="display: flex; gap: 12px;">
-                    <button type="button" id="rejectGatePassBtn" style="padding: 9px 18px; border: 1px solid #CBD5E1; background: transparent; color: #475569; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Revoke / Send Back to Operations</button>
-                    <button type="button" id="confirmGatePassBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25);">
-                        Authorize Gate Pass &amp; Release Shuttle &rarr;
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" id="rejectGatePassBtn" style="padding: 9px 18px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Revoke / Send Back to Operations</button>
+                    <button type="button" id="printGatePassBtn" style="padding: 9px 18px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;">
+                        <span style="font-size: 13px;">🖨️</span> Print Gate Pass
+                    </button>
+                    <button type="button" id="confirmGatePassBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25); display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;">
+                        Approve Gate Pass &amp; Release Shuttle &rarr;
                     </button>
                 </div>
             </div>
