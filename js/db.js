@@ -528,215 +528,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ==========================================================================
-// ROVER ENTERPRISE - UNIFIED CROSS-MODULE VIEWPORT ZOOM ENGINE
-// ==========================================================================
-window.ROVER_ZOOM = {
-    STORAGE_KEY: "rover_display_zoom",
-    MIN_SCALE: 0.65,
-    MAX_SCALE: 1.50,
-    STEP: 0.05,
-
-    getStoredScale: function() {
-        try {
-            if (typeof localStorage === "undefined") return null;
-            const raw = localStorage.getItem(this.STORAGE_KEY);
-            if (raw) {
-                const parsed = parseFloat(raw);
-                if (!isNaN(parsed) && parsed >= this.MIN_SCALE && parsed <= this.MAX_SCALE) {
-                    return parsed;
-                }
-            }
-        } catch (e) {}
-        return null;
-    },
-
-    getResponsiveBaseScale: function() {
-        if (typeof window === "undefined" || typeof document === "undefined") return 1.0;
-        const width = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 1440);
-        const height = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 900);
-
-        if (width >= 1024) {
-            const baseDesignWidth = 1440;
-            let widthScale = width / baseDesignWidth;
-            let scale = widthScale;
-
-            if (height < 820) {
-                let heightScale = height / 820;
-                scale = Math.min(widthScale, heightScale);
-            }
-            return Math.max(0.78, Math.min(1.20, Math.round(scale * 100) / 100));
-        }
-        return 1.0;
-    },
-
-    getCurrentScale: function() {
-        const stored = this.getStoredScale();
-        return stored !== null ? stored : this.getResponsiveBaseScale();
-    },
-
-    apply: function(scale) {
-        if (typeof document === "undefined") return;
-        const finalScale = Math.max(this.MIN_SCALE, Math.min(this.MAX_SCALE, Math.round(scale * 100) / 100));
-
-        // Apply exclusively to document.documentElement so all elements (fixed sidebars, top nav, panels, and modals) scale synchronously
-        if (document.documentElement) {
-            document.documentElement.style.zoom = finalScale;
-        }
-        if (document.body && document.body.style.zoom) {
-            document.body.style.zoom = "";
-        }
-
-        const label = document.getElementById("roverZoomLabel");
-        if (label) {
-            label.innerText = Math.round(finalScale * 100) + "%";
-        }
-    },
-
-    setZoom: function(scale, persist = true) {
-        const clamped = Math.max(this.MIN_SCALE, Math.min(this.MAX_SCALE, Math.round(scale * 100) / 100));
-        if (persist && typeof localStorage !== "undefined") {
-            try {
-                localStorage.setItem(this.STORAGE_KEY, clamped.toString());
-            } catch (e) {}
-        }
-        this.apply(clamped);
-    },
-
-    zoomIn: function() {
-        const current = this.getCurrentScale();
-        this.setZoom(current + this.STEP, true);
-    },
-
-    zoomOut: function() {
-        const current = this.getCurrentScale();
-        this.setZoom(current - this.STEP, true);
-    },
-
-    resetZoom: function() {
+// Clean up any residual zoom and restore native 1:1 viewport sizing
+(function() {
+    try {
         if (typeof localStorage !== "undefined") {
-            try {
-                localStorage.removeItem(this.STORAGE_KEY);
-            } catch (e) {}
+            localStorage.removeItem("rover_display_zoom");
         }
-        const base = this.getResponsiveBaseScale();
-        this.apply(base);
-    },
-
-    init: function() {
-        if (typeof window === "undefined" || typeof document === "undefined") return;
-
-        // Apply stored or responsive scale immediately upon script execution
-        this.apply(this.getCurrentScale());
-
-        // Sync real-time cross-tab & cross-window zoom mutations
-        window.addEventListener("storage", (e) => {
-            if (e.key === this.STORAGE_KEY) {
-                this.apply(this.getCurrentScale());
+        if (typeof document !== "undefined") {
+            if (document.documentElement && document.documentElement.style.zoom) {
+                document.documentElement.style.zoom = "";
             }
-        });
-
-        // Recalculate on window resize when user hasn't locked a custom zoom
-        window.addEventListener("resize", () => {
-            if (this.getStoredScale() === null) {
-                this.apply(this.getResponsiveBaseScale());
+            if (document.body && document.body.style.zoom) {
+                document.body.style.zoom = "";
             }
-        });
-
-        // Intercept Mouse Wheel Zoom (Ctrl + Wheel)
-        window.addEventListener("wheel", (e) => {
-            if (e.ctrlKey) {
-                e.preventDefault();
-                if (e.deltaY > 0) {
-                    this.zoomOut();
-                } else if (e.deltaY < 0) {
-                    this.zoomIn();
-                }
+            const existingWidget = document.getElementById("roverZoomControl");
+            if (existingWidget) {
+                existingWidget.remove();
             }
-        }, { passive: false });
-
-        // Intercept Keyboard Shortcuts (Ctrl/Cmd + Plus, Minus, 0)
-        window.addEventListener("keydown", (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                if (e.key === "+" || e.key === "=") {
-                    e.preventDefault();
-                    this.zoomIn();
-                } else if (e.key === "-" || e.key === "_") {
-                    e.preventDefault();
-                    this.zoomOut();
-                } else if (e.key === "0") {
-                    e.preventDefault();
-                    this.resetZoom();
-                }
-            }
-        });
-
-        // Mount control widget once DOM tree is ready
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", () => this.mountControl());
-        } else {
-            this.mountControl();
         }
-    },
-
-    mountControl: function() {
-        if (typeof document === "undefined" || document.getElementById("roverZoomControl")) return;
-
-        const targetContainer = document.querySelector(".top-nav-right") ||
-                                document.querySelector(".top-nav .user-meta") ||
-                                document.querySelector(".top-nav > div:last-child") ||
-                                document.querySelector(".top-nav");
-
-        const widget = document.createElement("div");
-        widget.id = "roverZoomControl";
-        widget.className = "rover-zoom-control";
-        widget.setAttribute("role", "region");
-        widget.setAttribute("aria-label", "Viewport Zoom Control");
-        widget.innerHTML = `
-            <button type="button" id="roverZoomOutBtn" title="Zoom Out (Ctrl -)" aria-label="Zoom Out">&minus;</button>
-            <span id="roverZoomLabel" title="Click to Reset Zoom (Ctrl 0)" role="button" tabindex="0">${Math.round(this.getCurrentScale() * 100)}%</span>
-            <button type="button" id="roverZoomInBtn" title="Zoom In (Ctrl +)" aria-label="Zoom In">&#43;</button>
-        `;
-
-        if (targetContainer) {
-            targetContainer.insertBefore(widget, targetContainer.firstChild);
-        } else if (document.body) {
-            // Fallback floating dock if no top-nav is present
-            widget.style.position = "fixed";
-            widget.style.bottom = "16px";
-            widget.style.right = "16px";
-            widget.style.zIndex = "999999";
-            widget.style.background = "#FFFFFF";
-            widget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-            document.body.appendChild(widget);
-        }
-
-        const outBtn = document.getElementById("roverZoomOutBtn");
-        const inBtn = document.getElementById("roverZoomInBtn");
-        const label = document.getElementById("roverZoomLabel");
-
-        if (outBtn) outBtn.addEventListener("click", () => this.zoomOut());
-        if (inBtn) inBtn.addEventListener("click", () => this.zoomIn());
-        if (label) {
-            label.addEventListener("click", () => this.resetZoom());
-            label.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    this.resetZoom();
-                }
-            });
-        }
-    }
-};
-
-// Backwards compatibility alias for existing code
-window.applyDynamicDesktopScaling = function() {
-    if (window.ROVER_ZOOM) {
-        window.ROVER_ZOOM.apply(window.ROVER_ZOOM.getCurrentScale());
-    }
-};
-
-// Initialize Zoom Engine immediately
-if (typeof window !== "undefined" && window.ROVER_ZOOM) {
-    window.ROVER_ZOOM.init();
-}
+    } catch (e) {}
+})();
