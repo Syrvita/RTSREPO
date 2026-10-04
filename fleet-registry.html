@@ -74,10 +74,11 @@
                         <p class="subtext">Comprehensive vehicle asset registry, real-time allocation status, and driver assignments across Metro Manila Hub.</p>
                     </div>
                     <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
-                        <button id="exportFleetCsvBtn" class="btn-primary" style="padding: 10px 18px; background: #D32F2F; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 6px;">
+                        <button id="exportFleetCsvBtn" class="btn-ghost" style="padding: 10px 16px; background: #FFFFFF; color: #424242; border: 1px solid #E0E0E0; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 6px;">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             Export Fleet Manifest
                         </button>
+                        <button id="openAddVehicleModalBtn" class="btn-primary" style="background: #D32F2F; color: #FFFFFF; padding: 10px 18px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer;">+ Register New Asset</button>
                     </div>
                 </div>
 
@@ -149,6 +150,130 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- MODAL 1: REGISTER NEW ASSET (#addVehicleModal) -->
+    <div id="addVehicleModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-window" style="background: #FFFFFF; width: 620px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+            <!-- Header -->
+            <div style="padding: 20px 24px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Register New Fleet Asset</h2>
+                        <span style="background: #E3F2FD; color: #1976D2; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">FLEET INTAKE</span>
+                    </div>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Enroll a Philippine commercial van into the active operational roster.</p>
+                </div>
+                <button type="button" id="closeAddVehicleModalTopBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Form Body -->
+            <form id="addVehicleForm" style="padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #FAFAFA; margin: 0;">
+                <div>
+                    <label for="newVehicleModel" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Commercial Vehicle Model *</label>
+                    <select id="newVehicleModel" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                        <option value="Toyota HiAce Commuter" data-capacity="14" data-prefix="RV-HIA" data-type="Passenger Van">Toyota HiAce Commuter (14 Pax - Standard Shuttle)</option>
+                        <option value="Toyota HiAce GL Grandia" data-capacity="10" data-prefix="RV-GRA" data-type="Executive Van">Toyota HiAce GL Grandia (10 Pax - Executive VIP)</option>
+                        <option value="Nissan NV350 Urvan" data-capacity="15" data-prefix="RV-URV" data-type="Passenger Van">Nissan NV350 Urvan (15 Pax - Commuter Van)</option>
+                        <option value="Hyundai Grand Starex / Staria" data-capacity="10" data-prefix="RV-STR" data-type="Executive Shuttle">Hyundai Grand Starex / Staria (10 Pax - Executive VIP)</option>
+                        <option value="Mitsubishi L300 FB Body" data-capacity="16" data-prefix="RV-L30" data-type="Utility Shuttle / Cargo Van">Mitsubishi L300 FB Body (16 Pax - Utility Shuttle)</option>
+                        <option value="Isuzu Traviz Dual Cab" data-capacity="16" data-prefix="RV-TRV" data-type="Commercial Shuttle">Isuzu Traviz Dual Cab (16 Pax - Commercial Shuttle)</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div>
+                        <label for="newVehicleCapacity" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Seating Capacity (PAX) *</label>
+                        <input type="number" id="newVehicleCapacity" value="14" min="8" max="20" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                    </div>
+                    <div>
+                        <label for="newVehiclePlate" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">LTO Plate Number *</label>
+                        <input type="text" id="newVehiclePlate" placeholder="NVA-1234" required pattern="^[A-Za-z]{3}-[0-9]{3,4}$" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; text-transform: uppercase; background: #FFFFFF; color: #111827;">
+                        <span style="font-size: 10px; color: #6B7280; margin-top: 3px; display: block;">Format: ABC-1234 or ABC-123</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div>
+                        <label for="newVehicleHub" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Assigned Operational Hub *</label>
+                        <select id="newVehicleHub" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                            <option value="Metro Manila Central Hub">Metro Manila Central Hub</option>
+                            <option value="Clark Logistics Hub Terminal 2">Clark Logistics Hub Terminal 2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="newVehicleStatus" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Initial Status *</label>
+                        <select id="newVehicleStatus" required style="width: 100%; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                            <option value="Available">Available / Idle</option>
+                            <option value="Maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="newVehicleRFID" style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase;">Tollway RFID Systems</label>
+                    <input type="text" id="newVehicleRFID" value="Autosweep &amp; Easytrip Installed" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 13px; background: #FFFFFF; color: #111827;">
+                </div>
+            </form>
+
+            <!-- Footer -->
+            <div style="padding: 16px 24px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: #6B7280;">Registered asset is immediately indexed in local roverDB.</span>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="closeAddVehicleModalBtn" style="padding: 9px 18px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #374151; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="button" id="saveNewVehicleBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25);">
+                        Save Asset to Registry &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: IN-PAGE VEHICLE SCHEDULE MODAL (#vehicleScheduleModal) -->
+    <div id="vehicleScheduleModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-window" style="background: #FFFFFF; width: 750px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+            <!-- Header -->
+            <div style="padding: 20px 24px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Active Schedule &amp; Corridor Roster: <span id="scheduleModalUnitTitle" style="color: #D32F2F;">RV-VAN-104</span></h2>
+                        <span style="background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #C8E6C9; letter-spacing: 0.5px;">SCHEDULE AUDIT</span>
+                    </div>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Live dispatch timeline and assigned trip corridors for this vehicle.</p>
+                </div>
+                <button type="button" id="closeVehicleScheduleModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Body -->
+            <div id="vehicleScheduleModalBody" style="padding: 20px 24px; overflow-y: auto; background: #FAFAFA; display: flex; flex-direction: column; gap: 16px; flex: 1;">
+                <!-- Unit Summary Strip -->
+                <div id="scheduleModalUnitSummary" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="scheduleModalModel">Toyota HiAce Commuter</div>
+                        <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
+                            Plate: <strong id="scheduleModalPlate" style="color: #111827;">NVA-1234</strong> &bull; Capacity: <span id="scheduleModalCap">14 Pax</span> &bull; Hub: <span id="scheduleModalHub">Manila Hub</span>
+                        </div>
+                    </div>
+                    <div id="scheduleModalStatusContainer">
+                        <span id="scheduleModalStatusPill" class="pill-status pill-available">● Available</span>
+                    </div>
+                </div>
+
+                <!-- Schedule Feed Header -->
+                <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">ASSIGNED CORRIDOR MISSIONS</div>
+
+                <!-- Trip Feed -->
+                <div id="scheduleModalTripFeed" style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 14px 24px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: #6B7280;">Live schedule synchronization with ROVER Enterprise database.</span>
+                <button type="button" id="closeVehicleScheduleModalFooterBtn" style="padding: 8px 18px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #374151; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Close Schedule</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/db.js"></script>

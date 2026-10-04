@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const actionCell = document.getElementById("actionCellRQ1042");
         if (actionCell) {
-            actionCell.innerHTML = `<a href="reservation-details.html?id=RQ-1042" class="action-link">View Details</a>`;
+            actionCell.innerHTML = `<button type="button" class="btn-view-trip-details action-link" data-booking-id="RQ-1042" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;">View Details</button>`;
         }
 
         const filterPendingBtn = document.getElementById("filterPendingBtn");
@@ -394,4 +394,99 @@ function initManualDispatchModal() {
   }
 }
 
+function initTripDetailsModal() {
+  const modal = document.getElementById("tripDetailsModal");
+  const closeBtn = document.getElementById("closeTripDetailsModalBtn");
+  const dismissBtn = document.getElementById("dismissTripDetailsModalBtn");
+  const printBtn = document.getElementById("printTripManifestBtn");
+
+  if (!modal) return;
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (dismissBtn) dismissBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  if (printBtn) {
+    printBtn.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
+  function openTripDetailsModal(bookingId) {
+    const cleanId = (bookingId || "").replace(/^#/, "");
+    const db = typeof ROVER_DB !== "undefined" ? ROVER_DB.get() : JSON.parse(localStorage.getItem("roverDB")) || {};
+    const reservations = db.reservations || [];
+    const r = reservations.find(x => (x.id || "").replace(/^#/, "") === cleanId) || {};
+
+    const idEl = document.getElementById("tripModalBookingId");
+    const statusPillEl = document.getElementById("tripModalStatusPill");
+    const clientEl = document.getElementById("tripModalClientName");
+    const contactEl = document.getElementById("tripModalClientContact");
+    const routeEl = document.getElementById("tripModalRoute");
+    const checkpointsEl = document.getElementById("tripModalCheckpoints");
+    const paxEl = document.getElementById("tripModalPax");
+    const vehiclePrefEl = document.getElementById("tripModalVehiclePref");
+    const scheduleEl = document.getElementById("tripModalSchedule");
+    const durationEl = document.getElementById("tripModalDuration");
+
+    const vehicleModelEl = document.getElementById("tripModalVehicleModel");
+    const vehiclePlateEl = document.getElementById("tripModalVehiclePlate");
+    const driverNameEl = document.getElementById("tripModalDriverName");
+    const driverLicEl = document.getElementById("tripModalDriverLic");
+    const driverDutyEl = document.getElementById("tripModalDriverDuty");
+    const stagedByEl = document.getElementById("tripModalStagedBy");
+    const confirmedByEl = document.getElementById("tripModalConfirmedBy");
+    const notesEl = document.getElementById("tripModalNotes");
+
+    if (idEl) idEl.textContent = `#${cleanId}`;
+    if (statusPillEl) {
+      statusPillEl.textContent = (r.status || "CONFIRMED & STAGED").toUpperCase();
+    }
+    if (clientEl) clientEl.textContent = r.client || "Apex Logistics Global Inc.";
+    if (contactEl) contactEl.textContent = r.clientContact || "Rowena Mae Castaneda";
+    if (routeEl) routeEl.textContent = r.route || (r.origin && r.destination ? `${r.origin} → ${r.destination}` : "Metro Manila Corporate Corridor");
+    if (checkpointsEl) checkpointsEl.textContent = r.checkpoints || "Tollways: Skyway Stage 3 Buendia Ramp • NLEX Balintawak • Central Hub Gate";
+    if (paxEl) paxEl.textContent = `${r.estimatedPax || r.pax || 14} Passengers`;
+    if (vehiclePrefEl) vehiclePrefEl.textContent = `(${r.vehiclePref || r.vehicleType || "High-Roof Passenger Van"})`;
+    if (scheduleEl) scheduleEl.textContent = r.schedule || r.pickupWindow || "Oct 28, 2026 • 08:00 – 18:00 PHT";
+    if (durationEl) durationEl.textContent = "Est. Transit Duration: 2 hrs 15 mins (Express Route Buffer 100% Cleared)";
+
+    const vehicleText = r.vehicleAssigned ? r.vehicleAssigned.split("(")[0].trim() : (r.vehicleType || "Toyota HiAce Commuter Deluxe");
+    const plateText = r.assignedVehicle || (r.vehicleAssigned && r.vehicleAssigned.includes("RV-") ? r.vehicleAssigned.match(/\(([^)]+)\)/)?.[1] : "NCL-8821");
+    if (vehicleModelEl) vehicleModelEl.textContent = vehicleText;
+    if (vehiclePlateEl) vehiclePlateEl.innerHTML = `Plate: <strong>${escapeHTML(plateText || "NCL-8821")}</strong> &bull; Capacity: ${r.estimatedPax || 14} Seats &bull; Manila Hub`;
+
+    const driverText = r.driverAssigned ? r.driverAssigned.split("(")[0].trim() : (r.assignedDriver || "Danilo Ramos");
+    if (driverNameEl) driverNameEl.textContent = driverText;
+    if (driverLicEl) driverLicEl.innerHTML = `License: <strong>N01-18-094821</strong> (Professional RC 1,2,3)`;
+    if (driverDutyEl) driverDutyEl.textContent = "✓ Shift Cleared • 8.5 hrs rest period audit compliant";
+
+    if (stagedByEl) stagedByEl.innerHTML = `Staged by: <strong>${escapeHTML(r.stagedBy || "Sigmund Malacas (Operations Manager)")}</strong>`;
+    if (confirmedByEl) confirmedByEl.innerHTML = `Gate Clearance: <strong>${escapeHTML(r.gatePassId || "Pending Gate Release")}</strong> &bull; ${r.confirmedBy ? escapeHTML(r.confirmedBy) : "Awaiting Admin Sign-off"}`;
+    if (notesEl) notesEl.textContent = r.notes || r.stagingNotes || "Operational dispatch staged under standard protocol.";
+
+    modal.style.display = "flex";
+  }
+
+  // Delegated event listener for all .btn-view-trip-details
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest(".btn-view-trip-details");
+    if (target) {
+      e.preventDefault();
+      const bookingId = target.getAttribute("data-booking-id");
+      if (bookingId) {
+        openTripDetailsModal(bookingId);
+      }
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", initManualDispatchModal);
+document.addEventListener("DOMContentLoaded", initTripDetailsModal);

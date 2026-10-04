@@ -129,11 +129,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${statusPill}</td>
                 <td>${bufferInfo}</td>
                 <td>
-                    <a href="service-orders.html" style="color: #D32F2F; text-decoration: none; font-weight: 600; font-size: 12px;">Inspect Schedule &rarr;</a>
+                    <button type="button" class="btn-inspect-schedule" data-unit-id="${escapeHTML(unit.id)}" style="background: none; border: none; color: #D32F2F; font-weight: 600; font-size: 12px; cursor: pointer; padding: 0; font-family: inherit;">Inspect Schedule &rarr;</button>
                 </td>
             `;
 
             tbody.appendChild(tr);
+        });
+
+        // Bind in-page schedule inspection buttons
+        const inspectBtns = tbody.querySelectorAll(".btn-inspect-schedule");
+        inspectBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const unitId = btn.getAttribute("data-unit-id");
+                openVehicleScheduleModal(unitId);
+            });
         });
     }
 
@@ -181,6 +190,232 @@ document.addEventListener("DOMContentLoaded", () => {
             a.setAttribute("href", url);
             a.setAttribute("download", `rover_fleet_manifest_${Date.now()}.csv`);
             a.click();
+        });
+    }
+
+    // 5. Add Vehicle Modal Logic (#addVehicleModal)
+    const addVehicleModal = document.getElementById("addVehicleModal");
+    const openAddVehicleModalBtn = document.getElementById("openAddVehicleModalBtn");
+    const closeAddVehicleModalTopBtn = document.getElementById("closeAddVehicleModalTopBtn");
+    const closeAddVehicleModalBtn = document.getElementById("closeAddVehicleModalBtn");
+    const saveNewVehicleBtn = document.getElementById("saveNewVehicleBtn");
+    const addVehicleForm = document.getElementById("addVehicleForm");
+    const newVehicleModel = document.getElementById("newVehicleModel");
+    const newVehicleCapacity = document.getElementById("newVehicleCapacity");
+    const newVehiclePlate = document.getElementById("newVehiclePlate");
+    const newVehicleHub = document.getElementById("newVehicleHub");
+    const newVehicleStatus = document.getElementById("newVehicleStatus");
+    const newVehicleRFID = document.getElementById("newVehicleRFID");
+
+    function openAddModal() {
+        if (!addVehicleModal) return;
+        addVehicleModal.style.display = "flex";
+    }
+
+    function closeAddModal() {
+        if (!addVehicleModal) return;
+        addVehicleModal.style.display = "none";
+    }
+
+    if (openAddVehicleModalBtn) {
+        openAddVehicleModalBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            openAddModal();
+        });
+    }
+
+    if (closeAddVehicleModalTopBtn) {
+        closeAddVehicleModalTopBtn.addEventListener("click", closeAddModal);
+    }
+
+    if (closeAddVehicleModalBtn) {
+        closeAddVehicleModalBtn.addEventListener("click", closeAddModal);
+    }
+
+    if (addVehicleModal) {
+        addVehicleModal.addEventListener("click", (e) => {
+            if (e.target === addVehicleModal) closeAddModal();
+        });
+    }
+
+    if (newVehicleModel && newVehicleCapacity) {
+        newVehicleModel.addEventListener("change", function() {
+            const selectedOpt = this.options[this.selectedIndex];
+            const cap = selectedOpt.getAttribute("data-capacity") || "14";
+            newVehicleCapacity.value = cap;
+        });
+    }
+
+    if (saveNewVehicleBtn) {
+        saveNewVehicleBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const modelOpt = newVehicleModel ? newVehicleModel.options[newVehicleModel.selectedIndex] : null;
+            const modelVal = newVehicleModel ? newVehicleModel.value : "";
+            const capVal = newVehicleCapacity ? parseInt(newVehicleCapacity.value, 10) : 14;
+            let plateVal = newVehiclePlate ? newVehiclePlate.value.trim().toUpperCase() : "";
+            const hubVal = newVehicleHub ? newVehicleHub.value : "Metro Manila Central Hub";
+            const statusVal = newVehicleStatus ? newVehicleStatus.value : "Available";
+            const rfidVal = newVehicleRFID ? newVehicleRFID.value.trim() : "Autosweep & Easytrip Installed";
+
+            // Philippine LTO plate validation (e.g. ABC-1234 or ABC-123)
+            const plateRegex = /^[A-Z]{3}-\d{3,4}$/;
+            if (!plateVal || !plateRegex.test(plateVal)) {
+                alert("Validation Error: Please enter a valid Philippine LTO plate number (e.g., NVA-1234 or ABC-123).");
+                if (newVehiclePlate) newVehiclePlate.focus();
+                return;
+            }
+
+            if (!modelVal || isNaN(capVal) || capVal <= 0) {
+                alert("Validation Error: Please ensure all required vehicle specification fields are filled.");
+                return;
+            }
+
+            const prefix = modelOpt ? (modelOpt.getAttribute("data-prefix") || "RV-HIA") : "RV-HIA";
+            const typeVal = modelOpt ? (modelOpt.getAttribute("data-type") || "Passenger Van") : "Passenger Van";
+
+            const db = ROVER_DB.get();
+            if (!db.fleet) db.fleet = [];
+
+            // Generate unique unit ID
+            let unitId = "";
+            let attempts = 0;
+            do {
+                const randomNum = Math.floor(100 + Math.random() * 900);
+                unitId = `${prefix}-${randomNum}`;
+                attempts++;
+            } while (db.fleet.some(u => u.id === unitId) && attempts < 50);
+
+            const newUnit = {
+                id: unitId,
+                model: modelVal,
+                type: typeVal,
+                capacity: capVal,
+                plate: plateVal,
+                hub: hubVal,
+                status: statusVal,
+                scheduleBuffer: statusVal === "Available" ? "100% Clear" : "Under Service",
+                rfid: rfidVal
+            };
+
+            db.fleet.unshift(newUnit);
+            ROVER_DB.save(db);
+
+            renderFleetTable();
+            closeAddModal();
+            if (addVehicleForm) addVehicleForm.reset();
+            if (newVehicleCapacity) newVehicleCapacity.value = "14";
+
+            alert(`Asset ${unitId} (${plateVal}) registered successfully to active fleet.`);
+        });
+    }
+
+    // 6. In-Page Vehicle Schedule Modal Logic (#vehicleScheduleModal)
+    const vehicleScheduleModal = document.getElementById("vehicleScheduleModal");
+    const closeVehicleScheduleModalBtn = document.getElementById("closeVehicleScheduleModalBtn");
+    const closeVehicleScheduleModalFooterBtn = document.getElementById("closeVehicleScheduleModalFooterBtn");
+
+    function openVehicleScheduleModal(unitId) {
+        if (!vehicleScheduleModal) return;
+
+        const db = ROVER_DB.get();
+        const fleet = db.fleet || [];
+        const reservations = db.reservations || [];
+
+        const unit = fleet.find(u => u.id === unitId) || {
+            id: unitId,
+            model: "Commercial Van",
+            plate: "Unassigned",
+            hub: "Manila Hub",
+            capacity: 14,
+            status: "Available"
+        };
+
+        const titleEl = document.getElementById("scheduleModalUnitTitle");
+        const modelEl = document.getElementById("scheduleModalModel");
+        const plateEl = document.getElementById("scheduleModalPlate");
+        const capEl = document.getElementById("scheduleModalCap");
+        const hubEl = document.getElementById("scheduleModalHub");
+        const statusPillEl = document.getElementById("scheduleModalStatusPill");
+        const tripFeed = document.getElementById("scheduleModalTripFeed");
+
+        if (titleEl) titleEl.textContent = unit.id;
+        if (modelEl) modelEl.textContent = unit.model;
+        if (plateEl) plateEl.textContent = unit.plate || "Unassigned";
+        if (capEl) capEl.textContent = `${unit.capacity || 14} Pax`;
+        if (hubEl) hubEl.textContent = unit.hub || "Metro Manila Central Hub";
+
+        if (statusPillEl) {
+            statusPillEl.className = unit.status === "Available" ? "pill-status pill-available" :
+                (unit.status === "Maintenance" ? "pill-status pill-maintenance" : "pill-status pill-in-use");
+            statusPillEl.textContent = `● ${unit.status}`;
+        }
+
+        // Query assigned reservations for this unit
+        const matchingTrips = reservations.filter(r => {
+            const hasAssigned = r.assignedVehicle && (r.assignedVehicle === unitId || r.assignedVehicle.includes(unitId));
+            const hasTextAssigned = r.vehicleAssigned && (r.vehicleAssigned.includes(unitId) || (unit.plate && r.vehicleAssigned.includes(unit.plate)));
+            const hasCurrentTrip = unit.currentTrip && (r.id === unit.currentTrip || (r.id && r.id.replace(/^#/, "") === unit.currentTrip.replace(/^#/, "")));
+            return hasAssigned || hasTextAssigned || hasCurrentTrip;
+        });
+
+        if (tripFeed) {
+            tripFeed.innerHTML = "";
+            if (matchingTrips.length === 0) {
+                tripFeed.innerHTML = `
+                    <div style="background: #FFFFFF; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 32px 20px; text-align: center; color: #64748B;">
+                        <div style="font-size: 28px; margin-bottom: 8px;">🚐</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;">No active trips scheduled.</div>
+                        <div style="font-size: 12px; margin-top: 4px; color: #64748B;">Vehicle is idle and available at hub for immediate corridor deployment.</div>
+                    </div>
+                `;
+            } else {
+                matchingTrips.forEach(trip => {
+                    const cleanTripId = (trip.id || "").replace(/^#/, "");
+                    const card = document.createElement("div");
+                    card.style.cssText = "background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;";
+                    card.innerHTML = `
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-weight: 700; color: #D32F2F; font-size: 13px;">#${escapeHTML(cleanTripId)}</span>
+                                <span style="font-size: 11px; font-weight: 600; color: #111827;">${escapeHTML(trip.client || "Corporate Client")}</span>
+                                <span style="background: #E8F5E9; color: #2E7D32; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">${escapeHTML(trip.status || "Assigned")}</span>
+                            </div>
+                            <div style="font-size: 13px; font-weight: 600; color: #111827; margin-top: 4px;">
+                                ${escapeHTML(trip.route || trip.corridor || "Metro Manila Corporate Corridor")}
+                            </div>
+                            <div style="font-size: 11px; color: #64748B; margin-top: 2px;">
+                                Window: <strong>${escapeHTML(trip.schedule || trip.pickupWindow || "Live Service Window")}</strong> &bull; Driver: <strong>${escapeHTML(trip.driverAssigned || trip.assignedDriver || "Rostered Duty Pilot")}</strong>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-size: 11px; color: #15803D; font-weight: 600; background: #DCFCE7; padding: 4px 8px; border-radius: 4px;">Corridor Cleared</span>
+                        </div>
+                    `;
+                    tripFeed.appendChild(card);
+                });
+            }
+        }
+
+        vehicleScheduleModal.style.display = "flex";
+    }
+
+    function closeScheduleModal() {
+        if (!vehicleScheduleModal) return;
+        vehicleScheduleModal.style.display = "none";
+    }
+
+    if (closeVehicleScheduleModalBtn) {
+        closeVehicleScheduleModalBtn.addEventListener("click", closeScheduleModal);
+    }
+
+    if (closeVehicleScheduleModalFooterBtn) {
+        closeVehicleScheduleModalFooterBtn.addEventListener("click", closeScheduleModal);
+    }
+
+    if (vehicleScheduleModal) {
+        vehicleScheduleModal.addEventListener("click", (e) => {
+            if (e.target === vehicleScheduleModal) closeScheduleModal();
         });
     }
 

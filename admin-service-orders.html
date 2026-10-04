@@ -161,7 +161,7 @@
                         <tbody id="adminDispatchTableBody">
                             <!-- Row 1: Manager Staged - Awaiting Gate Pass (#RQ-8821) -->
                             <tr id="row-RQ-8821" style="border-bottom: 1px solid #ECEFF1;" data-status="staged">
-                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-8821" style="color: #D32F2F; text-decoration: none;">#RQ-8821</a></td>
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="javascript:void(0)" class="btn-view-trip-details" data-booking-id="RQ-8821" style="color: #D32F2F; text-decoration: none; cursor: pointer;">#RQ-8821</a></td>
                                 <td style="padding: 14px 20px;">
                                     <div style="font-weight: 700; color: #111827;">Apex Logistics Global Inc.</div>
                                     <div style="font-size: 11px; color: #64748B;">Corporate Tier-1</div>
@@ -178,15 +178,20 @@
                                     </span>
                                 </td>
                                 <td style="padding: 14px 20px;">
-                                    <button type="button" class="btn-authorize-gate" data-id="RQ-8821" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
-                                        Authorize &amp; Issue Gate Pass &rarr;
-                                    </button>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <button type="button" class="btn-authorize-gate" data-id="RQ-8821" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
+                                            Authorize &amp; Issue Gate Pass &rarr;
+                                        </button>
+                                        <button type="button" class="btn-view-trip-details" data-booking-id="RQ-8821" style="background: none; border: 1px solid #CBD5E1; color: #475569; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                                            Details
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
 
                             <!-- Row 2: Manager Staged - Awaiting Gate Pass (#RQ-8819) -->
                             <tr id="row-RQ-8819" style="border-bottom: 1px solid #ECEFF1;" data-status="staged">
-                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-8819" style="color: #D32F2F; text-decoration: none;">#RQ-8819</a></td>
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="javascript:void(0)" class="btn-view-trip-details" data-booking-id="RQ-8819" style="color: #D32F2F; text-decoration: none; cursor: pointer;">#RQ-8819</a></td>
                                 <td style="padding: 14px 20px;">
                                     <div style="font-weight: 700; color: #111827;">San Miguel Aerocity Core</div>
                                     <div style="font-size: 11px; color: #64748B;">Industrial Enterprise</div>
@@ -203,15 +208,20 @@
                                     </span>
                                 </td>
                                 <td style="padding: 14px 20px;">
-                                    <button type="button" class="btn-authorize-gate" data-id="RQ-8819" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
-                                        Authorize &amp; Issue Gate Pass &rarr;
-                                    </button>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <button type="button" class="btn-authorize-gate" data-id="RQ-8819" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
+                                            Authorize &amp; Issue Gate Pass &rarr;
+                                        </button>
+                                        <button type="button" class="btn-view-trip-details" data-booking-id="RQ-8819" style="background: none; border: 1px solid #CBD5E1; color: #475569; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                                            Details
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
 
                             <!-- Row 3: Active Dispatched - Gate Pass Active (#RQ-1038) -->
                             <tr id="row-RQ-1038" style="border-bottom: 1px solid #ECEFF1;" data-status="dispatched">
-                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=RQ-1038" style="color: #D32F2F; text-decoration: none;">#RQ-1038</a></td>
+                                <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="javascript:void(0)" class="btn-view-trip-details" data-booking-id="RQ-1038" style="color: #D32F2F; text-decoration: none; cursor: pointer;">#RQ-1038</a></td>
                                 <td style="padding: 14px 20px;">
                                     <div style="font-weight: 700; color: #111827;">Subic FreePort Trans</div>
                                     <div style="font-size: 11px; color: #64748B;">Logistics Transit</div>
@@ -228,7 +238,10 @@
                                     </span>
                                 </td>
                                 <td style="padding: 14px 20px;">
-                                    <a href="javascript:void(0)" class="action-link" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <a href="javascript:void(0)" class="action-link btn-view-gate-pass" data-id="RQ-1038" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                                        <button type="button" class="btn-view-trip-details action-link" data-booking-id="RQ-1038" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; color: #1565C0; font-weight: 600; font-size: 12px;">Manifest &rarr;</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -453,6 +466,114 @@
                     <button type="button" id="submitAdminManualBtn" style="padding: 9px 20px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.25);">
                         Authorize Direct Dispatch &amp; Issue Gate Pass &rarr;
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRIP OPERATIONAL DETAILS MODAL (#tripDetailsModal) -->
+    <div id="tripDetailsModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-window" style="background: #FFFFFF; width: 840px; max-width: 95vw; max-height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #ECEFF1;">
+            <!-- Header -->
+            <div style="padding: 20px 28px; border-bottom: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: #111827;">Trip Operations Manifest: <span id="tripModalBookingId" style="color: #D32F2F;">#RQ-1042</span></h2>
+                        <span id="tripModalStatusPill" style="background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #C8E6C9; letter-spacing: 0.5px;">ACTIVE MANIFEST</span>
+                    </div>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #6B7280;">Detailed flight strip, vehicle telemetry specs, driver duty status, and corridor checkpoints.</p>
+                </div>
+                <button type="button" id="closeTripDetailsModalBtn" style="background: none; border: none; font-size: 24px; color: #9E9E9E; cursor: pointer; padding: 4px 8px; line-height: 1;" title="Close Modal">&times;</button>
+            </div>
+
+            <!-- Body (2-Column Split: 1.15fr left, 1fr right) -->
+            <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; padding: 22px 28px; overflow-y: auto; background: #FAFAFA; flex: 1;">
+                <!-- Left Column: Route & Reservation Manifest -->
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Client Organization & Liaison -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">CLIENT ENTITY &amp; LIAISON</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="tripModalClientName">Apex Logistics Global Inc.</div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 3px;">
+                            Contact Liaison: <strong id="tripModalClientContact" style="color: #111827;">Rowena Mae Castaneda</strong> &bull; Operations Director
+                        </div>
+                    </div>
+
+                    <!-- Corridors & Checkpoints -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">CORRIDOR &amp; INTERMEDIATE CHECKPOINTS</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="tripModalRoute">Makati CBD &rarr; Clark Logistics Hub</div>
+                        <div id="tripModalCheckpoints" style="font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.4;">
+                            Tollways: Skyway Stage 3 Buendia Ramp &bull; NLEX Balintawak &bull; SCTEX Clark South Plaza
+                        </div>
+                    </div>
+
+                    <!-- Passenger Count & Scheduling Window -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">MANIFEST HEADCOUNT &amp; SCHEDULE</div>
+                        <div style="font-size: 13px; font-weight: 600; color: #111827;">
+                            Headcount: <strong id="tripModalPax" style="color: #D32F2F;">14 Passengers</strong> <span style="font-size: 11px; color: #64748B;" id="tripModalVehiclePref">(High-Roof Passenger Van)</span>
+                        </div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 4px;">
+                            Window: <strong id="tripModalSchedule" style="color: #111827;">Oct 28, 2026 &bull; 08:00 – 18:00 PHT</strong>
+                        </div>
+                        <div id="tripModalDuration" style="font-size: 11px; color: #2E7D32; font-weight: 600; margin-top: 6px;">
+                            Est. Transit Duration: 2 hrs 15 mins (Express Route Buffer 100% Cleared)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Resource Allocation & Dispatch Audit -->
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Assigned Vehicle Card -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">ALLOCATED FLEET ASSET</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="tripModalVehicleModel">Toyota HiAce Commuter Deluxe</div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 3px;" id="tripModalVehiclePlate">
+                            Plate: <strong>NCL-8821</strong> &bull; Capacity: 14 Seats &bull; Manila Hub
+                        </div>
+                        <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+                            <span style="background: #E8F5E9; color: #2E7D32; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;">RFID Autosweep Active</span>
+                            <span style="background: #E0F2FE; color: #0284C7; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Fuel Gauge: 90%+ Cleared</span>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Driver Card -->
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">LICENSED ROSTERED PILOT</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #111827;" id="tripModalDriverName">Danilo Ramos</div>
+                        <div style="font-size: 12px; color: #475569; margin-top: 3px;" id="tripModalDriverLic">
+                            License: <strong>N01-18-094821</strong> (Professional RC 1,2,3)
+                        </div>
+                        <div id="tripModalDriverDuty" style="font-size: 11px; color: #15803D; font-weight: 600; margin-top: 6px;">
+                            ✓ Shift Cleared &bull; 8.5 hrs rest period audit compliant
+                        </div>
+                    </div>
+
+                    <!-- Staging / Clearance Audit -->
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 16px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">OPERATIONAL AUDIT TRAIL</div>
+                        <div id="tripModalStagedBy" style="font-size: 12px; color: #334155;">
+                            Staged by: <strong>Sigmund Malacas</strong> (Operations Manager)
+                        </div>
+                        <div id="tripModalConfirmedBy" style="font-size: 12px; color: #334155; margin-top: 2px;">
+                            Gate Clearance: <strong id="tripModalGatePass">GP-2026-1042</strong> &bull; Executive Sign-off
+                        </div>
+                        <div id="tripModalNotes" style="font-size: 11px; color: #64748B; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 1px solid #E2E8F0;">
+                            Authorized express transit. Direct compliance verified under LTFRB standards.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 14px 28px; background: #FFFFFF; border-top: 1px solid #ECEFF1; display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 11px; color: #6B7280;">
+                    <span>Flight strip verified under RA 10173 and LTFRB Enterprise protocol.</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="printTripManifestBtn" style="padding: 8px 16px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #374151; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Print Operational Manifest</button>
+                    <button type="button" id="dismissTripDetailsModalBtn" style="padding: 8px 18px; border: none; background: #D32F2F; color: #FFFFFF; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">Dismiss &rarr;</button>
                 </div>
             </div>
         </div>

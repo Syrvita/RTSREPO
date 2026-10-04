@@ -377,11 +377,18 @@ document.addEventListener("DOMContentLoaded", () => {
             // Actions cell (column 7)
             if (row.cells[6]) {
                 row.cells[6].innerHTML = `
-                    <a href="javascript:void(0)" class="action-link btn-view-gate-pass" data-id="${escapeHTML(bookingId)}" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <a href="javascript:void(0)" class="action-link btn-view-gate-pass" data-id="${escapeHTML(bookingId)}" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                        <button type="button" class="btn-view-trip-details action-link" data-booking-id="${escapeHTML(bookingId)}" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; color: #1565C0; font-weight: 600; font-size: 12px;">Manifest &rarr;</button>
+                    </div>
                 `;
                 const viewBtn = row.cells[6].querySelector(".btn-view-gate-pass");
                 if (viewBtn) {
                     viewBtn.addEventListener("click", () => openGatePassModal(bookingId));
+                }
+                const detailsBtn = row.cells[6].querySelector(".btn-view-trip-details");
+                if (detailsBtn) {
+                    detailsBtn.addEventListener("click", () => openTripDetailsModal(bookingId));
                 }
             }
         } else if (newState === "revoked") {
@@ -434,15 +441,23 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         const actionHtml = isDispatched ? `
-            <a href="javascript:void(0)" class="action-link btn-view-gate-pass" data-id="${safeId}" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <a href="javascript:void(0)" class="action-link btn-view-gate-pass" data-id="${safeId}" style="color: #4B5563; font-weight: 600; font-size: 12px; text-decoration: none;">View Gate Pass</a>
+                <button type="button" class="btn-view-trip-details action-link" data-booking-id="${safeId}" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; color: #1565C0; font-weight: 600; font-size: 12px;">Manifest &rarr;</button>
+            </div>
         ` : `
-            <button type="button" class="btn-authorize-gate" data-id="${safeId}" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
-                Authorize &amp; Issue Gate Pass &rarr;
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="button" class="btn-authorize-gate" data-id="${safeId}" style="background: #D32F2F; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">
+                    Authorize &amp; Issue Gate Pass &rarr;
+                </button>
+                <button type="button" class="btn-view-trip-details" data-booking-id="${safeId}" style="background: none; border: 1px solid #CBD5E1; color: #475569; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                    Details
+                </button>
+            </div>
         `;
 
         tr.innerHTML = `
-            <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="reservation-details.html?id=${safeId}" style="color: #D32F2F; text-decoration: none;">#${safeId}</a></td>
+            <td style="padding: 14px 20px; font-weight: 700; color: #D32F2F;"><a href="javascript:void(0)" class="btn-view-trip-details" data-booking-id="${safeId}" style="color: #D32F2F; text-decoration: none; cursor: pointer;">#${safeId}</a></td>
             <td style="padding: 14px 20px;">
                 <div style="font-weight: 700; color: #111827;">${safeClient}</div>
                 <div style="font-size: 11px; color: #D32F2F; font-weight: 600;">Executive Direct Override</div>
@@ -623,6 +638,101 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("Could not hydrate admin dispatch table:", err);
         }
     }
+
+    // 7. Trip Operational Details Modal Logic (#tripDetailsModal)
+    const tripDetailsModal = document.getElementById("tripDetailsModal");
+    const closeTripDetailsModalBtn = document.getElementById("closeTripDetailsModalBtn");
+    const dismissTripDetailsModalBtn = document.getElementById("dismissTripDetailsModalBtn");
+    const printTripManifestBtn = document.getElementById("printTripManifestBtn");
+
+    function closeTripModal() {
+        if (tripDetailsModal) tripDetailsModal.style.display = "none";
+    }
+
+    if (closeTripDetailsModalBtn) closeTripDetailsModalBtn.addEventListener("click", closeTripModal);
+    if (dismissTripDetailsModalBtn) dismissTripDetailsModalBtn.addEventListener("click", closeTripModal);
+
+    if (tripDetailsModal) {
+        tripDetailsModal.addEventListener("click", (e) => {
+            if (e.target === tripDetailsModal) closeTripModal();
+        });
+    }
+
+    if (printTripManifestBtn) {
+        printTripManifestBtn.addEventListener("click", () => {
+            window.print();
+        });
+    }
+
+    function openTripDetailsModal(bookingId) {
+        if (!tripDetailsModal) return;
+        const cleanId = (bookingId || "").replace(/^#/, "");
+        const db = ROVER_DB.get();
+        const reservations = db.reservations || [];
+        const r = reservations.find(x => (x.id || "").replace(/^#/, "") === cleanId) || {};
+
+        const idEl = document.getElementById("tripModalBookingId");
+        const statusPillEl = document.getElementById("tripModalStatusPill");
+        const clientEl = document.getElementById("tripModalClientName");
+        const contactEl = document.getElementById("tripModalClientContact");
+        const routeEl = document.getElementById("tripModalRoute");
+        const checkpointsEl = document.getElementById("tripModalCheckpoints");
+        const paxEl = document.getElementById("tripModalPax");
+        const vehiclePrefEl = document.getElementById("tripModalVehiclePref");
+        const scheduleEl = document.getElementById("tripModalSchedule");
+        const durationEl = document.getElementById("tripModalDuration");
+
+        const vehicleModelEl = document.getElementById("tripModalVehicleModel");
+        const vehiclePlateEl = document.getElementById("tripModalVehiclePlate");
+        const driverNameEl = document.getElementById("tripModalDriverName");
+        const driverLicEl = document.getElementById("tripModalDriverLic");
+        const driverDutyEl = document.getElementById("tripModalDriverDuty");
+        const stagedByEl = document.getElementById("tripModalStagedBy");
+        const confirmedByEl = document.getElementById("tripModalConfirmedBy");
+        const notesEl = document.getElementById("tripModalNotes");
+
+        if (idEl) idEl.textContent = `#${cleanId}`;
+        if (statusPillEl) {
+            statusPillEl.textContent = (r.status || "CONFIRMED & DISPATCHED").toUpperCase();
+        }
+        if (clientEl) clientEl.textContent = r.client || "Apex Logistics Global Inc.";
+        if (contactEl) contactEl.textContent = r.clientContact || "Rowena Mae Castaneda";
+        if (routeEl) routeEl.textContent = r.route || (r.origin && r.destination ? `${r.origin} → ${r.destination}` : "Metro Manila Corporate Corridor");
+        if (checkpointsEl) checkpointsEl.textContent = r.checkpoints || "Tollways: Skyway Stage 3 Buendia Ramp • NLEX Balintawak • Central Hub Gate";
+        if (paxEl) paxEl.textContent = `${r.estimatedPax || r.pax || 14} Passengers`;
+        if (vehiclePrefEl) vehiclePrefEl.textContent = `(${r.vehiclePref || r.vehicleType || "High-Roof Passenger Van"})`;
+        if (scheduleEl) scheduleEl.textContent = r.schedule || r.pickupWindow || "Oct 28, 2026 • 21:00 – 02:00 PHT";
+        if (durationEl) durationEl.textContent = "Est. Transit Duration: 2 hrs 15 mins (Express Route Buffer 100% Cleared)";
+
+        const vehicleText = r.vehicleAssigned ? r.vehicleAssigned.split("(")[0].trim() : (r.vehicleType || "Toyota HiAce Commuter Deluxe");
+        const plateText = r.assignedVehicle || (r.vehicleAssigned && r.vehicleAssigned.includes("RV-") ? r.vehicleAssigned.match(/\(([^)]+)\)/)?.[1] : "NCL-8821");
+        if (vehicleModelEl) vehicleModelEl.textContent = vehicleText;
+        if (vehiclePlateEl) vehiclePlateEl.innerHTML = `Plate: <strong>${escapeHTML(plateText || "NCL-8821")}</strong> &bull; Capacity: ${r.estimatedPax || 14} Seats &bull; Manila Hub`;
+
+        const driverText = r.driverAssigned ? r.driverAssigned.split("(")[0].trim() : (r.assignedDriver || "Danilo Ramos");
+        if (driverNameEl) driverNameEl.textContent = driverText;
+        if (driverLicEl) driverLicEl.innerHTML = `License: <strong>N01-18-094821</strong> (Professional RC 1,2,3)`;
+        if (driverDutyEl) driverDutyEl.textContent = "✓ Shift Cleared • 8.5 hrs rest period audit compliant";
+
+        if (stagedByEl) stagedByEl.innerHTML = `Staged by: <strong>${escapeHTML(r.stagedBy || "Sigmund Malacas (Operations Manager)")}</strong>`;
+        const gatePassNum = r.gatePassId || `GP-2026-${cleanId.replace(/^RQ-/, "")}`;
+        if (confirmedByEl) confirmedByEl.innerHTML = `Gate Clearance: <strong>${escapeHTML(gatePassNum)}</strong> &bull; ${r.confirmedBy ? escapeHTML(r.confirmedBy) : "Admin • Ops Manila"}`;
+        if (notesEl) notesEl.textContent = r.directives || r.notes || r.stagingNotes || "Authorized express transit. Direct compliance verified under LTFRB standards.";
+
+        tripDetailsModal.style.display = "flex";
+    }
+
+    // Delegated event listener for .btn-view-trip-details
+    document.addEventListener("click", (e) => {
+        const target = e.target.closest(".btn-view-trip-details");
+        if (target) {
+            e.preventDefault();
+            const bookingId = target.getAttribute("data-booking-id");
+            if (bookingId) {
+                openTripDetailsModal(bookingId);
+            }
+        }
+    });
 
     initExistingButtons();
     hydrateFromDatabase();
